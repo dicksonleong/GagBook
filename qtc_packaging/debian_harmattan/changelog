@@ -1,3 +1,9 @@
+gagbook (0.0.2) unstable; urgency=low
+  * Added settings storage
+  * Added pinch zooming for image
+
+ -- Dickson <dicksonleong8@gmail.com>  Sun, 23 Sep 2012 22:30:32 +0800
+
 gagbook (0.0.1) unstable; urgency=low
 
   * First Alpha release.

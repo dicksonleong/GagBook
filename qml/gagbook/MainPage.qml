@@ -25,7 +25,8 @@ Page {
             onClicked: gagListView.currentIndex++
         }
         ToolIcon{
-            platformIconId: "toolbar-refresh"
+            platformIconId: "toolbar-refresh" + (enabled ? "" : "-dimmed")
+            enabled: !pageHeader.busy
             onClicked: Script.refresh()
         }
         ToolIcon{
