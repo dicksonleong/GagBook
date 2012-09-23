@@ -15,6 +15,7 @@ Item{
 
     Image{
         id: background
+        anchors.fill: parent
         source: headerPress.pressed ? "Images/color10-meegotouch-view-header-fixed-pressed.png"
                                     : "Images/color10-meegotouch-view-header-fixed.png"
         sourceSize.width: parent.width
