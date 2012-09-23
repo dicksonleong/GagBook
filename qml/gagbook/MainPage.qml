@@ -73,7 +73,7 @@ Page {
     PageHeader{
         id: pageHeader
         text: {
-            switch(selectedSection){
+            switch(settings.selectedSection){
             case 0: return "Hot"
             case 1: return "Trending"
             case 2: return "Vote"

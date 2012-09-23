@@ -21,4 +21,7 @@ QtObject{
     property int fontSizeLarge: 26
     property int fontSizeXLarge: 28
     property int fontSizeXXLarge: 32
+
+    property url devWebSite: "http://dickson-apps.blogspot.com"
+    property url sourceRepoSite: "https://github.com/dicksonleong/GagBook"
 }

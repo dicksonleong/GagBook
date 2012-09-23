@@ -17,7 +17,7 @@ function refresh(isAll){
         gagListView.model.clear()
         nextPageId = 0
     }
-    Server.getGAG(selectedSection, nextPageId, onSuccess, onFailure)
+    Server.getGAG(settings.selectedSection, nextPageId, onSuccess, onFailure)
     pageHeader.busy = true
 }
 

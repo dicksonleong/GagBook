@@ -5,14 +5,11 @@ import com.nokia.extras 1.1
 PageStackWindow {
     id: appWindow
 
-    // TODO: QSetting
-    property int selectedSection: 0 // 0 = hot, 1 = trending, 2 = vote
-    property int imageSize: 0 // 0 = medium, 1 = large
-
     showStatusBar: inPortrait
     initialPage: MainPage{ id: mainPage }
 
     Constant{ id: constant }
+    Settings{ id: settings }
 
     InfoBanner{
         id: infoBanner
@@ -24,5 +21,5 @@ PageStackWindow {
         }
     }
 
-    Component.onCompleted: theme.inverted = true
+    Component.onCompleted: theme.inverted = !settings.whiteTheme
 }

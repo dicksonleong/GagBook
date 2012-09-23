@@ -19,8 +19,8 @@ Page{
 
         SettingSwitch{
             text: "White Theme"
-            checked: !theme.inverted
-            onCheckedChanged: theme.inverted = !checked
+            checked: settings.whiteTheme
+            onCheckedChanged: settings.whiteTheme = checked
         }
 
         Item{
@@ -44,8 +44,8 @@ Page{
                     left: parent.left
                     right: parent.right
                 }
-                checkedButton: imageSize === 0 ? mediumImageSizeButton : largeImageSizeButton
-                onCheckedButtonChanged: imageSize = (checkedButton === mediumImageSizeButton ? 0 : 1)
+                checkedButton: settings.imageSize === 0 ? mediumImageSizeButton : largeImageSizeButton
+                onCheckedButtonChanged: settings.imageSize = (checkedButton === mediumImageSizeButton ? 0 : 1)
 
                 Button{
                     id: mediumImageSizeButton

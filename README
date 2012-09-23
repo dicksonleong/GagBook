@@ -3,6 +3,14 @@ GagBook
 
 A 9GAG app for MeeGo Harmattan
 
+ToDo
+==========
+* Pinch-to-zoom image
+* Save image
+* Showing Facebook comment for each post
+* Maybe image caching?
+* Porting to Symbian
+
 License
 ==========
 

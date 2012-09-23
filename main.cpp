@@ -1,7 +1,9 @@
 #include <QtGui/QApplication>
 #include <QDeclarativeContext>
 #include "qmlapplicationviewer.h"
+
 #include "shareui.h"
+#include "qmlsettings.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -14,6 +16,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     ShareUI shareUI;
     viewer.rootContext()->setContextProperty("shareUI", &shareUI);
+
+    QMLSettings settingsStorage;
+    viewer.rootContext()->setContextProperty("settingsStorage", &settingsStorage);
 
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer.setMainQmlFile(QLatin1String("qml/gagbook/main.qml"));

@@ -5,13 +5,13 @@ SelectionDialog{
     id: sectionDialog
 
     titleText: "Section"
-    selectedIndex: selectedSection
+    selectedIndex: settings.selectedSection
     model: ListModel{
         ListElement{ name: "Hot" }
         ListElement{ name: "Trending" }
         ListElement{ name: "Vote" }
     }
-    onSelectedIndexChanged: selectedSection = selectedIndex
+    onSelectedIndexChanged: settings.selectedSection = selectedIndex
 
     Component.onCompleted: open()
 }

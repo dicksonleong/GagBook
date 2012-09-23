@@ -31,7 +31,7 @@ Item{
             fillMode: Image.PreserveAspectFit
             sourceSize.height: 1500
             cache: false
-            source: imageSize === 0 ? model.image.small : model.image.big  
+            source: settings.imageSize === 0 ? model.image.small : model.image.big
         }
 
         MouseArea{
@@ -105,7 +105,7 @@ Item{
             wrapMode: Text.Wrap
             elide: Text.ElideRight
             maximumLineCount: 3
-            color: constant.colorLight
+            color: "white"
             text: model.title + " (" + model.votes + " likes)"
         }
     }
