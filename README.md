@@ -4,15 +4,20 @@ GagBook
 A 9GAG app for MeeGo Harmattan. It has a simple swipe user interface - just switch to the next image with a swipe.
 
 ToDo
-==========
+---------
 * Save image
 * Showing Facebook comment for each post
 * Splash screen
 * Better app launcher icon
 * Porting to Symbian
 
+Contact
+---------
+* Twitter - [@DicksonBeta](http://twitter.com/DicksonBeta)
+* Email - dicksonleong8@gmail.com
+
 License
-==========
+---------
 
 GagBook - A 9GAG app for MeeGo Harmattan
 

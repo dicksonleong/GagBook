@@ -68,7 +68,7 @@ Page {
         snapMode: ListView.SnapOneItem
         highlightRangeMode: ListView.StrictlyEnforceRange
         delegate: GagDelegate{}
-        interactive: count === 0 || !currentItem.allowDelegateFlicking
+        interactive: count === 0 || !currentItem.allowDelegateFlicking || moving
         onAtXEndChanged: if(atXEnd && count > 0 && !pageHeader.busy) Script.refresh(false)
     }
 
