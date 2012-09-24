@@ -1,16 +1,14 @@
 GagBook
 ==========
 
-A 9GAG app for MeeGo Harmattan
+A 9GAG app for MeeGo Harmattan. It has a simple swipe user interface - just switch to the next image with a swipe.
 
 ToDo
 ==========
-* Pinch-to-zoom image
 * Save image
 * Showing Facebook comment for each post
 * Splash screen
 * Better app launcher icon
-* Maybe image caching?
 * Porting to Symbian
 
 License

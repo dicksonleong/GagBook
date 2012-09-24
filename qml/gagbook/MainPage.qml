@@ -63,11 +63,12 @@ Page {
         id: gagListView
         anchors{ top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
         model: ListModel{}
+        boundsBehavior: Flickable.DragOverBounds
         orientation: ListView.Horizontal
         snapMode: ListView.SnapOneItem
         highlightRangeMode: ListView.StrictlyEnforceRange
         delegate: GagDelegate{}
-        //cacheBuffer: width / 2
+        interactive: count === 0 || !currentItem.allowDelegateFlicking
         onAtXEndChanged: if(atXEnd && count > 0 && !pageHeader.busy) Script.refresh(false)
     }
 
