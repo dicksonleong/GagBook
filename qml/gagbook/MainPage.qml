@@ -41,10 +41,12 @@ Page {
         MenuLayout{
             MenuItem{
                 text: "Open in web browser"
+                enabled: gagListView.count > 0
                 onClicked: Qt.openUrlExternally(gagListView.model.get(gagListView.currentIndex).url)
             }
             MenuItem{
                 text: "Share"
+                enabled: gagListView.count > 0
                 onClicked: shareUI.share(gagListView.model.get(gagListView.currentIndex).title,
                                          gagListView.model.get(gagListView.currentIndex).url)
             }

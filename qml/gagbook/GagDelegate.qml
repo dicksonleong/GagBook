@@ -64,7 +64,7 @@ Item{
             property real maxScale: 3.0
 
             anchors.fill: parent
-            enabled: gagImage.status === Image.Ready
+            enabled: gagImage.status === Image.Ready && !root.ListView.view.moving
             pinch.target: gagImage
             pinch.minimumScale: minScale * 0.5 // This is to create "bounce back effect"
             pinch.maximumScale: maxScale * 1.5 // when over zoomed

@@ -11,7 +11,7 @@ ToDo
 * Better app launcher icon
 * Porting to Symbian
 
-Contact
+Contact Me
 ---------
 * Twitter - [@DicksonBeta](http://twitter.com/DicksonBeta)
 * Email - dicksonleong8@gmail.com

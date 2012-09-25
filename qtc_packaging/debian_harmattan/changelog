@@ -1,3 +1,9 @@
+gagbook (0.0.3) unstable; urgency=low
+  * Added bounce back effect when over zoomed
+  * Fixed scrolling conflict
+
+ -- Dickson <dicksonleong8@gmail.com>  Tue, 25 Sep 2012 13:28:53 +0800
+
 gagbook (0.0.2) unstable; urgency=low
   * Added settings storage
   * Added pinch zooming for image
