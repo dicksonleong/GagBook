@@ -30,6 +30,7 @@ function onSuccess(json){
 }
 
 function onFailure(status, statusText){
-    infoBanner.alert("Error: " + statusText + " (" + status + ")")
+    if(status === 0) infoBanner.alert("Error: Server or connection error")
+    else infoBanner.alert("Error: " + statusText + " (" + status + ")")
     pageHeader.busy = false
 }

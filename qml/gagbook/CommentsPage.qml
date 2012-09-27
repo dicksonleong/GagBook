@@ -19,6 +19,8 @@ Page {
         anchors{ top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
         contentHeight: commentsWebView.height * commentsWebView.scale
 
+        Behavior on contentY{ SmoothedAnimation{ velocity: 2500 } }
+
         WebView{
             id: commentsWebView
             width: commentsBox.width + 20
@@ -46,6 +48,7 @@ Page {
     PageHeader{
         id: pageHeader
         text: "Comments"
+        onClicked: webViewFlickable.contentY = 0
     }
 
     Component.onCompleted: commentsWebView.url = "comments.html"

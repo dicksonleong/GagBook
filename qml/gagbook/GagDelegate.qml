@@ -31,7 +31,7 @@ Item{
                 anchors.centerIn: parent
                 source: settings.imageSize === 0 ? model.image.small : model.image.big
                 smooth: !flickable.moving
-                sourceSize.height: 1750 // Maximum image height
+                sourceSize.height: 2000 // Maximum image height
                 cache: false
                 fillMode: Image.PreserveAspectFit
 

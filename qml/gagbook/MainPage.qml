@@ -15,18 +15,17 @@ Page {
             enabled: false
         }
         ToolIcon{
+            platformIconId: "toolbar-refresh" + (enabled ? "" : "-dimmed")
+            enabled: !pageHeader.busy
+            onClicked: Script.refresh()
+        }
+        ToolIcon{
             platformIconId: "toolbar-new-message" + (enabled ? "" : "-dimmed")
             enabled: gagListView.count > 0
             onClicked: {
                 var prop = {gagURL: gagListView.model.get(gagListView.currentIndex).url}
                 pageStack.push(Qt.resolvedUrl("CommentsPage.qml"), prop)
             }
-        }
-
-        ToolIcon{
-            platformIconId: "toolbar-refresh" + (enabled ? "" : "-dimmed")
-            enabled: !pageHeader.busy
-            onClicked: Script.refresh()
         }
         ToolIcon{
             platformIconId: "toolbar-view-menu"

@@ -9,17 +9,10 @@ var USER_AGENT = "GagBook/0.0.4 (Nokia; Qt; MeeGo Harmattan)"
 function getGAG(section, page, onSuccess, onFailure) {
     var sectionString = ""
     switch(section){
-    case 0:
-        sectionString = "hot"
-        break
-    case 1:
-        sectionString = "trending"
-        break
-    case 2:
-        sectionString = "vote"
-        break
-    default:
-        throw new Error("Invalid section: " + section)
+    case 0: sectionString = "hot"; break;
+    case 1: sectionString = "trending"; break;
+    case 2: sectionString = "vote"; break;
+    default: throw new Error("Invalid section: " + section)
     }
 
     var requestUrl = INFINIGAG_URL + "?section=" + sectionString + (page ? "&page=" + page : "")
