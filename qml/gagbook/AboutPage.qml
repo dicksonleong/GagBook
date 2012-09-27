@@ -40,7 +40,7 @@ Page{
                     font.pixelSize: constant.fontSizeMedium
                     horizontalAlignment: Text.AlignHCenter
                     color: constant.colorMid
-                    text: "v0.0.3 APLHA"
+                    text: "v0.0.4 APLHA"
                 }
 
                 Text{

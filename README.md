@@ -6,10 +6,10 @@ A 9GAG app for MeeGo Harmattan. It has a simple swipe user interface - just swit
 ToDo
 ---------
 * Save image
-* Showing Facebook comment for each post
 * Splash screen
 * Better app launcher icon
 * Porting to Symbian
+* Vote and comment (?)
 
 Contact Me
 ---------

@@ -15,15 +15,14 @@ Page {
             enabled: false
         }
         ToolIcon{
-            platformIconId: "toolbar-previous" + (enabled ? "" : "-dimmed")
-            enabled: gagListView.currentIndex > 0
-            onClicked: gagListView.currentIndex--
+            platformIconId: "toolbar-new-message" + (enabled ? "" : "-dimmed")
+            enabled: gagListView.count > 0
+            onClicked: {
+                var prop = {gagURL: gagListView.model.get(gagListView.currentIndex).url}
+                pageStack.push(Qt.resolvedUrl("CommentsPage.qml"), prop)
+            }
         }
-        ToolIcon{
-            platformIconId: "toolbar-next" + (enabled ? "" : "-dimmed")
-            enabled: gagListView.count > 0 && gagListView.currentIndex < gagListView.count
-            onClicked: gagListView.currentIndex++
-        }
+
         ToolIcon{
             platformIconId: "toolbar-refresh" + (enabled ? "" : "-dimmed")
             enabled: !pageHeader.busy

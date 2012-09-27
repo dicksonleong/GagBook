@@ -1,3 +1,8 @@
+gagbook (0.0.4) unstable; urgency=low
+  * Showing Facebook comments for each post
+
+ -- Dickson <dicksonleong8@gmail.com>  Thu, 27 Sep 2012 16:35:18 +0800
+
 gagbook (0.0.3) unstable; urgency=low
   * Added bounce back effect when over zoomed
   * Fixed scrolling conflict
