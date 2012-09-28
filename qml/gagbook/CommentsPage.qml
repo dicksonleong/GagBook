@@ -33,6 +33,7 @@ Page {
 
                 property string gagURL: commentsPage.gagURL
                 property int width: inPortrait ? 320 : 570
+                property bool whiteTheme: settings.whiteTheme
             }
 
             onLoadStarted: pageHeader.busy = true

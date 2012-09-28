@@ -11,10 +11,8 @@ Item{
     height: switchItem.height + 2 * switchItem.anchors.topMargin
 
     Label{
-        anchors.left: parent.left
-        anchors.right: switchItem.left
+        anchors{ left: parent.left; right: switchItem.left; verticalCenter: parent.verticalCenter }
         anchors.margins: constant.paddingMedium
-        anchors.verticalCenter: parent.verticalCenter
         wrapMode: Text.Wrap
         font.bold: true
         text: root.text
@@ -22,10 +20,7 @@ Item{
 
     Switch{
         id: switchItem
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.topMargin: constant.paddingXLarge
-        anchors.rightMargin: constant.paddingXLarge
+        anchors{ right: parent.right; top: parent.top; margins: constant.paddingXLarge }
         enabled: root.enabled
     }
 }

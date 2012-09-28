@@ -1,7 +1,14 @@
 GagBook
 ==========
 
-A 9GAG app for MeeGo Harmattan. It has a simple swipe user interface - just switch to the next image with a swipe.
+A [9GAG](http://9gag.com) app for MeeGo Harmattan, written using Qt/QML.
+
+Features:
+* View hot, trending or vote section
+* Swipe left/right to go to previous/next post
+* Pinch-to-zoom image
+* View Facebook comments for each post
+* Share post url using Harmattan's integrated sharing
 
 ToDo
 ---------

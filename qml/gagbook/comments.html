@@ -1,35 +1,38 @@
 <html>
 <head>
 
+<!-- FIXME: Resize height to fit content height instead of using CSS to set manually -->
 <style type="text/css">
 .fb_ltr{height:2000px !important;}
-body {background-color:black;}
 </style>
+
+<script type="text/javascript">
+window.onload = function(){
+    var box = document.getElementById("commentsBox");
+    box.setAttribute("href", window.qml.gagURL);
+    box.setAttribute("width", window.qml.width);
+    var backgroundCSS = document.createElement('style');
+
+    if(window.qml.whiteTheme){
+        box.setAttribute("colorscheme", "light");
+        backgroundCSS.innerHTML = "body {background-color:#E0E1E2;}";
+    }
+    else{
+        backgroundCSS.innerHTML = "body {background-color:black;}";
+    }
+    document.head.appendChild(backgroundCSS);
+}
+</script>
 
 </head>
 <body>
 
-<script type="text/javascript">
-window.onload = function(){
-var box = document.getElementById("commentsBox");
-box.setAttribute("data-href", window.qml.gagURL);
-box.setAttribute("data-width", window.qml.width);
-}
-</script>
-
 <div id="fb-root"></div>
 <script src="http://connect.facebook.net/en_GB/all.js#xfbml=1"></script>
 
-<!--<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "http://connect.facebook.net/en_GB/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>-->
-
-<div id="commentsBox" class="fb-comments" data-href=" " data-num-posts="10" data-width="400"
-data-mobile="false" data-colorscheme="dark"></div>
+<div id="wrapper">
+    <fb:comments id="commentsBox" href=" " num-posts="10" width="400" mobile="false" colorscheme="dark"></fb:comments>
+</div>
 
 </body>
 </html>
