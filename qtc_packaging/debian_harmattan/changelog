@@ -1,3 +1,8 @@
+gagbook (0.0.5) unstable; urgency=low
+  * Added image saving
+
+ -- Dickson <dicksonleong8@gmail.com>  Sat, 29 Sep 2012 20:53:12 +0800
+
 gagbook (0.0.4) unstable; urgency=low
   * Showing Facebook comments for each post
 

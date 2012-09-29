@@ -4,6 +4,7 @@
 
 #include "shareui.h"
 #include "qmlsettings.h"
+#include "qmlimagesaver.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -11,7 +12,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     app->setApplicationName("GagBook");
     app->setOrganizationName("GagBook");
-    app->setApplicationVersion("0.0.4");
+    app->setApplicationVersion("0.0.5");
 
     QmlApplicationViewer viewer;
 
@@ -20,6 +21,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QMLSettings settingsStorage;
     viewer.rootContext()->setContextProperty("settingsStorage", &settingsStorage);
+
+    QMLImageSaver imageSaver;
+    viewer.rootContext()->setContextProperty("imageSaver", &imageSaver);
 
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     viewer.setMainQmlFile(QLatin1String("qml/gagbook/main.qml"));

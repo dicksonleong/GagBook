@@ -35,7 +35,8 @@ CONFIG += shareuiinterface-maemo-meegotouch mdatauri
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
     shareui.cpp \
-    qmlsettings.cpp
+    qmlsettings.cpp \
+    qmlimagesaver.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -52,4 +53,5 @@ OTHER_FILES += \
 
 HEADERS += \
     shareui.h \
-    qmlsettings.h
+    qmlsettings.h \
+    qmlimagesaver.h

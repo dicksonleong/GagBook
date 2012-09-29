@@ -9,10 +9,10 @@ Features:
 * Pinch-to-zoom image
 * View Facebook comments for each post
 * Share post url using Harmattan's integrated sharing
+* Save image
 
 ToDo
 ---------
-* Save image
 * Splash screen
 * Better app launcher icon
 * Porting to Symbian

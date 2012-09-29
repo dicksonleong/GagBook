@@ -28,6 +28,13 @@ Page {
             }
         }
         ToolIcon{
+            platformIconId: "toolbar-share" + (enabled ? "" : "-dimmed")
+            enabled: gagListView.count > 0
+            onClicked: shareUI.share(gagListView.model.get(gagListView.currentIndex).title,
+                                     gagListView.model.get(gagListView.currentIndex).url)
+        }
+
+        ToolIcon{
             platformIconId: "toolbar-view-menu"
             onClicked: mainMenu.open()
         }
@@ -40,13 +47,15 @@ Page {
             MenuItem{
                 text: "Open in web browser"
                 enabled: gagListView.count > 0
-                onClicked: Qt.openUrlExternally(gagListView.model.get(gagListView.currentIndex).url)
+                onClicked: {
+                    Qt.openUrlExternally(gagListView.model.get(gagListView.currentIndex).url)
+                    infoBanner.alert("Opening link: " + gagListView.model.get(gagListView.currentIndex).url)
+                }
             }
             MenuItem{
-                text: "Share"
+                text: "Save image"
                 enabled: gagListView.count > 0
-                onClicked: shareUI.share(gagListView.model.get(gagListView.currentIndex).title,
-                                         gagListView.model.get(gagListView.currentIndex).url)
+                onClicked: gagListView.currentItem.saveImage()
             }
             MenuItem{
                 text: "Settings"

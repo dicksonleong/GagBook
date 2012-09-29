@@ -6,6 +6,12 @@ Item{
 
     property bool allowDelegateFlicking: gagImage.status === Image.Ready && gagImage.scale > pinchArea.minScale
 
+    function saveImage(){
+        var filePath = imageSaver.save(gagImage, model.id)
+        if(filePath) infoBanner.alert("Image saved in " + filePath)
+        else infoBanner.alert("Failed to save image")
+    }
+
     height: ListView.view.height
     width: ListView.view.width
 
@@ -41,8 +47,6 @@ Item{
                     prevScale = scale
                 }
 
-                onStatusChanged: if(status == Image.Ready) fitToScreen()
-
                 onScaleChanged: {
                     if ((width * scale) > flickable.width) {
                         var xoff = (flickable.width / 2 + flickable.contentX) * scale / prevScale;
@@ -53,6 +57,22 @@ Item{
                         flickable.contentY = yoff - flickable.height / 2
                     }
                     prevScale = scale
+                }
+
+                onStatusChanged: {
+                    if(status == Image.Ready){
+                        fitToScreen()
+                        loadedAnimation.start()
+                    }
+                }
+
+                NumberAnimation{
+                    id: loadedAnimation
+                    target: gagImage
+                    property: "opacity"
+                    duration: 250
+                    from: 0; to: 1
+                    easing.type: Easing.InOutQuad
                 }
             }
         }
@@ -124,32 +144,14 @@ Item{
         Component{
             id: loadingIndicator
 
-            Column{
-                height: childrenRect.height
-                width: busyIndicator.width
-                spacing: constant.paddingLarge
-
-                BusyIndicator{
-                    id: busyIndicator
-                    running: true
-                    platformStyle: BusyIndicatorStyle{ size: "large" }
-                }
-
-                Label{
-                    width: busyIndicator.width
-                    horizontalAlignment: Text.AlignHCenter
-                    text: Math.round(gagImage.progress/100) + "%"
-                }
+            BusyIndicator{
+                id: busyIndicator
+                running: true
+                platformStyle: BusyIndicatorStyle{ size: "large" }
             }
         }
 
-        Component{
-            id: failedLoading
-
-            Label{
-                text: "Error loading image!"
-            }
-        }
+        Component{ id: failedLoading; Label{ text: "Error loading image" } }
     }
 
     ScrollDecorator{ flickableItem: flickable }
