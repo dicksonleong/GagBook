@@ -112,7 +112,7 @@ Item{
 
         MouseArea{
             anchors.fill: parent
-            onClicked: textContainer.showing = !textContainer.showing
+            onClicked: textContainer.state = textContainer.state ? "" : "hidden"
             onDoubleClicked: {
                 flickable.returnToBounds()
                 if(gagImage.scale !== pinchArea.minScale) fitToScreenAnimation.start()
@@ -156,28 +156,45 @@ Item{
 
     ScrollDecorator{ flickableItem: flickable }
 
-    Rectangle{
+    Item{
         id: textContainer
+        anchors{ left: parent.left; right: parent.right; top: parent.top }
+        height: textColumn.height + 2 * textColumn.anchors.margins
+        states: State{
+            name: "hidden"
+            AnchorChanges{ target: textContainer; anchors.top: undefined; anchors.bottom: root.top }
+        }
+        transitions: Transition{ AnchorAnimation{ duration: 250; easing.type: Easing.InOutQuad } }
 
-        property bool showing: true
+        Rectangle{
+            anchors.fill: parent
+            color: "black"
+            opacity: 0.5
+        }
 
-        width: parent.width
-        height: titleText.paintedHeight + 2 * titleText.anchors.margins
-        color: "black"
-        opacity: 0.65
-        y: showing ? 0 : -height
-        Behavior on y { NumberAnimation{ duration: 250 } }
+        Column{
+            id: textColumn
+            anchors{ left: parent.left; right: parent.right; top: parent.top; margins: constant.paddingSmall }
+            height: childrenRect.height
 
-        Text{
-            id: titleText
-            anchors{ left: parent.left; right: parent.right; top: parent.top; margins: constant.paddingMedium }
-            font.pixelSize: constant.fontSizeMedium
-            font.bold: true
-            wrapMode: Text.Wrap
-            elide: Text.ElideRight
-            maximumLineCount: 3
-            color: "white"
-            text: model.title + " (" + model.votes + " likes)"
+            Text{
+                width: parent.width
+                font.pixelSize: constant.fontSizeSmall
+                color: "white"
+                font.bold: true
+                wrapMode: Text.Wrap
+                elide: Text.ElideRight
+                maximumLineCount: 2
+                text: model.title
+            }
+
+            Text{
+                width: parent.width
+                font.pixelSize: constant.fontSizeSmall
+                color: "white"
+                elide: Text.ElideRight
+                text: model.votes + " likes"
+            }
         }
     }
 }

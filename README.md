@@ -15,8 +15,9 @@ ToDo
 ---------
 * Splash screen
 * Better app launcher icon
-* Porting to Symbian
 * Vote and comment (?)
+* Porting to Symbian (after final release)
+* Submit to Nokia Store (after final release)
 
 Contact Me
 ---------

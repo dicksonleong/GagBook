@@ -19,7 +19,7 @@ void ShareUI::share(const QString &title, const QString &link)
 #ifdef Q_OS_LINUX
     MDataUri uri;
     uri.setMimeType("text/x-url");
-    uri.setAttribute ("title", title);
+    uri.setAttribute("title", title);
     uri.setTextData(link);
 
     if(!uri.isValid()){
