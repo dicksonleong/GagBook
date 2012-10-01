@@ -52,7 +52,7 @@ Page{
                     text: "GagBook is a (read-only) 9GAG app for your smartphones, allow you to enjoy 9GAGing in your \
 smartphone with a simple and swipe UI and UX. GagBook is using InfiniGAG API but not affiliated with 9GAG or InfiniGAG. \
 This app may involve transmitting huge amount of data when downloading images.\n\n\
-Developed by Dickson.\n\n\
+Copyright © 2012 Dickson\n\
 GagBook is license under GPL v3+."
                 }
             }

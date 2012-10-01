@@ -7,9 +7,7 @@ Item{
     property bool allowDelegateFlicking: gagImage.status === Image.Ready && gagImage.scale > pinchArea.minScale
 
     function saveImage(){
-        var filePath = imageSaver.save(gagImage, model.id)
-        if(filePath) infoBanner.alert("Image saved in " + filePath)
-        else infoBanner.alert("Failed to save image")
+        return imageSaver.save(gagImage, model.id)
     }
 
     height: ListView.view.height

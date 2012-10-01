@@ -9,7 +9,7 @@ class ShareUI : public QObject
 public:
     explicit ShareUI(QObject *parent = 0);
 
-    Q_INVOKABLE void share(const QString &title, const QString &link);
+    Q_INVOKABLE void shareLink(const QString &link, const QString &title = QString());
 };
 
 #endif // SHAREUI_H

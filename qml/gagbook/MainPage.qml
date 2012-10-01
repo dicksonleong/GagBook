@@ -7,17 +7,13 @@ Page {
     id: mainPage
 
     property Item sectionDialog: null
+    property Item openLinkQueryDialog: null
     property int nextPageId: 0
 
     tools: ToolBarLayout{
         ToolIcon{
             platformIconId: "toolbar-back-dimmed"
             enabled: false
-        }
-        ToolIcon{
-            platformIconId: "toolbar-refresh" + (enabled ? "" : "-dimmed")
-            enabled: !pageHeader.busy
-            onClicked: Script.refresh()
         }
         ToolIcon{
             platformIconId: "toolbar-new-message" + (enabled ? "" : "-dimmed")
@@ -28,12 +24,18 @@ Page {
             }
         }
         ToolIcon{
+            // FIXME: Better toolbar icon for open link
+            iconSource: "image://theme/icon-l-browser-main-view"
+            enabled: gagListView.count > 0
+            opacity: enabled ? 1 : 0.25
+            onClicked: Script.openOpenLinkQueryDialog(gagListView.model.get(gagListView.currentIndex).url)
+        }
+        ToolIcon{
             platformIconId: "toolbar-share" + (enabled ? "" : "-dimmed")
             enabled: gagListView.count > 0
-            onClicked: shareUI.share(gagListView.model.get(gagListView.currentIndex).title,
-                                     gagListView.model.get(gagListView.currentIndex).url)
+            onClicked: shareUI.shareLink(gagListView.model.get(gagListView.currentIndex).url,
+                                         gagListView.model.get(gagListView.currentIndex).title)
         }
-
         ToolIcon{
             platformIconId: "toolbar-view-menu"
             onClicked: mainMenu.open()
@@ -45,17 +47,18 @@ Page {
 
         MenuLayout{
             MenuItem{
-                text: "Open in web browser"
-                enabled: gagListView.count > 0
-                onClicked: {
-                    Qt.openUrlExternally(gagListView.model.get(gagListView.currentIndex).url)
-                    infoBanner.alert("Opening link: " + gagListView.model.get(gagListView.currentIndex).url)
-                }
+                text: "Refresh section"
+                enabled: !pageHeader.busy
+                onClicked: Script.refresh()
             }
             MenuItem{
                 text: "Save image"
                 enabled: gagListView.count > 0
-                onClicked: gagListView.currentItem.saveImage()
+                onClicked: {
+                    var filePath = gagListView.currentItem.saveImage()
+                    if(filePath) infoBanner.alert("Image saved in " + filePath)
+                    else infoBanner.alert("Failed to save image")
+                }
             }
             MenuItem{
                 text: "Settings"

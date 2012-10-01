@@ -11,6 +11,20 @@ function openSectionDialog(){
     }
 }
 
+function openOpenLinkQueryDialog(link){
+    if(openLinkQueryDialog) {
+        openLinkQueryDialog.link = link
+        openLinkQueryDialog.open()
+    }
+    else{
+        var comp = Qt.createComponent("OpenLinkQueryDialog.qml")
+        openLinkQueryDialog = comp.createObject(mainPage, { link: link })
+        if(!openLinkQueryDialog){
+            console.log("Error creating object: " + comp.errorString())
+        }
+    }
+}
+
 function refresh(isAll){
     if(isAll == undefined) isAll = true
     if(isAll){

@@ -13,14 +13,17 @@ ShareUI::ShareUI(QObject *parent) :
 {
 }
 
-void ShareUI::share(const QString &title, const QString &link)
+void ShareUI::shareLink(const QString &link, const QString &title)
 {
 //#ifdef MEEGO_EDITION_HARMATTAN
 #ifdef Q_OS_LINUX
     MDataUri uri;
     uri.setMimeType("text/x-url");
-    uri.setAttribute("title", title);
     uri.setTextData(link);
+
+    if(!title.isEmpty()){
+        uri.setAttribute("title", title);
+    }
 
     if(!uri.isValid()){
         qCritical("Invalid URI");
