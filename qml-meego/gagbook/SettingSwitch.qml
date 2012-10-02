@@ -10,11 +10,12 @@ Item{
     width: parent.width
     height: switchItem.height + 2 * switchItem.anchors.topMargin
 
-    Label{
+    Text{
         anchors{ left: parent.left; right: switchItem.left; verticalCenter: parent.verticalCenter }
         anchors.margins: constant.paddingMedium
+        color: constant.colorLight
+        font.pixelSize: constant.fontSizeMedium
         wrapMode: Text.Wrap
-        font.bold: true
         text: root.text
     }
 

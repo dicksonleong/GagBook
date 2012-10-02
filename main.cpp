@@ -2,7 +2,10 @@
 #include <QDeclarativeContext>
 #include "qmlapplicationviewer.h"
 
+#if defined(Q_OS_HARMATTAN) || defined(Q_WS_SIMULATOR)
 #include "shareui.h"
+#endif
+
 #include "qmlsettings.h"
 #include "qmlimagesaver.h"
 
@@ -16,8 +19,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QmlApplicationViewer viewer;
 
+#if defined(Q_OS_HARMATTAN) || defined(Q_WS_SIMULATOR)
     ShareUI shareUI;
     viewer.rootContext()->setContextProperty("shareUI", &shareUI);
+#endif
 
     QMLSettings settingsStorage;
     viewer.rootContext()->setContextProperty("settingsStorage", &settingsStorage);
@@ -26,7 +31,13 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     viewer.rootContext()->setContextProperty("imageSaver", &imageSaver);
 
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
-    viewer.setMainQmlFile(QLatin1String("qml/gagbook/main.qml"));
+#if defined(Q_OS_HARMATTAN)
+    viewer.setMainQmlFile(QLatin1String("qml-meego/gagbook/main.qml"));
+#elif defined(Q_OS_SYMBIAN)
+    viewer.setMainQmlFile(QLatin1String("qml-symbian/gagbook/main.qml"));
+#else // Simulator. Change this value to run symbian or meego version on simulator
+    viewer.setMainQmlFile(QLatin1String("qml-symbian/gagbook/main.qml"));
+#endif
     viewer.showExpanded();
 
     return app->exec();

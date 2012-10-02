@@ -1,0 +1,38 @@
+<html>
+<head>
+
+<!-- FIXME: Resize height to fit content height instead of using CSS to set manually -->
+<style type="text/css">
+.fb_ltr{height:2000px !important;}
+</style>
+
+<script type="text/javascript">
+window.onload = function(){
+    var box = document.getElementById("commentsBox");
+    box.setAttribute("href", window.qml.gagURL);
+    box.setAttribute("width", window.qml.width);
+    var backgroundCSS = document.createElement('style');
+
+    if(window.qml.whiteTheme){
+        box.setAttribute("colorscheme", "light");
+        backgroundCSS.innerHTML = "body {background-color:#f1f1f1;}";
+    }
+    else{
+        backgroundCSS.innerHTML = "body {background-color:black;}";
+    }
+    document.head.appendChild(backgroundCSS);
+}
+</script>
+
+</head>
+<body>
+
+<div id="fb-root"></div>
+<script src="http://connect.facebook.net/en_GB/all.js#xfbml=1"></script>
+
+<div id="wrapper">
+    <fb:comments id="commentsBox" href=" " num-posts="10" width="400" mobile="false" colorscheme="dark"></fb:comments>
+</div>
+
+</body>
+</html>

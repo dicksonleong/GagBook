@@ -1,5 +1,5 @@
 import QtQuick 1.1
-import com.nokia.meego 1.0
+import com.nokia.symbian 1.1
 import com.nokia.extras 1.1
 
 Item{
@@ -10,7 +10,7 @@ Item{
     property bool comboboxVisible: false
     signal clicked
 
-    height: inPortrait ? 72 : 56
+    height: constant.headerHeight
     width: parent.width
 
     Image{
@@ -28,7 +28,7 @@ Item{
             verticalCenter: parent.verticalCenter
             left: parent.left
             right: busyLoader.left
-            margins: constant.paddingXLarge
+            margins: constant.paddingMedium
         }
         font.pixelSize: constant.fontSizeXLarge
         color: "white"
@@ -41,7 +41,7 @@ Item{
         anchors{
             verticalCenter: parent.verticalCenter
             right: parent.right
-            rightMargin: constant.paddingXLarge
+            rightMargin: constant.paddingMedium
         }
         sourceComponent: busy ? updatingIndicator : (comboboxVisible ? combobox : undefined )
     }
@@ -50,7 +50,8 @@ Item{
         id: updatingIndicator
 
         BusyIndicator{
-            platformStyle: BusyIndicatorStyle{ inverted: true }
+            platformInverted: false
+            width: platformStyle.graphicSizeSmall; height: width
             running: true
         }
     }
@@ -61,6 +62,16 @@ Item{
         Image{
             source: "Images/meegotouch-combobox-indicator-inverted.png"
         }
+    }
+
+    Image {
+        anchors{ top: parent.top; left: parent.left }
+        source: "Images/meegoTLCorner.png"
+    }
+
+    Image {
+        anchors{ top: parent.top; right: parent.right }
+        source: "Images/meegoTRCorner.png"
     }
 
     MouseArea{

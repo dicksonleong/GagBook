@@ -1,12 +1,13 @@
 import QtQuick 1.1
-import com.nokia.meego 1.0
+import com.nokia.symbian 1.1
 
 Page{
     id: settingsPage
 
     tools: ToolBarLayout{
-        ToolIcon{
-            platformIconId: "toolbar-back"
+        ToolButton{
+            platformInverted: settings.whiteTheme
+            iconSource: "toolbar-back"
             onClicked: pageStack.pop()
         }
     }
@@ -31,7 +32,6 @@ Page{
                 id: imageSizeText
                 anchors{ left: parent.left; top: parent.top; leftMargin: constant.paddingMedium }
                 font.pixelSize: constant.fontSizeMedium
-                font.bold: true
                 color: constant.colorLight
                 text: "Image Size"
             }
@@ -49,10 +49,12 @@ Page{
 
                 Button{
                     id: mediumImageSizeButton
+                    platformInverted: settings.whiteTheme
                     text: "Medium"
                 }
                 Button{
                     id: largeImageSizeButton
+                    platformInverted: settings.whiteTheme
                     text: "Large"
                 }
             }

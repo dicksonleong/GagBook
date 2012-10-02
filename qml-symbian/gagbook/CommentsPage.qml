@@ -1,5 +1,5 @@
 import QtQuick 1.1
-import com.nokia.meego 1.0
+import com.nokia.symbian 1.1
 import QtWebKit 1.0
 
 Page {
@@ -8,8 +8,9 @@ Page {
     property string gagURL
 
     tools: ToolBarLayout{
-        ToolIcon{
-            platformIconId: "toolbar-back"
+        ToolButton{
+            platformInverted: settings.whiteTheme
+            iconSource: "toolbar-back"
             onClicked: pageStack.pop()
         }
     }
@@ -30,7 +31,7 @@ Page {
                 WebView.windowObjectName: "qml"
 
                 property string gagURL: commentsPage.gagURL
-                property int width: inPortrait ? 320 : 570
+                property int width: constant.commentsBoxWidth
                 property bool whiteTheme: settings.whiteTheme
             }
 
@@ -51,7 +52,7 @@ Page {
         }
     }
 
-    ScrollDecorator{ flickableItem: webViewFlickable }
+    ScrollDecorator{ flickableItem: webViewFlickable; platformInverted: settings.whiteTheme }
 
     PageHeader{
         id: pageHeader

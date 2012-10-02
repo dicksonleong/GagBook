@@ -1,7 +1,7 @@
 #include "shareui.h"
 
-// FIXME: MEEGO_EDITION_HARMATTAN marco doesn't work (QtCreator bug?)
-#ifdef Q_OS_LINUX
+
+#ifdef Q_OS_HARMATTAN
 #include <MDataUri>
 #include <maemo-meegotouch-interfaces/shareuiinterface.h>
 #endif
@@ -13,7 +13,7 @@ ShareUI::ShareUI(QObject *parent) :
 
 void ShareUI::shareLink(const QString &link, const QString &title)
 {
-#ifdef Q_OS_LINUX
+#ifdef Q_OS_HARMATTAN
     MDataUri uri;
     uri.setMimeType("text/x-url");
     uri.setTextData(link);
