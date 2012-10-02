@@ -26,9 +26,6 @@ symbian:TARGET.CAPABILITY += NetworkServices
 # Speed up launching on MeeGo/Harmattan when using applauncherd daemon
 CONFIG += qdeclarative-boostable
 
-# For ShareUI class
-CONFIG += shareuiinterface-maemo-meegotouch mdatauri
-
 # Add dependency to Symbian components
 # CONFIG += qt-components
 
@@ -55,3 +52,8 @@ HEADERS += \
     shareui.h \
     qmlsettings.h \
     qmlimagesaver.h
+
+contains(MEEGO_EDITION,harmattan) {
+    # For ShareUI class
+    CONFIG += shareuiinterface-maemo-meegotouch share-ui-plugin share-ui-common mdatauri
+}

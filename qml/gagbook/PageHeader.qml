@@ -38,9 +38,11 @@ Item{
 
     Loader{
         id: busyLoader
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.right: parent.right
-        anchors.rightMargin: constant.paddingXLarge
+        anchors{
+            verticalCenter: parent.verticalCenter
+            right: parent.right
+            rightMargin: constant.paddingXLarge
+        }
         sourceComponent: busy ? updatingIndicator : (comboboxVisible ? combobox : undefined )
     }
 

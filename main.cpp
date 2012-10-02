@@ -12,7 +12,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     app->setApplicationName("GagBook");
     app->setOrganizationName("GagBook");
-    app->setApplicationVersion("0.0.5");
+    app->setApplicationVersion("0.1");
 
     QmlApplicationViewer viewer;
 

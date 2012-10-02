@@ -9,7 +9,7 @@ class QMLImageSaver : public QObject
 public:
     explicit QMLImageSaver(QObject *parent = 0);
 
-    Q_INVOKABLE QString save(QDeclarativeItem *imageObject, const int id);
+    Q_INVOKABLE QString save(QDeclarativeItem *imageObject, const int id = 0);
 };
 
 #endif // QMLIMAGESAVER_H

@@ -32,6 +32,7 @@ Page{
                     font.pixelSize: constant.fontSizeXXLarge
                     horizontalAlignment: Text.AlignHCenter
                     color: constant.colorLight
+                    font.bold: true
                     text: "GagBook"
                 }
 
@@ -40,7 +41,7 @@ Page{
                     font.pixelSize: constant.fontSizeMedium
                     horizontalAlignment: Text.AlignHCenter
                     color: constant.colorMid
-                    text: "v0.0.5 ALPHA"
+                    text: "v0.1 BETA"
                 }
 
                 Text{
@@ -49,11 +50,12 @@ Page{
                     horizontalAlignment: Text.AlignHCenter
                     color: constant.colorLight
                     wrapMode: Text.Wrap
+                    textFormat: Text.PlainText
                     text: "GagBook is a (read-only) 9GAG app for your smartphones, allow you to enjoy 9GAGing in your \
-smartphone with a simple and swipe UI and UX. GagBook is using InfiniGAG API but not affiliated with 9GAG or InfiniGAG. \
+smartphone with a simple swipe UI. GagBook is using InfiniGAG API but not affiliated with 9GAG or InfiniGAG. \
 This app may involve transmitting huge amount of data when downloading images.\n\n\
 Copyright © 2012 Dickson\n\
-GagBook is license under GPL v3+."
+GagBook is open source and licensed under GPL v3"
                 }
             }
 

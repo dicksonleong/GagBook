@@ -4,7 +4,7 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QDesktopServices>
-#include <QtDebug>
+#include <QDebug>
 
 QMLImageSaver::QMLImageSaver(QObject *parent) :
     QObject(parent)

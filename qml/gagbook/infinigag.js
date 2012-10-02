@@ -4,7 +4,7 @@
 .pragma library
 
 var INFINIGAG_URL = "http://liquid8002.untergrund.net/infinigag/"
-var USER_AGENT = "GagBook/0.0.5 (Nokia; Qt; MeeGo Harmattan)"
+var USER_AGENT = "GagBook/0.1 (Nokia; Qt; MeeGo Harmattan)"
 
 function getGAG(section, page, onSuccess, onFailure) {
     var sectionString = ""
@@ -32,31 +32,3 @@ function getGAG(section, page, onSuccess, onFailure) {
             }
     request.send()
 }
-
-//function getGAGComments(url){
-//    var fql = "\
-//SELECT fromid, text, time, likes, username, comments \ // username always returns "Anonymous User" :(
-//FROM comment \
-//WHERE object_id IN \
-//(SELECT comments_fbid \
-//FROM link_stat \
-//WHERE url ='" + url + "')\
-//ORDER BY likes DESC"
-
-//    var requestUrl = "https://graph.facebook.com/fql?q=" + encodeURIComponent(fql)
-//    var request = new XMLHttpRequest()
-//    request.open("GET", requestUrl)
-//    request.setRequestHeader("User-Agent", USER_AGENT)
-
-//    request.onreadystatechange = function (){
-//                if(request.readyState === XMLHttpRequest.DONE){
-//                    if(request.status === 200){
-//                        console.log("HEADER-----------\n" + request.getAllResponseHeaders())
-//                        console.log("RESOPONSE-----------\n" + request.responseText)
-//                    }
-//                    else console.log(request.status)
-//                }
-//            }
-//    request.send()
-//    console.log(requestUrl)
-//}

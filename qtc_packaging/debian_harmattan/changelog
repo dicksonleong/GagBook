@@ -1,3 +1,10 @@
+gagbook (0.1.0) unstable; urgency=low
+  * Beta release
+  * Improved title bar
+  * Rearranged the toolbar
+
+ -- Dickson <dicksonleong8@gmail.com>  Tue, 02 Oct 2012 13:38:08 +0800
+
 gagbook (0.0.5) unstable; urgency=low
   * Added image saving
 
