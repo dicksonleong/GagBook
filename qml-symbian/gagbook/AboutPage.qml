@@ -42,7 +42,7 @@ Page{
                     font.pixelSize: constant.fontSizeMedium
                     horizontalAlignment: Text.AlignHCenter
                     color: constant.colorMid
-                    text: "v0.1 BETA"
+                    text: "v0.1.1 BETA"
                 }
 
                 Text{

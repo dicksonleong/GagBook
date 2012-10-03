@@ -1,23 +1,22 @@
 GagBook
 ==========
 
-A [9GAG](http://9gag.com) app for MeeGo Harmattan, written using Qt/QML.
+A [9GAG](http://9gag.com) app for MeeGo Harmattan and Symbian^3, written using Qt/QML.
 
 Features:
 * View hot, trending or vote section
 * Swipe left/right to go to previous/next post
 * Pinch-to-zoom image
 * View Facebook comments for each post
-* Share post url using Harmattan's integrated sharing
 * Save image
+* Share post url using Harmattan's integrated sharing
 
 ToDo
 ---------
-* Splash screen
 * Better app launcher icon
+* Splash screen
 * Vote and comment (?)
-* Porting to Symbian (after final release)
-* Submit to Nokia Store (after final release)
+* Submit to Nokia Store
 
 Contact Me
 ---------
@@ -27,7 +26,7 @@ Contact Me
 License
 ---------
 
-GagBook - A 9GAG app for MeeGo Harmattan
+GagBook - A 9GAG app for MeeGo Harmattan and Symbian^3
 
 Copyright (C) 2012 Dickson Leong
 
