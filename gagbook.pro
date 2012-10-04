@@ -8,10 +8,10 @@ SOURCES += main.cpp \
 
 # Simulator
 simulator{
-    folder_01.source = qml-meego/gagbook
-    folder_01.target = qml-meego
-    folder_02.source = qml-symbian/gagbook
-    folder_02.target = qml-symbian
+    folder_01.source = qml/gagbook-meego
+    folder_01.target = qml
+    folder_02.source = qml/gagbook-symbian
+    folder_02.target = qml
     DEPLOYMENTFOLDERS = folder_01 folder_02
 
     HEADERS += shareui.h
@@ -20,8 +20,8 @@ simulator{
 
 # MeeGo Harmattan
 contains(MEEGO_EDITION,harmattan) {
-    folder_01.source = qml-meego/gagbook
-    folder_01.target = qml-meego
+    folder_01.source = qml/gagbook-meego
+    folder_01.target = qml
     DEPLOYMENTFOLDERS = folder_01
 
     HEADERS += shareui.h
@@ -33,12 +33,15 @@ contains(MEEGO_EDITION,harmattan) {
 
 # Symbian^3
 symbian{
-    folder_01.source = qml-symbian/gagbook
-    folder_01.target = qml-symbian
+    folder_01.source = qml/gagbook-symbian
+    folder_01.target = qml
     DEPLOYMENTFOLDERS = folder_01
 
+    # This is a protected Nokia UID and can't be self-signed. Change this to a unprotected UID
+    # and self-sign it to deploy to your device (unless your device is hacked)
+    TARGET.UID3 = 0x2005e90b
+
     CONFIG += qt-components
-    TARGET.UID3 = 0xE1C5FA03 # Development UID which can be self-signed
     TARGET.CAPABILITY += NetworkServices
     ICON = gagbook-symbian.svg
 
