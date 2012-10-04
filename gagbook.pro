@@ -16,6 +16,7 @@ simulator{
 
     HEADERS += shareui.h
     SOURCES += shareui.cpp
+    RESOURCES += resource.qrc
 }
 
 # MeeGo Harmattan
@@ -29,6 +30,10 @@ contains(MEEGO_EDITION,harmattan) {
 
     CONFIG += shareuiinterface-maemo-meegotouch share-ui-plugin share-ui-common mdatauri qdeclarative-boostable
     DEFINES += Q_OS_HARMATTAN
+
+    splash.files = splash/gagbook-splash-portrait.jpg splash/gagbook-splash-landscape.jpg
+    splash.path = /opt/gagbook/splash
+    INSTALLS += splash
 }
 
 # Symbian^3
@@ -44,6 +49,7 @@ symbian{
     CONFIG += qt-components
     TARGET.CAPABILITY += NetworkServices
     ICON = gagbook-symbian.svg
+    RESOURCES += resource.qrc
 
     vendorinfo += "%{\"Dickson\"}" ":\"Dickson\""
     my_deployment.pkg_prerules = vendorinfo
@@ -80,4 +86,3 @@ qtcAddDeployment()
     qtc_packaging/debian_harmattan/control \
     qtc_packaging/debian_harmattan/compat \
     qtc_packaging/debian_harmattan/changelog
-

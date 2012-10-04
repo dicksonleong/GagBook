@@ -4,7 +4,7 @@ Version=1.0
 Type=Application
 Terminal=false
 Name=GagBook
-Exec=/usr/bin/invoker --type=d -s /opt/gagbook/bin/gagbook
+Exec=/usr/bin/invoker --splash=/opt/gagbook/splash/gagbook-splash-portrait.jpg --splash-landscape=/opt/gagbook/splash/gagbook-splash-landscape.jpg --type=d -s /opt/gagbook/bin/gagbook
 Icon=/usr/share/icons/hicolor/80x80/apps/gagbook80.png
 X-Window-Icon=
 X-HildonDesk-ShowInToolbar=true

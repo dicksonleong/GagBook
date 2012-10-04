@@ -6,6 +6,11 @@
 #include "shareui.h"
 #endif
 
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
+#include <QSplashScreen>
+#include <QPixmap>
+#endif
+
 #include "qmlsettings.h"
 #include "qmlimagesaver.h"
 
@@ -16,6 +21,12 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app->setApplicationName("GagBook");
     app->setOrganizationName("GagBook");
     app->setApplicationVersion("0.1.1");
+
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
+    QSplashScreen *splash = new QSplashScreen(QPixmap(":/splash/gagbook-splash-symbian.jpg"));
+    splash->show();
+    splash->showMessage("Loading...", Qt::AlignHCenter | Qt::AlignBottom, Qt::white);
+#endif
 
     QmlApplicationViewer viewer;
 
@@ -30,6 +41,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QMLImageSaver imageSaver;
     viewer.rootContext()->setContextProperty("imageSaver", &imageSaver);
 
+    viewer.rootContext()->setContextProperty("appVersion", app->applicationVersion());
+
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 #if defined(Q_OS_HARMATTAN)
     viewer.setMainQmlFile(QLatin1String("qml/gagbook-meego/main.qml"));
@@ -39,6 +52,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     viewer.setMainQmlFile(QLatin1String("qml/gagbook-symbian/main.qml"));
 #endif
     viewer.showExpanded();
+
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
+    splash->finish(&viewer);
+    splash->deleteLater();
+#endif
 
     return app->exec();
 }
