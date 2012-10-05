@@ -5,9 +5,16 @@ Item{
     id: root
 
     property bool allowDelegateFlicking: gagImage.status === Image.Ready && gagImage.scale > pinchArea.minScale
+    property bool imageZoomed: gagImage.scale !== pinchArea.minScale
 
     function saveImage(){
         return imageSaver.save(gagImage, model.id)
+    }
+
+    function resetImageZoom(){
+        flickable.returnToBounds()
+        bounceBackAnimation.to = pinchArea.minScale
+        bounceBackAnimation.start()
     }
 
     height: ListView.view.height
@@ -19,7 +26,7 @@ Item{
         contentWidth: imageContainer.width
         contentHeight: imageContainer.height
         clip: true
-        interactive: allowDelegateFlicking
+        interactive: moving || allowDelegateFlicking
         onHeightChanged: if(gagImage.status == Image.Ready) gagImage.fitToScreen()
 
         Item {
@@ -113,18 +120,6 @@ Item{
         MouseArea{
             anchors.fill: parent
             onClicked: textContainer.state = textContainer.state ? "" : "hidden"
-            onDoubleClicked: {
-                flickable.returnToBounds()
-                if(gagImage.scale !== pinchArea.minScale) fitToScreenAnimation.start()
-            }
-
-            NumberAnimation{
-                id: fitToScreenAnimation
-                target: gagImage
-                duration: 250
-                property: "scale"
-                from: gagImage.scale; to: pinchArea.minScale
-            }
         }
     }
 

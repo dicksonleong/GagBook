@@ -27,7 +27,6 @@ QtObject{
     property int fontSizeXXLarge: platformStyle.fontSizeLarge + 4
 
     property int headerHeight: inPortrait ? 55 : 45
-    property int commentsBoxWidth: inPortrait ? 250 : 444
 
     property url devWebSite: "http://dickson-apps.blogspot.com"
     property url sourceRepoSite: "https://github.com/dicksonleong/GagBook"

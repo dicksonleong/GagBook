@@ -44,7 +44,10 @@ Page{
                     right: parent.right
                 }
                 checkedButton: settings.imageSize === 0 ? mediumImageSizeButton : largeImageSizeButton
-                onCheckedButtonChanged: settings.imageSize = (checkedButton === mediumImageSizeButton ? 0 : 1)
+                onCheckedButtonChanged: {
+                    if(settingsPage.status === PageStatus.Active)
+                        settings.imageSize = (checkedButton === mediumImageSizeButton ? 0 : 1)
+                }
 
                 Button{
                     id: mediumImageSizeButton

@@ -30,7 +30,7 @@ Page {
                 WebView.windowObjectName: "qml"
 
                 property string gagURL: commentsPage.gagURL
-                property int width: constant.commentsBoxWidth
+                property int width: webViewFlickable.width * 0.75
                 property bool whiteTheme: settings.whiteTheme
             }
 

@@ -5,7 +5,7 @@ A [9GAG](http://9gag.com) app for MeeGo Harmattan and Symbian^3, written using Q
 
 Features:
 * View hot, trending or vote section
-* Swipe left/right to go to previous/next post
+* Go to previous/next post by swiping left/right
 * Pinch-to-zoom image
 * View Facebook comments for each post
 * Save image
@@ -13,8 +13,8 @@ Features:
 
 ToDo
 ---------
+* Better comment section
 * Better app launcher icon
-* Splash screen
 * Vote and comment (?)
 * Submit to Nokia Store
 

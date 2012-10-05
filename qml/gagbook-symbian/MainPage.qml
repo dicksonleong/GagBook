@@ -12,9 +12,11 @@ Page {
 
     tools: ToolBarLayout{
         ToolButton{
+            property bool __canResetZoom: gagListView.count > 0 && gagListView.currentItem.imageZoomed
             platformInverted: settings.whiteTheme
-            iconSource: "Images/close_stop" + (platformInverted ? "_inverted.svg" : ".svg")
-            onClicked: Qt.quit()
+            iconSource: __canResetZoom ? "toolbar-back"
+                                       : ("Images/close_stop" + (platformInverted ? "_inverted.svg" : ".svg"))
+            onClicked: __canResetZoom ? gagListView.currentItem.resetImageZoom() : Qt.quit()
         }
         ToolButton{
             platformInverted: settings.whiteTheme
@@ -83,7 +85,7 @@ Page {
         snapMode: ListView.SnapOneItem
         highlightRangeMode: ListView.StrictlyEnforceRange
         delegate: GagDelegate{}
-        interactive: count === 0 || !currentItem.allowDelegateFlicking || moving
+        interactive: moving || count === 0 || !currentItem.allowDelegateFlicking
         onAtXEndChanged: if(atXEnd && count > 0 && !pageHeader.busy) Script.refresh(false)
     }
 

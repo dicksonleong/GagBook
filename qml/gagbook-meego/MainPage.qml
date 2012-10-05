@@ -12,8 +12,9 @@ Page {
 
     tools: ToolBarLayout{
         ToolIcon{
-            platformIconId: "toolbar-back-dimmed"
-            enabled: false
+            platformIconId: "toolbar-back" + (enabled ? "" : "-dimmed")
+            enabled: gagListView.count > 0 && gagListView.currentItem.imageZoomed
+            onClicked: gagListView.currentItem.resetImageZoom()
         }
         ToolIcon{
             platformIconId: "toolbar-new-message" + (enabled ? "" : "-dimmed")
@@ -80,7 +81,7 @@ Page {
         snapMode: ListView.SnapOneItem
         highlightRangeMode: ListView.StrictlyEnforceRange
         delegate: GagDelegate{}
-        interactive: count === 0 || !currentItem.allowDelegateFlicking || moving
+        interactive: moving || count === 0 || !currentItem.allowDelegateFlicking
         onAtXEndChanged: if(atXEnd && count > 0 && !pageHeader.busy) Script.refresh(false)
     }
 
