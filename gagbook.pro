@@ -1,10 +1,10 @@
 HEADERS += \
-    qmlsettings.h \
-    qmlimagesaver.h
+    src/qmlsettings.h \
+    src/qmlimagesaver.h
 
 SOURCES += main.cpp \
-    qmlsettings.cpp \
-    qmlimagesaver.cpp
+    src/qmlsettings.cpp \
+    src/qmlimagesaver.cpp
 
 # Simulator
 simulator{
@@ -14,8 +14,8 @@ simulator{
     folder_02.target = qml
     DEPLOYMENTFOLDERS = folder_01 folder_02
 
-    HEADERS += shareui.h
-    SOURCES += shareui.cpp
+    HEADERS += src/shareui.h
+    SOURCES += src/shareui.cpp
     RESOURCES += resource.qrc
 }
 
@@ -25,8 +25,8 @@ contains(MEEGO_EDITION,harmattan) {
     folder_01.target = qml
     DEPLOYMENTFOLDERS = folder_01
 
-    HEADERS += shareui.h
-    SOURCES += shareui.cpp
+    HEADERS += src/shareui.h
+    SOURCES += src/shareui.cpp
 
     CONFIG += shareuiinterface-maemo-meegotouch share-ui-plugin share-ui-common mdatauri qdeclarative-boostable
     DEFINES += Q_OS_HARMATTAN

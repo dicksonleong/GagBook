@@ -28,10 +28,10 @@ QString QMLImageSaver::save(QDeclarativeItem *imageObject, const int id)
     imageObject->paint(&painter, &styleOption, 0);
     bool saved = img.save(savingFilePath, "JPG");
 
-    if(saved)
-        return savingFilePath;
-    else{
+    if(!saved){
         qDebug() << "QMLImageSaver::save Failed to save image to" << savingFilePath ;
         return "";
     }
+
+    return savingFilePath;
 }

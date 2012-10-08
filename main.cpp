@@ -3,7 +3,7 @@
 #include "qmlapplicationviewer.h"
 
 #if defined(Q_OS_HARMATTAN) || defined(Q_WS_SIMULATOR)
-#include "shareui.h"
+#include "src/shareui.h"
 #endif
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
@@ -11,8 +11,8 @@
 #include <QPixmap>
 #endif
 
-#include "qmlsettings.h"
-#include "qmlimagesaver.h"
+#include "src/qmlsettings.h"
+#include "src/qmlimagesaver.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
