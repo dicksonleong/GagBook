@@ -1,3 +1,10 @@
+gagbook (0.2.0) stable; urgency=low
+  * Back button in toolbar can used to reset image zoom
+  * Removed double click gesture for reset zoom to avoid conflict
+  * Submission to Nokia Store
+
+ -- Dickson <dicksonleong8@gmail.com>  Mon, 08 Oct 2012 17:38:57 +0800
+
 gagbook (0.1.1) unstable; urgency=low
   * Minor coding improvement for porting to Symbian
   * Added splash screen

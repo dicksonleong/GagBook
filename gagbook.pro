@@ -56,7 +56,7 @@ symbian{
     DEPLOYMENT += my_deployment
     DEPLOYMENT.display_name += GagBook
 
-    VERSION = 0.1.1
+    VERSION = 0.2.0
 }
 
 # Additional import path used to resolve QML modules in Creator's code model

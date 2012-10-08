@@ -17,7 +17,6 @@ ToDo
 * Better comment section
 * Better app launcher icon
 * Vote and comment (?)
-* Submit to Nokia Store
 
 Contact Me
 ---------

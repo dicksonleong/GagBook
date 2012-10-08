@@ -21,7 +21,7 @@
 .pragma library
 
 var INFINIGAG_URL = "http://liquid8002.untergrund.net/infinigag/"
-var USER_AGENT = "GagBook/0.1.1 (Nokia; Qt; Symbian)"
+var USER_AGENT = "GagBook/0.2 (Nokia; Qt; Symbian)"
 
 function getGAG(section, page, onSuccess, onFailure) {
     var sectionString = ""
