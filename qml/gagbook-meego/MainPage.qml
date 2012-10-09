@@ -100,7 +100,9 @@ Page {
         highlightRangeMode: ListView.StrictlyEnforceRange
         delegate: GagDelegate{}
         interactive: moving || count === 0 || !currentItem.allowDelegateFlicking
+
         onAtXEndChanged: if(atXEnd && count > 0 && !pageHeader.busy) Script.refresh(false)
+        onCurrentItemChanged: if(currentItem) currentItem.loadImage = true
     }
 
     PageHeader{

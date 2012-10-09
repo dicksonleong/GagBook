@@ -67,7 +67,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 #elif defined(Q_OS_SYMBIAN)
     viewer.setMainQmlFile(QLatin1String("qml/gagbook-symbian/main.qml"));
 #else // Simulator. Change this value to run symbian or meego version on simulator
-    viewer.setMainQmlFile(QLatin1String("qml/gagbook-symbian/main.qml"));
+    viewer.setMainQmlFile(QLatin1String("qml/gagbook-meego/main.qml"));
 #endif
     viewer.showExpanded();
 

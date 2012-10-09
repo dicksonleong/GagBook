@@ -22,6 +22,9 @@ import com.nokia.meego 1.0
 Item{
     id: root
 
+    property bool loadImage: false
+
+    // Read-only
     property bool allowDelegateFlicking: gagImage.status === Image.Ready && gagImage.scale > pinchArea.minScale
     property bool imageZoomed: gagImage.scale !== pinchArea.minScale
 
@@ -57,18 +60,18 @@ Item{
 
                 property real prevScale
 
-                anchors.centerIn: parent
-                source: settings.imageSize === 0 ? model.image.small : model.image.big
-                smooth: !flickable.moving
-                sourceSize.height: 2000 // Maximum image height
-                cache: false
-                fillMode: Image.PreserveAspectFit
-
                 function fitToScreen(){
                     scale = Math.min(flickable.width / width, flickable.height / height, 1)
                     pinchArea.minScale = scale
                     prevScale = scale
                 }
+
+                anchors.centerIn: parent
+                smooth: !flickable.moving
+                sourceSize.height: 2000 // Maximum image height
+                cache: false
+                fillMode: Image.PreserveAspectFit
+                source: root.loadImage ? (settings.imageSize === 0 ? model.image.small : model.image.big) : ""
 
                 onScaleChanged: {
                     if ((width * scale) > flickable.width) {
@@ -97,6 +100,8 @@ Item{
                     from: 0; to: 1
                     easing.type: Easing.InOutQuad
                 }
+
+                Component.onCompleted: if(root.ListView.isCurrentItem) root.loadImage = true
             }
         }
 
