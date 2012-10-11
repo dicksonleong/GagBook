@@ -63,11 +63,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 #if defined(Q_OS_HARMATTAN)
-    viewer.setMainQmlFile(QLatin1String("qml/gagbook-meego/main.qml"));
+    viewer.setMainQmlFile(QLatin1String("qml/gagbook-harmattan/main.qml"));
 #elif defined(Q_OS_SYMBIAN)
     viewer.setMainQmlFile(QLatin1String("qml/gagbook-symbian/main.qml"));
-#else // Simulator. Change this value to run symbian or meego version on simulator
-    viewer.setMainQmlFile(QLatin1String("qml/gagbook-meego/main.qml"));
+#else // Simulator. Change this value to run Symbian or Harmattan version on simulator
+    viewer.setMainQmlFile(QLatin1String("qml/gagbook-harmattan/main.qml"));
 #endif
     viewer.showExpanded();
 

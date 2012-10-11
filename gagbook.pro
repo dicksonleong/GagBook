@@ -8,7 +8,7 @@ SOURCES += main.cpp \
 
 # Simulator
 simulator{
-    folder_01.source = qml/gagbook-meego
+    folder_01.source = qml/gagbook-harmattan
     folder_01.target = qml
     folder_02.source = qml/gagbook-symbian
     folder_02.target = qml
@@ -21,7 +21,7 @@ simulator{
 
 # MeeGo Harmattan
 contains(MEEGO_EDITION,harmattan) {
-    folder_01.source = qml/gagbook-meego
+    folder_01.source = qml/gagbook-harmattan
     folder_01.target = qml
     DEPLOYMENTFOLDERS = folder_01
 
