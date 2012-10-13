@@ -42,9 +42,8 @@ symbian{
     folder_01.target = qml
     DEPLOYMENTFOLDERS = folder_01
 
-    # This is a protected Nokia UID and can't be self-signed. Change this to a unprotected UID
-    # and self-sign it to deploy to your device (unless your device is hacked)
-    TARGET.UID3 = 0x2005e90b
+    # This is a self-signed UID
+    TARGET.UID3 = 0xA00158E4
 
     CONFIG += qt-components
     TARGET.CAPABILITY += NetworkServices
@@ -56,7 +55,7 @@ symbian{
     DEPLOYMENT += my_deployment
     DEPLOYMENT.display_name += GagBook
 
-    VERSION = 0.2.0
+    VERSION = 0.2.1
 }
 
 # Additional import path used to resolve QML modules in Creator's code model
