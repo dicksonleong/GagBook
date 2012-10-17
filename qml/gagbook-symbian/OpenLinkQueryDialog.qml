@@ -20,9 +20,10 @@ import QtQuick 1.1
 import com.nokia.symbian 1.1
 
 QueryDialog{
-    id: openLinkQueryDialog
+    id: root
 
     property string link: ""
+    property bool __isClosing: false
 
     platformInverted: settings.whiteTheme
     titleIcon: "Images/internet.svg"
@@ -36,5 +37,14 @@ QueryDialog{
         infoBanner.alert("Launching web browser...")
     }
 
-    Component.onCompleted: open()
+    Component.onCompleted: {
+        console.log("Dialog contructed:", root)
+        open()
+    }
+    Component.onDestruction: console.log("Dialog destructing:", root)
+
+    onStatusChanged: {
+        if(status === DialogStatus.Closing) __isClosing = true
+        else if(status === DialogStatus.Closed && __isClosing) root.destroy(250)
+    }
 }

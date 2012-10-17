@@ -16,45 +16,26 @@
     along with this program. If not, see http://www.gnu.org/licenses/.
 */
 
-function openSectionDialog(){
-    if(sectionDialog) sectionDialog.open()
-    else{
-        var comp = Qt.createComponent("SectionDialog.qml")
-        sectionDialog = comp.createObject(mainPage)
-        if(!sectionDialog) {
-            console.log("Error creating object: " + comp.errorString())
-            return
-        }
-        sectionDialog.accepted.connect(refresh)
-        sectionDialog.statusChanged.connect(destroyOpenSectionDialog)
+var __sectionDialogComponent = null
+var __openLinkQueryDialogComponent = null
+
+function createSectionDialog(){
+    if(!__sectionDialogComponent) __sectionDialogComponent = Qt.createComponent("SectionDialog.qml")
+    var dialog = __sectionDialogComponent.createObject(mainPage)
+    if(!dialog){
+        console.log("Error creating object: " + __sectionDialogComponent.errorString())
+        return
     }
+    dialog.accepted.connect(refresh)
 }
 
-function openOpenLinkQueryDialog(link){
-    if(openLinkQueryDialog) {
-        openLinkQueryDialog.link = link
-        openLinkQueryDialog.open()
-    }
-    else{
-        var comp = Qt.createComponent("OpenLinkQueryDialog.qml")
-        openLinkQueryDialog = comp.createObject(mainPage, { link: link })
-        if(!openLinkQueryDialog){
-            console.log("Error creating object: " + comp.errorString())
-            return
-        }
-        openLinkQueryDialog.statusChanged.connect(destroyOpenLinkQueryDialog)
-    }
-}
 
-function destroyOpenSectionDialog(){
-    if(sectionDialog.status === DialogStatus.Closed){
-        sectionDialog.destroy()
-    }
-}
-
-function destroyOpenLinkQueryDialog(){
-    if(openLinkQueryDialog.status === DialogStatus.Closed){
-        openLinkQueryDialog.destroy()
+function createOpenLinkQueryDialog(link){
+    if(!__openLinkQueryDialogComponent) __openLinkQueryDialogComponent = Qt.createComponent("OpenLinkQueryDialog.qml")
+    var dialog = __openLinkQueryDialogComponent.createObject(mainPage, { link: link })
+    if(!dialog){
+        console.log("Error creating object: " + __openLinkQueryDialogComponent.errorString())
+        return
     }
 }
 

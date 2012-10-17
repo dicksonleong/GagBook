@@ -10,13 +10,14 @@ Features:
 * Pinch-to-zoom image
 * View Facebook comments for each post
 * Save image
-* Share post url using Harmattan's integrated sharing
+* Share post using Harmattan's integrated sharing
 
 ToDo
 ---------
 * Better comment section
 * Better app launcher icon
 * Vote and comment (?)
+* OAuth-based Facebook and Twitter sharing
 
 Contact Me
 ---------

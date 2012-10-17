@@ -24,8 +24,6 @@ import "MainPage.js" as Script
 Page {
     id: mainPage
 
-    property Item sectionDialog: null
-    property Item openLinkQueryDialog: null
     property int nextPageId: 0
 
     tools: ToolBarLayout{
@@ -47,7 +45,7 @@ Page {
             iconSource: "image://theme/icon-l-browser-main-view"
             enabled: gagListView.count > 0
             opacity: enabled ? 1 : 0.25
-            onClicked: Script.openOpenLinkQueryDialog(gagListView.model.get(gagListView.currentIndex).url)
+            onClicked: Script.createOpenLinkQueryDialog(gagListView.model.get(gagListView.currentIndex).url)
         }
         ToolIcon{
             platformIconId: "toolbar-share" + (enabled ? "" : "-dimmed")
@@ -116,7 +114,7 @@ Page {
             }
         }
         comboboxVisible: true
-        onClicked: Script.openSectionDialog()
+        onClicked: Script.createSectionDialog()
     }
 
     Component.onCompleted: Script.refresh()

@@ -24,8 +24,6 @@ import "MainPage.js" as Script
 Page {
     id: mainPage
 
-    property Item sectionDialog: null
-    property Item openLinkQueryDialog: null
     property int nextPageId: 0
 
     tools: ToolBarLayout{
@@ -51,7 +49,7 @@ Page {
             iconSource: "Images/internet" + (platformInverted ? "_inverted.svg" : ".svg")
             enabled: gagListView.count > 0
             opacity: enabled ? 1 : 0.25
-            onClicked: Script.openOpenLinkQueryDialog(gagListView.model.get(gagListView.currentIndex).url)
+            onClicked: Script.createOpenLinkQueryDialog(gagListView.model.get(gagListView.currentIndex).url)
         }
         ToolButton{
             platformInverted: settings.whiteTheme
@@ -120,7 +118,7 @@ Page {
             }
         }
         comboboxVisible: true
-        onClicked: Script.openSectionDialog()
+        onClicked: Script.createSectionDialog()
     }
 
     Component.onCompleted: Script.refresh()

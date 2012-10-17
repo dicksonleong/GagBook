@@ -20,7 +20,9 @@ import QtQuick 1.1
 import com.nokia.meego 1.0
 
 SelectionDialog{
-    id: sectionDialog
+    id: root
+
+    property bool __isClosing: false
 
     titleText: "Section"
     selectedIndex: settings.selectedSection
@@ -31,5 +33,14 @@ SelectionDialog{
     }
     onSelectedIndexChanged: settings.selectedSection = selectedIndex
 
-    Component.onCompleted: open()
+    Component.onCompleted: {
+        console.log("Dialog contructed:", root)
+        open()
+    }
+    Component.onDestruction: console.log("Dialog destructing:", root)
+
+    onStatusChanged: {
+        if(status === DialogStatus.Closing) __isClosing = true
+        else if(status === DialogStatus.Closed && __isClosing) root.destroy(250)
+    }
 }
