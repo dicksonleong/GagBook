@@ -69,8 +69,9 @@ Page{
                     color: constant.colorLight
                     wrapMode: Text.Wrap
                     textFormat: Text.PlainText
-                    text: "GagBook is a (read-only) 9GAG app for your smartphones, allow you to enjoy 9GAGing in your \
-smartphone with a simple swipe UI. GagBook is using InfiniGAG API but not affiliated with 9GAG or InfiniGAG. \
+                    text: "GagBook is a 9GAG app that allow you to view the post from 9GAG \
+with a simple and native swipe-based UI. \
+GagBook is using InfiniGAG API but not affiliated with 9GAG or InfiniGAG. \
 This app may involve transmitting huge amount of data when downloading images.\n\n\
 Copyright © 2012 Dickson\n\
 GagBook is open source and licensed under LGPL v3"
