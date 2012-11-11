@@ -35,47 +35,18 @@ Page{
         height: childrenRect.height
         spacing: constant.paddingMedium
 
-        SettingSwitch{
+        SettingButtonRow{
             text: "White Theme"
-            checked: settings.whiteTheme
-            onCheckedChanged: settings.whiteTheme = checked
+            checkedButtonIndex: settings.whiteTheme ? 1 : 0
+            buttonsText: ["Dark", "White"]
+            onButtonClicked: settings.whiteTheme = index === 1
         }
 
-        Item{
-            width: parent.width
-            height: imageSizeText.paintedHeight + imageSizeButtonRow.height + imageSizeButtonRow.anchors.topMargin
-
-            Text{
-                id: imageSizeText
-                anchors{ left: parent.left; top: parent.top; leftMargin: constant.paddingMedium }
-                font.pixelSize: constant.fontSizeMedium
-                color: constant.colorLight
-                text: "Image Size"
-            }
-
-            ButtonRow{
-                id: imageSizeButtonRow
-                anchors{
-                    top: imageSizeText.bottom
-                    margins: constant.paddingMedium
-                    left: parent.left
-                    right: parent.right
-                }
-                checkedButton: settings.imageSize === 0 ? mediumImageSizeButton : largeImageSizeButton
-                onCheckedButtonChanged: {
-                    if(settingsPage.status === PageStatus.Active)
-                        settings.imageSize = (checkedButton === mediumImageSizeButton ? 0 : 1)
-                }
-
-                Button{
-                    id: mediumImageSizeButton
-                    text: "Medium"
-                }
-                Button{
-                    id: largeImageSizeButton
-                    text: "Large"
-                }
-            }
+        SettingButtonRow{
+            text: "Image Size"
+            checkedButtonIndex: settings.imageSize
+            buttonsText: ["Medium", "Large"]
+            onButtonClicked: settings.imageSize = index
         }
     }
 

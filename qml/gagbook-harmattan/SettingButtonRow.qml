@@ -23,23 +23,42 @@ Item{
     id: root
 
     property string text: ""
-    property alias checked: switchItem.checked
+    property variant buttonsText: []
+    property int checkedButtonIndex: 0
+
+    signal buttonClicked(int index)
+
 
     width: parent.width
-    height: switchItem.height + 2 * switchItem.anchors.topMargin
+    height: settingText.paintedHeight + buttonRow.height + buttonRow.anchors.topMargin
 
     Text{
-        anchors{ left: parent.left; right: switchItem.left; verticalCenter: parent.verticalCenter }
-        anchors.margins: constant.paddingMedium
-        color: constant.colorLight
+        id: settingText
+        anchors{ left: parent.left; top: parent.top; leftMargin: constant.paddingMedium }
         font.pixelSize: constant.fontSizeMedium
-        wrapMode: Text.Wrap
+        color: constant.colorLight
         text: root.text
     }
 
-    Switch{
-        id: switchItem
-        anchors{ right: parent.right; top: parent.top; margins: constant.paddingXLarge }
-        enabled: root.enabled
+    ButtonRow{
+        id: buttonRow
+        anchors{
+            top: settingText.bottom
+            margins: constant.paddingMedium
+            left: parent.left
+            right: parent.right
+        }
+        checkedButton: buttonRepeater.itemAt(root.checkedButtonIndex)
+        onVisibleChanged: checkedButton = buttonRepeater.itemAt(root.checkedButtonIndex)
+
+        Repeater{
+            id: buttonRepeater
+            model: root.buttonsText
+
+            Button{
+                text: modelData
+                onClicked: root.buttonClicked(index)
+            }
+        }
     }
 }
