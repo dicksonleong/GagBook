@@ -22,7 +22,6 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QDesktopServices>
-#include <QDebug>
 
 QMLImageSaver::QMLImageSaver(QObject *parent) :
     QObject(parent)
@@ -33,9 +32,8 @@ QString QMLImageSaver::save(QDeclarativeItem *imageObject, const int id)
 {
     QString fileName = "gagbook_" + QString::number(id) + ".jpg";
 
-    // NOTE: QDesktopServices::storageLocation(QDesktopServices::PicturesLocation)
-    // may return /home/user/ (?) if the tracker is screwed up in the OS. (Tracker bug)
-    // May need to hardcode the path /home/user/MyDocs/Picture if this bug is too common
+    // NOTE: QDesktopServices::storageLocation(QDesktopServices::PicturesLocation) in Harmattan
+    // may return /home/user/ (?) due to a bug in the tracker.
     // If you have such problem, check the file /home/user/.config/user-dirs.dirs
     QString savingFilePath = QDesktopServices::storageLocation(QDesktopServices::PicturesLocation) + "/" + fileName;
 
@@ -47,7 +45,7 @@ QString QMLImageSaver::save(QDeclarativeItem *imageObject, const int id)
     bool saved = img.save(savingFilePath, "JPG");
 
     if(!saved){
-        qDebug() << "QMLImageSaver::save Failed to save image to" << savingFilePath ;
+        qWarning("QMLImageSaver::save: Unable to save image to %s", qPrintable(savingFilePath));
         return "";
     }
 
