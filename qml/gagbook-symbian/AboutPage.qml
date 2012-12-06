@@ -60,7 +60,7 @@ Page{
                     font.pixelSize: constant.fontSizeMedium
                     horizontalAlignment: Text.AlignHCenter
                     color: constant.colorMid
-                    text: "v" + appVersion
+                    text: "v" + APP_VERSION
                 }
 
                 Text{

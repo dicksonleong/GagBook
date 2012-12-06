@@ -18,10 +18,8 @@
 
 //  This app use InfiniGAG API <http://infinigag.com/api/>
 
-.pragma library
-
 var INFINIGAG_URL = "http://infinigag.appspot.com/"
-var USER_AGENT = "GagBook/0.2.2 (Nokia; Qt; MeeGo Harmattan)"
+var USER_AGENT = "GagBook/" + APP_VERSION + " (Nokia; Qt; MeeGo/1.2; Harmattan)"
 
 function getGAG(section, page, onSuccess, onFailure) {
     var sectionString = ""
@@ -39,13 +37,13 @@ function getGAG(section, page, onSuccess, onFailure) {
     request.setRequestHeader("User-Agent", USER_AGENT)
 
     request.onreadystatechange = function(){
-                if(request.readyState === XMLHttpRequest.DONE){
-                    if(request.status === 200){
-                        if(request.responseText) onSuccess(JSON.parse(request.responseText))
-                        else onFailure(-1, "Empty response")
-                    }
-                    else onFailure(request.status, request.statusText)
-                }
+        if(request.readyState === XMLHttpRequest.DONE){
+            if(request.status === 200){
+                if(request.responseText) onSuccess(JSON.parse(request.responseText))
+                else onFailure(-1, "Empty response")
             }
+            else onFailure(request.status, request.statusText)
+        }
+    }
     request.send()
 }

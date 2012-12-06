@@ -37,7 +37,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     app->setApplicationName("GagBook");
     app->setOrganizationName("GagBook");
-    app->setApplicationVersion("0.2.2");
+    app->setApplicationVersion(APP_VERSION);
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
     QSplashScreen *splash = new QSplashScreen(QPixmap(":/splash/gagbook-splash-symbian.jpg"));
@@ -55,7 +55,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QMLUtils qmlUtils;
     viewer.rootContext()->setContextProperty("QMLUtils", &qmlUtils);
 
-    viewer.rootContext()->setContextProperty("appVersion", app->applicationVersion());
+    viewer.rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
 
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 #if defined(Q_OS_HARMATTAN)

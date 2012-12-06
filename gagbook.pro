@@ -1,3 +1,9 @@
+TEMPLATE = app
+TARGET = gagbook
+
+VERSION = 0.2.2
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+
 HEADERS += \
     src/qmlutils.h
 
@@ -30,7 +36,7 @@ contains(MEEGO_EDITION,harmattan) {
     DEFINES += Q_OS_HARMATTAN
 
     splash.files = splash/gagbook-splash-portrait.jpg splash/gagbook-splash-landscape.jpg
-    splash.path = /opt/gagbook/splash
+    splash.path = /opt/$${TARGET}/splash
     INSTALLS += splash
 }
 
@@ -53,28 +59,15 @@ symbian{
     DEPLOYMENT += my_deployment
     DEPLOYMENT.display_name += GagBook
 
-    VERSION = 0.2.2
+    # Symbian have a different syntax
+    DEFINES -= APP_VERSION=\\\"$$VERSION\\\"
+    DEFINES += APP_VERSION=\"$$VERSION\"
 }
-
-# Additional import path used to resolve QML modules in Creator's code model
-QML_IMPORT_PATH =
-
-# Smart Installer package's UID
-# This UID is from the protected range and therefore the package will
-# fail to install if self-signed. By default qmake uses the unprotected
-# range value if unprotected UID is defined for the application and
-# 0x2002CCCF value if protected UID is given to the application
-#symbian:DEPLOYMENT.installer_header = 0x2002CCCF
-
-# If your application uses the Qt Mobility libraries, uncomment the following
-# lines and add the respective components to the MOBILITY variable.
-# CONFIG += mobility
-# MOBILITY +=
-
-# Please do not modify the following two lines. Required for deployment.
-include(qmlapplicationviewer/qmlapplicationviewer.pri)
-qtcAddDeployment()
 
 OTHER_FILES += qtc_packaging/debian_harmattan/* \
     gagbook_harmattan.desktop \
     README.md
+
+# Please do not modify the following two lines. Required for deployment.
+include(qmlapplicationviewer/qmlapplicationviewer.pri)
+qtcAddDeployment()
