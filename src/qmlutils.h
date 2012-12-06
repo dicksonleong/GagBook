@@ -16,19 +16,30 @@
     along with this program. If not, see http://www.gnu.org/licenses/.
 */
 
-#include "qmlsettings.h"
+#ifndef QMLUTILS_H
+#define QMLUTILS_H
 
-QMLSettings::QMLSettings(QObject *parent) :
-    QObject(parent), settings(new QSettings(this))
-{
-}
+#include <QtCore/QObject>
+#include <QtCore/QVariant>
 
-QVariant QMLSettings::read(const QString &key, const QVariant &defaultValue)
-{
-    return settings->value(key, defaultValue);
-}
+class QDeclarativeItem;
+class QSettings;
 
-void QMLSettings::store(const QString &key, const QVariant &value)
+class QMLUtils : public QObject
 {
-    settings->setValue(key, value);
-}
+    Q_OBJECT
+public:
+    explicit QMLUtils(QObject *parent = 0);
+
+    Q_INVOKABLE QString saveImage(QDeclarativeItem *imagObject, const int id);
+
+    Q_INVOKABLE QVariant getSetting(const QString &key, const QVariant &defaultValue = QVariant());
+    Q_INVOKABLE void setSetting(const QString &key, const QVariant &value);
+
+private:
+    Q_DISABLE_COPY(QMLUtils)
+
+    QSettings *settings;
+};
+
+#endif // QMLUTILS_H

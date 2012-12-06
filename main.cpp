@@ -17,20 +17,19 @@
 */
 
 #include <QtGui/QApplication>
-#include <QDeclarativeContext>
+#include <QtDeclarative/QDeclarativeContext>
 #include "qmlapplicationviewer.h"
+
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
+#include <QtGui/QSplashScreen>
+#include <QtGui/QPixmap>
+#endif
+
+#include "src/qmlutils.h"
 
 #if defined(Q_OS_HARMATTAN) || defined(Q_WS_SIMULATOR)
 #include "src/shareui.h"
 #endif
-
-#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
-#include <QSplashScreen>
-#include <QPixmap>
-#endif
-
-#include "src/qmlsettings.h"
-#include "src/qmlimagesaver.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -53,11 +52,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     viewer.rootContext()->setContextProperty("shareUI", &shareUI);
 #endif
 
-    QMLSettings settingsStorage;
-    viewer.rootContext()->setContextProperty("settingsStorage", &settingsStorage);
-
-    QMLImageSaver imageSaver;
-    viewer.rootContext()->setContextProperty("imageSaver", &imageSaver);
+    QMLUtils qmlUtils;
+    viewer.rootContext()->setContextProperty("QMLUtils", &qmlUtils);
 
     viewer.rootContext()->setContextProperty("appVersion", app->applicationVersion());
 

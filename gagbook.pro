@@ -1,10 +1,8 @@
 HEADERS += \
-    src/qmlsettings.h \
-    src/qmlimagesaver.h
+    src/qmlutils.h
 
 SOURCES += main.cpp \
-    src/qmlsettings.cpp \
-    src/qmlimagesaver.cpp
+    src/qmlutils.cpp
 
 # Simulator
 simulator{

@@ -29,7 +29,7 @@ Item{
     property bool imageZoomed: gagImage.scale !== pinchArea.minScale
 
     function saveImage(){
-        return imageSaver.save(gagImage, model.id)
+        return QMLUtils.saveImage(gagImage, model.id)
     }
 
     function resetImageZoom(){
