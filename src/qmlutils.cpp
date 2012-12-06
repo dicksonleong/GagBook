@@ -18,8 +18,10 @@
 
 #include "qmlutils.h"
 
-#include <QtDeclarative/QDeclarativeItem>
+#include <QtGui/QApplication>
+#include <QtGui/QClipboard>
 #include <QtCore/QSettings>
+#include <QtDeclarative/QDeclarativeItem>
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
 #include <QtGui/QStyleOptionGraphicsItem>
@@ -33,8 +35,14 @@ namespace {
 }
 
 QMLUtils::QMLUtils(QObject *parent) :
-    QObject(parent), settings(new QSettings(this))
+    QObject(parent), clipboard(QApplication::clipboard()), settings(new QSettings(this))
 {
+}
+
+void QMLUtils::copyToClipboard(const QString &text)
+{
+    clipboard->setText(text, QClipboard::Clipboard);
+    clipboard->setText(text, QClipboard::Selection);
 }
 
 QString QMLUtils::saveImage(QDeclarativeItem *imageObject, const int id)

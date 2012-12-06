@@ -49,7 +49,7 @@ Page {
             iconSource: "Images/internet" + (platformInverted ? "_inverted.svg" : ".svg")
             enabled: gagListView.count > 0
             opacity: enabled ? 1 : 0.25
-            onClicked: Script.createOpenLinkQueryDialog(gagListView.model.get(gagListView.currentIndex).url)
+            onClicked: Script.createOpenLinkDialog(gagListView.model.get(gagListView.currentIndex).url)
         }
         ToolButton{
             platformInverted: settings.whiteTheme

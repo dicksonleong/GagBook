@@ -23,6 +23,7 @@
 #include <QtCore/QVariant>
 
 class QDeclarativeItem;
+class QClipboard;
 class QSettings;
 
 class QMLUtils : public QObject
@@ -30,6 +31,8 @@ class QMLUtils : public QObject
     Q_OBJECT
 public:
     explicit QMLUtils(QObject *parent = 0);
+
+    Q_INVOKABLE void copyToClipboard(const QString &text);
 
     Q_INVOKABLE QString saveImage(QDeclarativeItem *imagObject, const int id);
 
@@ -39,6 +42,7 @@ public:
 private:
     Q_DISABLE_COPY(QMLUtils)
 
+    QClipboard *clipboard;
     QSettings *settings;
 };
 

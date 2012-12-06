@@ -19,24 +19,47 @@
 import QtQuick 1.1
 import com.nokia.meego 1.0
 
-QueryDialog{
+ContextMenu {
     id: root
 
-    property string link: ""
+    property string link
+
     property bool __isClosing: false
 
-    icon: "image://theme/icon-l-browser"
-    titleText: "Open Link"
-    message: "Do you want to open the following link in web browser?\n\n" + link
-    acceptButtonText: "Yes"
-    rejectButtonText: "No"
-
-    onAccepted: {
-        Qt.openUrlExternally(link)
-        infoBanner.alert("Launching web browser...")
+    platformTitle: Text{
+        anchors{ left: parent.left; right: parent.right }
+        horizontalAlignment: Text.AlignHCenter
+        text: link
+        font.italic: true
+        font.pixelSize: constant.fontSizeMedium
+        color: constant.colorLight
+        elide: Text.ElideRight
+        maximumLineCount: 3
+        wrapMode: Text.WrapAnywhere
     }
 
-    Component.onCompleted: open()
+    MenuLayout{
+        MenuItem{
+            text: "Open link in web browser"
+            onClicked: {
+                Qt.openUrlExternally(link)
+                infoBanner.alert("Launching web browser...")
+            }
+        }
+        MenuItem{
+            text: "Copy link"
+            onClicked: {
+                QMLUtils.copyToClipboard(link)
+                infoBanner.alert("Link copied to clipboard")
+            }
+        }
+    }
+
+    Component.onCompleted: {
+        console.log("Dialog created:", root)
+        open()
+    }
+    Component.onDestruction: console.log("Dialog destructing:", root)
 
     onStatusChanged: {
         if(status === DialogStatus.Closing) __isClosing = true

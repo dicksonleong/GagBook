@@ -45,7 +45,7 @@ Page {
             iconSource: "image://theme/icon-l-browser-main-view"
             enabled: gagListView.count > 0
             opacity: enabled ? 1 : 0.25
-            onClicked: Script.createOpenLinkQueryDialog(gagListView.model.get(gagListView.currentIndex).url)
+            onClicked: Script.createOpenLinkDialog(gagListView.model.get(gagListView.currentIndex).url)
         }
         ToolIcon{
             platformIconId: "toolbar-share" + (enabled ? "" : "-dimmed")
