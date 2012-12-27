@@ -18,7 +18,7 @@
 
 //  This app use InfiniGAG API <http://infinigag.com/api/>
 
-var INFINIGAG_URL = "http://infinigag.appspot.com/"
+var INFINIGAG_URL = "http://infinigag.com/api.json"
 var USER_AGENT = "GagBook/" + APP_VERSION + " (Nokia; Qt; MeeGo/1.2; Harmattan)"
 
 function getGAG(section, page, onSuccess, onFailure) {

@@ -29,7 +29,7 @@ SelectionDialog {
     model: ListModel {
         ListElement { name: "Hot" }
         ListElement { name: "Trending" }
-        ListElement { name: "Vote" }
+        //ListElement { name: "Vote" }
     }
     onSelectedIndexChanged: settings.selectedSection = selectedIndex
 
