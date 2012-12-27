@@ -1,7 +1,7 @@
 TEMPLATE = app
 TARGET = gagbook
 
-VERSION = 0.2.2
+VERSION = 0.2.3
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 HEADERS += \

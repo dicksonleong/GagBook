@@ -1,3 +1,11 @@
+gagbook (0.2.3) stable; urgency=high
+  * Change InfiniGAG API url
+  * Remove vote section temporary
+  * Use button row for dark/white theme in settings
+  * Add option to copy link
+
+ -- Dickson <dicksonleong8@gmail.com>  Thu, 27 Dec 2012 13:02:48 +0800
+
 gagbook (0.2.2) stable; urgency=high
   * Changed API url
 
