@@ -17,7 +17,7 @@
 */
 import QtQuick 1.1
 
-QtObject{
+QtObject {
     id: settings
 
     property int selectedSection: QMLUtils.getSetting("selectionSection", 0)

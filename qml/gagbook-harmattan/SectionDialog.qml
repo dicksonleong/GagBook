@@ -19,25 +19,28 @@
 import QtQuick 1.1
 import com.nokia.meego 1.0
 
-SelectionDialog{
+SelectionDialog {
     id: root
 
     property bool __isClosing: false
 
     titleText: "Section"
     selectedIndex: settings.selectedSection
-    model: ListModel{
-        ListElement{ name: "Hot" }
-        ListElement{ name: "Trending" }
-        ListElement{ name: "Vote" }
+    model: ListModel {
+        ListElement { name: "Hot" }
+        ListElement { name: "Trending" }
+        ListElement { name: "Vote" }
     }
     onSelectedIndexChanged: settings.selectedSection = selectedIndex
 
-    Component.onCompleted: open()
+    Component.onCompleted: {
+        console.log("Dialog created:", root)
+        open()
+    }
     Component.onDestruction: console.log("Dialog destructing:", root)
 
     onStatusChanged: {
-        if(status === DialogStatus.Closing) __isClosing = true
-        else if(status === DialogStatus.Closed && __isClosing) root.destroy(250)
+        if (status === DialogStatus.Closing) __isClosing = true
+        else if (status === DialogStatus.Closed && __isClosing) root.destroy(250)
     }
 }

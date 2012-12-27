@@ -19,31 +19,31 @@
 import QtQuick 1.1
 import com.nokia.symbian 1.1
 
-Page{
+Page {
     id: settingsPage
 
-    tools: ToolBarLayout{
-        ToolButton{
+    tools: ToolBarLayout {
+        ToolButton {
             platformInverted: settings.whiteTheme
             iconSource: "toolbar-back"
             onClicked: pageStack.pop()
         }
     }
 
-    Column{
+    Column {
         id: settingsColumn
-        anchors{ left: parent.left; right: parent.right; top: pageHeader.bottom; topMargin: constant.paddingMedium }
+        anchors { left: parent.left; right: parent.right; top: pageHeader.bottom; topMargin: constant.paddingMedium }
         height: childrenRect.height
         spacing: constant.paddingMedium
 
-        SettingButtonRow{
-            text: "White Theme"
+        SettingButtonRow {
+            text: "Theme"
             checkedButtonIndex: settings.whiteTheme ? 1 : 0
             buttonsText: ["Dark", "White"]
             onButtonClicked: settings.whiteTheme = index === 1
         }
 
-        SettingButtonRow{
+        SettingButtonRow {
             text: "Image Size"
             checkedButtonIndex: settings.imageSize
             buttonsText: ["Medium", "Large"]
@@ -51,7 +51,7 @@ Page{
         }
     }
 
-    PageHeader{
+    PageHeader {
         id: pageHeader
         text: "Settings"
     }

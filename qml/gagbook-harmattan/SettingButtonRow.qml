@@ -19,7 +19,7 @@
 import QtQuick 1.1
 import com.nokia.meego 1.0
 
-Item{
+Item {
     id: root
 
     property string text: ""
@@ -28,34 +28,33 @@ Item{
 
     signal buttonClicked(int index)
 
-
     width: parent.width
     height: settingText.paintedHeight + buttonRow.height + buttonRow.anchors.topMargin
 
-    Text{
+    Text {
         id: settingText
-        anchors{ left: parent.left; top: parent.top; leftMargin: constant.paddingMedium }
+        anchors { left: parent.left; top: parent.top; leftMargin: constant.paddingMedium }
         font.pixelSize: constant.fontSizeMedium
         color: constant.colorLight
         text: root.text
     }
 
-    ButtonRow{
+    ButtonRow {
         id: buttonRow
-        anchors{
+        anchors {
             top: settingText.bottom
-            margins: constant.paddingMedium
             left: parent.left
             right: parent.right
+            margins: constant.paddingMedium
         }
         checkedButton: buttonRepeater.itemAt(root.checkedButtonIndex)
         onVisibleChanged: checkedButton = buttonRepeater.itemAt(root.checkedButtonIndex)
 
-        Repeater{
+        Repeater {
             id: buttonRepeater
             model: root.buttonsText
 
-            Button{
+            Button {
                 text: modelData
                 onClicked: root.buttonClicked(index)
             }

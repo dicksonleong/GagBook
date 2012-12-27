@@ -19,7 +19,7 @@
 import QtQuick 1.1
 import com.nokia.symbian 1.1
 
-ContextMenu{
+ContextMenu {
     id: root
 
     property string link
@@ -28,9 +28,9 @@ ContextMenu{
 
     platformInverted: settings.whiteTheme
 
-    MenuLayout{
-        Text{
-            anchors{ left: parent.left; right: parent.right }
+    MenuLayout {
+        Text {
+            anchors { left: parent.left; right: parent.right }
             horizontalAlignment: Text.AlignHCenter
             text: link
             font.italic: true
@@ -40,7 +40,7 @@ ContextMenu{
             maximumLineCount: 3
             wrapMode: Text.WrapAnywhere
         }
-        MenuItem{
+        MenuItem {
             text: "Open link in web browser"
             platformInverted: root.platformInverted
             onClicked: {
@@ -48,7 +48,7 @@ ContextMenu{
                 infoBanner.alert("Launching web browser...")
             }
         }
-        MenuItem{
+        MenuItem {
             text: "Copy link"
             platformInverted: root.platformInverted
             onClicked: {
@@ -65,7 +65,7 @@ ContextMenu{
     Component.onDestruction: console.log("Dialog destructing:", root)
 
     onStatusChanged: {
-        if(status === DialogStatus.Closing) __isClosing = true
-        else if(status === DialogStatus.Closed && __isClosing) root.destroy(250)
+        if (status === DialogStatus.Closing) __isClosing = true
+        else if (status === DialogStatus.Closed && __isClosing) root.destroy(250)
     }
 }

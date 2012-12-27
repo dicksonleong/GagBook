@@ -11,17 +11,17 @@
 </style>
 
 <script type="text/javascript">
-window.onload = function(){
+window.onload = function() {
     var box = document.getElementById("commentsBox");
     box.setAttribute("data-href", window.qml.gagURL);
     box.setAttribute("data-width", window.qml.width);
     var backgroundCSS = document.createElement('style');
 
-    if(window.qml.whiteTheme){
+    if (window.qml.whiteTheme) {
         box.setAttribute("colorscheme", "light");
         backgroundCSS.innerHTML = "body {background-color:#E0E1E2;}";
     }
-    else{
+    else {
         backgroundCSS.innerHTML = "body {background-color:black;}";
     }
     document.head.appendChild(backgroundCSS);

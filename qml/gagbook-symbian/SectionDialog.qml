@@ -19,7 +19,7 @@
 import QtQuick 1.1
 import com.nokia.symbian 1.1
 
-SelectionDialog{
+SelectionDialog {
     id: root
 
     property bool __isClosing: false
@@ -27,17 +27,17 @@ SelectionDialog{
     platformInverted: settings.whiteTheme
     titleText: "Section"
     selectedIndex: settings.selectedSection
-    model: ListModel{
-        ListElement{ name: "Hot" }
-        ListElement{ name: "Trending" }
-        ListElement{ name: "Vote" }
+    model: ListModel {
+        ListElement { name: "Hot" }
+        ListElement { name: "Trending" }
+        ListElement { name: "Vote" }
     }
     onSelectedIndexChanged: settings.selectedSection = selectedIndex
 
     Component.onCompleted: open()
 
     onStatusChanged: {
-        if(status === DialogStatus.Closing) __isClosing = true
-        else if(status === DialogStatus.Closed && __isClosing) root.destroy(250)
+        if (status === DialogStatus.Closing) __isClosing = true
+        else if (status === DialogStatus.Closed && __isClosing) root.destroy(250)
     }
 }

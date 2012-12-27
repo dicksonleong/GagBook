@@ -18,7 +18,7 @@
 
 import QtQuick 1.1
 
-QtObject{
+QtObject {
     id: constant
 
     property color colorHighlighted: colorLight

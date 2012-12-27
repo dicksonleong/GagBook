@@ -19,7 +19,7 @@
 import QtQuick 1.1
 import com.nokia.meego 1.0
 
-Item{
+Item {
     id: root
 
     property bool loadImage: false
@@ -28,27 +28,25 @@ Item{
     property bool allowDelegateFlicking: gagImage.status === Image.Ready && gagImage.scale > pinchArea.minScale
     property bool imageZoomed: gagImage.scale !== pinchArea.minScale
 
-    function saveImage(){
+    function saveImage() {
         return QMLUtils.saveImage(gagImage, model.id)
     }
 
-    function resetImageZoom(){
+    function resetImageZoom() {
         flickable.returnToBounds()
         bounceBackAnimation.to = pinchArea.minScale
         bounceBackAnimation.start()
     }
 
-    height: ListView.view.height
-    width: ListView.view.width
+    height: ListView.view.height; width: ListView.view.width
 
     Flickable {
         id: flickable
         anchors.fill: parent
-        contentWidth: imageContainer.width
-        contentHeight: imageContainer.height
+        contentWidth: imageContainer.width; contentHeight: imageContainer.height
         clip: true
         interactive: moving || allowDelegateFlicking
-        onHeightChanged: if(gagImage.status == Image.Ready) gagImage.fitToScreen()
+        onHeightChanged: if (gagImage.status == Image.Ready) gagImage.fitToScreen()
 
         Item {
             id: imageContainer
@@ -60,7 +58,7 @@ Item{
 
                 property real prevScale
 
-                function fitToScreen(){
+                function fitToScreen() {
                     scale = Math.min(flickable.width / width, flickable.height / height, 1)
                     pinchArea.minScale = scale
                     prevScale = scale
@@ -86,13 +84,13 @@ Item{
                 }
 
                 onStatusChanged: {
-                    if(status == Image.Ready){
+                    if (status == Image.Ready) {
                         fitToScreen()
                         loadedAnimation.start()
                     }
                 }
 
-                NumberAnimation{
+                NumberAnimation {
                     id: loadedAnimation
                     target: gagImage
                     property: "opacity"
@@ -101,11 +99,11 @@ Item{
                     easing.type: Easing.InOutQuad
                 }
 
-                Component.onCompleted: if(root.ListView.isCurrentItem) root.loadImage = true
+                Component.onCompleted: if (root.ListView.isCurrentItem) root.loadImage = true
             }
         }
 
-        PinchArea{
+        PinchArea {
             id: pinchArea
 
             property real minScale: 1.0
@@ -119,17 +117,17 @@ Item{
 
             onPinchFinished: {
                 flickable.returnToBounds()
-                if(gagImage.scale < pinchArea.minScale){
+                if (gagImage.scale < pinchArea.minScale) {
                     bounceBackAnimation.to = pinchArea.minScale
                     bounceBackAnimation.start()
                 }
-                else if(gagImage.scale > pinchArea.maxScale){
+                else if (gagImage.scale > pinchArea.maxScale) {
                     bounceBackAnimation.to = pinchArea.maxScale
                     bounceBackAnimation.start()
                 }
             }
 
-            NumberAnimation{
+            NumberAnimation {
                 id: bounceBackAnimation
                 target: gagImage
                 duration: 250
@@ -138,16 +136,16 @@ Item{
             }
         }
 
-        MouseArea{
+        MouseArea {
             anchors.fill: parent
             onClicked: textContainer.state = textContainer.state ? "" : "hidden"
         }
     }
 
-    Loader{
+    Loader {
         anchors.centerIn: parent
         sourceComponent: {
-            switch(gagImage.status){
+            switch (gagImage.status) {
             case Image.Loading:
                 return loadingIndicator
             case Image.Error:
@@ -157,44 +155,44 @@ Item{
             }
         }
 
-        Component{
+        Component {
             id: loadingIndicator
 
-            BusyIndicator{
+            BusyIndicator {
                 id: busyIndicator
                 running: true
-                platformStyle: BusyIndicatorStyle{ size: "large" }
+                platformStyle: BusyIndicatorStyle { size: "large" }
             }
         }
 
-        Component{ id: failedLoading; Label{ text: "Error loading image" } }
+        Component { id: failedLoading; Label { text: "Error loading image" } }
     }
 
-    ScrollDecorator{ flickableItem: flickable }
+    ScrollDecorator { flickableItem: flickable }
 
-    Item{
+    Item {
         id: textContainer
-        anchors{ left: parent.left; right: parent.right; top: parent.top }
+        anchors { left: parent.left; right: parent.right; top: parent.top }
         height: textColumn.height + 2 * textColumn.anchors.margins
-        states: State{
+        states: State {
             name: "hidden"
-            AnchorChanges{ target: textContainer; anchors.top: undefined; anchors.bottom: root.top }
+            AnchorChanges { target: textContainer; anchors.top: undefined; anchors.bottom: root.top }
         }
-        transitions: Transition{ AnchorAnimation{ duration: 250; easing.type: Easing.InOutQuad } }
+        transitions: Transition { AnchorAnimation { duration: 250; easing.type: Easing.InOutQuad } }
 
-        Rectangle{
+        Rectangle {
             anchors.fill: parent
             color: "black"
             opacity: 0.5
         }
 
-        Column{
+        Column {
             id: textColumn
-            anchors{ left: parent.left; right: parent.right; top: parent.top; margins: constant.paddingSmall }
+            anchors { left: parent.left; right: parent.right; top: parent.top; margins: constant.paddingSmall }
             height: childrenRect.height
 
-            Text{
-                width: parent.width
+            Text {
+                anchors { left: parent.left; right: parent.right }
                 font.pixelSize: constant.fontSizeSmall
                 color: "white"
                 font.bold: true
@@ -204,8 +202,8 @@ Item{
                 text: model.title
             }
 
-            Text{
-                width: parent.width
+            Text {
+                anchors { left: parent.left; right: parent.right }
                 font.pixelSize: constant.fontSizeSmall
                 color: "white"
                 elide: Text.ElideRight

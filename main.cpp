@@ -46,6 +46,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 #endif
 
     QmlApplicationViewer viewer;
+    viewer.rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
 
 #if defined(Q_OS_HARMATTAN) || defined(Q_WS_SIMULATOR)
     ShareUI shareUI;
@@ -54,8 +55,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QMLUtils qmlUtils;
     viewer.rootContext()->setContextProperty("QMLUtils", &qmlUtils);
-
-    viewer.rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
 
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 #if defined(Q_OS_HARMATTAN)

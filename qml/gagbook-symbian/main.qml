@@ -24,16 +24,16 @@ PageStackWindow {
     id: appWindow
 
     platformInverted: settings.whiteTheme
-    initialPage: MainPage{ id: mainPage }
+    initialPage: MainPage { id: mainPage }
 
-    Constant{ id: constant }
-    Settings{ id: settings }
+    Constant { id: constant }
+    Settings { id: settings }
 
-    InfoBanner{
+    InfoBanner {
         id: infoBanner
         platformInverted: settings.whiteTheme
 
-        function alert(text){
+        function alert(text) {
             infoBanner.text = text
             infoBanner.open()
         }

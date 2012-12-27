@@ -19,29 +19,28 @@
 var __sectionDialogComponent = null
 var __openLinkDialogComponent = null
 
-function createSectionDialog(){
-    if(!__sectionDialogComponent) __sectionDialogComponent = Qt.createComponent("SectionDialog.qml")
+function createSectionDialog() {
+    if (!__sectionDialogComponent) __sectionDialogComponent = Qt.createComponent("SectionDialog.qml")
     var dialog = __sectionDialogComponent.createObject(mainPage)
-    if(!dialog){
+    if (!dialog) {
         console.log("Error creating object: " + __sectionDialogComponent.errorString())
         return
     }
     dialog.accepted.connect(refresh)
 }
 
-
-function createOpenLinkDialog(link){
-    if(!__openLinkDialogComponent) __openLinkDialogComponent = Qt.createComponent("OpenLinkDialog.qml")
+function createOpenLinkDialog(link) {
+    if (!__openLinkDialogComponent) __openLinkDialogComponent = Qt.createComponent("OpenLinkDialog.qml")
     var dialog = __openLinkDialogComponent.createObject(mainPage, { link: link })
-    if(!dialog){
+    if (!dialog) {
         console.log("Error creating object: " + __openLinkDialogComponent.errorString())
         return
     }
 }
 
-function refresh(isAll){
-    if(isAll == undefined) isAll = true
-    if(isAll){
+function refresh(isAll) {
+    if (isAll == undefined) isAll = true
+    if (isAll) {
         gagListView.model.clear()
         nextPageId = 0
     }
@@ -49,16 +48,16 @@ function refresh(isAll){
     pageHeader.busy = true
 }
 
-function onSuccess(json){
+function onSuccess(json) {
     nextPageId = json.attributes.next
-    for(var i=0; i< json.images.length ; i++){
+    for (var i=0; i< json.images.length ; i++) {
         gagListView.model.append(json.images[i])
     }
     pageHeader.busy = false
 }
 
-function onFailure(status, statusText){
-    if(status === 0) infoBanner.alert("Error: Server or connection error")
+function onFailure(status, statusText) {
+    if (status === 0) infoBanner.alert("Server or connection error")
     else infoBanner.alert("Error: " + statusText + " (" + status + ")")
     pageHeader.busy = false
 }

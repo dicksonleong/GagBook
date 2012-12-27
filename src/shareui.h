@@ -19,7 +19,7 @@
 #ifndef SHAREUI_H
 #define SHAREUI_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class ShareUI : public QObject
 {

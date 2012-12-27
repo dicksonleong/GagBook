@@ -20,7 +20,7 @@ import QtQuick 1.1
 import com.nokia.symbian 1.1
 import com.nokia.extras 1.1
 
-Item{
+Item {
     id: root
 
     property string text
@@ -31,18 +31,17 @@ Item{
     height: constant.headerHeight
     width: parent.width
 
-    Image{
+    Image {
         id: background
         anchors.fill: parent
+        sourceSize { width: parent.width; height: parent.height }
         source: headerPress.pressed ? "Images/color10-meegotouch-view-header-fixed-pressed.png"
                                     : "Images/color10-meegotouch-view-header-fixed.png"
-        sourceSize.width: parent.width
-        sourceSize.height: parent.height
     }
 
-    Text{
+    Text {
         id: mainText
-        anchors{
+        anchors {
             verticalCenter: parent.verticalCenter
             left: parent.left
             right: busyLoader.left
@@ -54,45 +53,38 @@ Item{
         text: root.text
     }
 
-    Loader{
+    Loader {
         id: busyLoader
-        anchors{
+        anchors {
             verticalCenter: parent.verticalCenter
-            right: parent.right
-            rightMargin: constant.paddingMedium
+            right: parent.right; rightMargin: constant.paddingMedium
         }
-        sourceComponent: busy ? updatingIndicator : (comboboxVisible ? combobox : undefined )
+        sourceComponent: busy ? updatingIndicator : (comboboxVisible ? combobox : undefined)
     }
 
-    Component{
+    Component {
         id: updatingIndicator
 
-        BusyIndicator{
+        BusyIndicator {
             platformInverted: false
             width: platformStyle.graphicSizeSmall; height: width
             running: true
         }
     }
 
-    Component{
-        id: combobox
-
-        Image{
-            source: "Images/meegotouch-combobox-indicator-inverted.png"
-        }
-    }
+    Component { id: combobox; Image { source: "Images/meegotouch-combobox-indicator-inverted.png" } }
 
     Image {
-        anchors{ top: parent.top; left: parent.left }
+        anchors { top: parent.top; left: parent.left }
         source: "Images/meegoTLCorner.png"
     }
 
     Image {
-        anchors{ top: parent.top; right: parent.right }
+        anchors { top: parent.top; right: parent.right }
         source: "Images/meegoTRCorner.png"
     }
 
-    MouseArea{
+    MouseArea {
         id: headerPress
         anchors.fill: parent
         onClicked: root.clicked()

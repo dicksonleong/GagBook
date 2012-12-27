@@ -19,35 +19,35 @@
 import QtQuick 1.1
 import com.nokia.symbian 1.1
 
-Page{
+Page {
     id: aboutPage
 
-    tools: ToolBarLayout{
-        ToolButton{
+    tools: ToolBarLayout {
+        ToolButton {
             platformInverted: settings.whiteTheme
             iconSource: "toolbar-back"
             onClicked: pageStack.pop()
         }
     }
 
-    Flickable{
+    Flickable {
         id: aboutPageFlickable
-        anchors{ top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
+        anchors { top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
         contentHeight: container.height
 
-        Item{
+        Item {
             id: container
             width: aboutPageFlickable.width
             height: textColumn.height + buttonColumn.anchors.topMargin + buttonColumn.height + 2 * textColumn.anchors.margins
 
-            Column{
+            Column {
                 id: textColumn
                 anchors { left: parent.left; right: parent.right; top: parent.top; margins: constant.paddingMedium }
                 height: childrenRect.height
                 spacing: constant.paddingMedium
 
-                Text{
-                    width: parent.width
+                Text {
+                    anchors { left: parent.left; right: parent.right }
                     font.pixelSize: constant.fontSizeXXLarge
                     horizontalAlignment: Text.AlignHCenter
                     color: constant.colorLight
@@ -55,16 +55,16 @@ Page{
                     text: "GagBook"
                 }
 
-                Text{
-                    width: parent.width
+                Text {
+                    anchors { left: parent.left; right: parent.right }
                     font.pixelSize: constant.fontSizeMedium
                     horizontalAlignment: Text.AlignHCenter
                     color: constant.colorMid
                     text: "v" + APP_VERSION
                 }
 
-                Text{
-                    width: parent.width
+                Text {
+                    anchors { left: parent.left; right: parent.right }
                     font.pixelSize: constant.fontSizeMedium
                     horizontalAlignment: Text.AlignHCenter
                     color: constant.colorLight
@@ -79,20 +79,23 @@ GagBook is open source and licensed under LGPL v3"
                 }
             }
 
-            Column{
+            Column {
                 id: buttonColumn
-                anchors{ top: textColumn.bottom; topMargin: constant.paddingXXLarge; horizontalCenter: parent.horizontalCenter }
-                width: parent.width * 0.75 ; height: childrenRect.height
+                anchors {
+                    top: textColumn.bottom; topMargin: constant.paddingXXLarge
+                    horizontalCenter: parent.horizontalCenter
+                }
+                width: parent.width * 0.75; height: childrenRect.height
                 spacing: constant.paddingMedium
 
-                Button{
+                Button {
                     platformInverted: settings.whiteTheme
                     text: "Developer's Website"
                     width: parent.width
                     onClicked: Qt.openUrlExternally(constant.devWebSite)
                 }
 
-                Button{
+                Button {
                     platformInverted: settings.whiteTheme
                     text: "Source Repository"
                     width: parent.width
@@ -104,7 +107,7 @@ GagBook is open source and licensed under LGPL v3"
 
     ScrollDecorator { flickableItem: aboutPageFlickable; platformInverted: settings.whiteTheme }
 
-    PageHeader{
+    PageHeader {
         id: pageHeader
         text: "About"
     }

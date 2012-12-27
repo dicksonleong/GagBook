@@ -24,16 +24,16 @@ PageStackWindow {
     id: appWindow
 
     showStatusBar: inPortrait
-    initialPage: MainPage{ id: mainPage }
+    initialPage: MainPage { id: mainPage }
 
-    Constant{ id: constant }
-    Settings{ id: settings }
+    Constant { id: constant }
+    Settings { id: settings }
 
-    InfoBanner{
+    InfoBanner {
         id: infoBanner
         topMargin: showStatusBar ? 40 : 8
 
-        function alert(text){
+        function alert(text) {
             infoBanner.text = text
             infoBanner.show()
         }

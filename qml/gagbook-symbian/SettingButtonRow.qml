@@ -19,7 +19,7 @@
 import QtQuick 1.1
 import com.nokia.symbian 1.1
 
-Item{
+Item {
     id: root
 
     property string text: ""
@@ -31,35 +31,35 @@ Item{
     width: parent.width
     height: settingText.paintedHeight + buttonRow.height + buttonRow.anchors.topMargin
 
-    Text{
+    Text {
         id: settingText
-        anchors{ left: parent.left; top: parent.top; leftMargin: constant.paddingMedium }
+        anchors { left: parent.left; top: parent.top; leftMargin: constant.paddingMedium }
         font.pixelSize: constant.fontSizeMedium
         color: constant.colorLight
         text: root.text
     }
 
-    ButtonRow{
+    ButtonRow {
         id: buttonRow
-        anchors{
+        anchors {
             top: settingText.bottom
-            margins: constant.paddingMedium
             left: parent.left
             right: parent.right
+            margins: constant.paddingMedium
         }
         checkedButton: checkedButtonIndex === 0 ? firstButton : secondButton
         onVisibleChanged: checkedButtonIndex === 0 ? firstButton : secondButton
 
         // Stupid ButtonRow in Symbian component doesn't support using repeater to dynamically create buttons
         // So I have to create button statically
-        Button{
+        Button {
             id: firstButton
             platformInverted: settings.whiteTheme
             text: root.buttonsText[0]
             onClicked: root.buttonClicked(0)
         }
 
-        Button{
+        Button {
             id: secondButton
             platformInverted: settings.whiteTheme
             text: root.buttonsText[1]

@@ -25,26 +25,26 @@ Page {
 
     property string gagURL
 
-    tools: ToolBarLayout{
-        ToolButton{
+    tools: ToolBarLayout {
+        ToolButton {
             platformInverted: settings.whiteTheme
             iconSource: "toolbar-back"
             onClicked: pageStack.pop()
         }
     }
 
-    Flickable{
+    Flickable {
         id: webViewFlickable
-        anchors{ top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
+        anchors { top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
         contentHeight: commentsWebView.height * commentsWebView.scale
 
-        WebView{
+        WebView {
             id: commentsWebView
             width: commentsBox.width + 20
             scale: webViewFlickable.width / width
             transformOrigin: Item.TopLeft
 
-            javaScriptWindowObjects: QtObject{
+            javaScriptWindowObjects: QtObject {
                 id: commentsBox
                 WebView.windowObjectName: "qml"
 
@@ -57,10 +57,10 @@ Page {
             onLoadFailed: pageHeader.busy = false
             onLoadFinished: pageHeader.busy = false
 
-            Connections{ target: appWindow; onInPortraitChanged: commentsWebView.reload.trigger() }
+            Connections { target: appWindow; onInPortraitChanged: commentsWebView.reload.trigger() }
         }
 
-        NumberAnimation{
+        NumberAnimation {
             id: backToTopAnimation
             target: webViewFlickable
             property: "contentY"
@@ -70,9 +70,9 @@ Page {
         }
     }
 
-    ScrollDecorator{ flickableItem: webViewFlickable; platformInverted: settings.whiteTheme }
+    ScrollDecorator { flickableItem: webViewFlickable; platformInverted: settings.whiteTheme }
 
-    PageHeader{
+    PageHeader {
         id: pageHeader
         text: "Comments"
         onClicked: backToTopAnimation.start()

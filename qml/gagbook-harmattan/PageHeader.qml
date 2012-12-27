@@ -20,7 +20,7 @@ import QtQuick 1.1
 import com.nokia.meego 1.0
 import com.nokia.extras 1.1
 
-Item{
+Item {
     id: root
 
     property string text
@@ -31,18 +31,17 @@ Item{
     height: constant.headerHeight
     width: parent.width
 
-    Image{
+    Image {
         id: background
         anchors.fill: parent
+        sourceSize { width: parent.width; height: parent.height }
         source: headerPress.pressed ? "Images/color10-meegotouch-view-header-fixed-pressed.png"
                                     : "Images/color10-meegotouch-view-header-fixed.png"
-        sourceSize.width: parent.width
-        sourceSize.height: parent.height
     }
 
-    Text{
+    Text {
         id: mainText
-        anchors{
+        anchors {
             verticalCenter: parent.verticalCenter
             left: parent.left
             right: busyLoader.left
@@ -54,34 +53,27 @@ Item{
         text: root.text
     }
 
-    Loader{
+    Loader {
         id: busyLoader
-        anchors{
+        anchors {
             verticalCenter: parent.verticalCenter
-            right: parent.right
-            rightMargin: constant.paddingXLarge
+            right: parent.right; rightMargin: constant.paddingXLarge
         }
-        sourceComponent: busy ? updatingIndicator : (comboboxVisible ? combobox : undefined )
+        sourceComponent: busy ? updatingIndicator : (comboboxVisible ? combobox : undefined)
     }
 
-    Component{
+    Component {
         id: updatingIndicator
 
-        BusyIndicator{
-            platformStyle: BusyIndicatorStyle{ inverted: true }
+        BusyIndicator {
+            platformStyle: BusyIndicatorStyle { inverted: true }
             running: true
         }
     }
 
-    Component{
-        id: combobox
+    Component { id: combobox;  Image { source: "Images/meegotouch-combobox-indicator-inverted.png" } }
 
-        Image{
-            source: "Images/meegotouch-combobox-indicator-inverted.png"
-        }
-    }
-
-    MouseArea{
+    MouseArea {
         id: headerPress
         anchors.fill: parent
         onClicked: root.clicked()

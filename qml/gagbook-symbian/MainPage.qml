@@ -26,15 +26,15 @@ Page {
 
     property int nextPageId: 0
 
-    tools: ToolBarLayout{
-        ToolButton{
+    tools: ToolBarLayout {
+        ToolButton {
             property bool __canResetZoom: gagListView.count > 0 && gagListView.currentItem.imageZoomed
             platformInverted: settings.whiteTheme
             iconSource: __canResetZoom ? "toolbar-back"
                                        : ("Images/close_stop" + (platformInverted ? "_inverted.svg" : ".svg"))
             onClicked: __canResetZoom ? gagListView.currentItem.resetImageZoom() : Qt.quit()
         }
-        ToolButton{
+        ToolButton {
             platformInverted: settings.whiteTheme
             iconSource: "Images/instant_messenger_chat" + (platformInverted ? "_inverted.svg" : ".svg")
             enabled: gagListView.count > 0
@@ -44,47 +44,47 @@ Page {
                 pageStack.push(Qt.resolvedUrl("CommentsPage.qml"), prop)
             }
         }
-        ToolButton{
+        ToolButton {
             platformInverted: settings.whiteTheme
             iconSource: "Images/internet" + (platformInverted ? "_inverted.svg" : ".svg")
             enabled: gagListView.count > 0
             opacity: enabled ? 1 : 0.25
             onClicked: Script.createOpenLinkDialog(gagListView.model.get(gagListView.currentIndex).url)
         }
-        ToolButton{
+        ToolButton {
             platformInverted: settings.whiteTheme
             iconSource: "toolbar-menu"
             onClicked: mainMenu.open()
         }
     }
 
-    Menu{
+    Menu {
         id: mainMenu
         platformInverted: settings.whiteTheme
 
-        MenuLayout{
-            MenuItem{
+        MenuLayout {
+            MenuItem {
                 platformInverted: settings.whiteTheme
                 text: "Refresh section"
                 enabled: !pageHeader.busy
                 onClicked: Script.refresh()
             }
-            MenuItem{
+            MenuItem {
                 platformInverted: settings.whiteTheme
                 text: "Save image"
                 enabled: gagListView.count > 0
                 onClicked: {
                     var filePath = gagListView.currentItem.saveImage()
-                    if(filePath) infoBanner.alert("Image saved in " + filePath)
+                    if (filePath) infoBanner.alert("Image saved in " + filePath)
                     else infoBanner.alert("Failed to save image")
                 }
             }
-            MenuItem{
+            MenuItem {
                 platformInverted: settings.whiteTheme
                 text: "Settings"
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
-            MenuItem{
+            MenuItem {
                 platformInverted: settings.whiteTheme
                 text: "About GagBook"
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
@@ -92,25 +92,25 @@ Page {
         }
     }
 
-    ListView{
+    ListView {
         id: gagListView
-        anchors{ top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
-        model: ListModel{}
+        anchors { top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
+        model: ListModel {}
         boundsBehavior: Flickable.DragOverBounds
         orientation: ListView.Horizontal
         snapMode: ListView.SnapOneItem
         highlightRangeMode: ListView.StrictlyEnforceRange
-        delegate: GagDelegate{}
+        delegate: GagDelegate {}
         interactive: moving || count === 0 || !currentItem.allowDelegateFlicking
 
-        onAtXEndChanged: if(atXEnd && count > 0 && !pageHeader.busy) Script.refresh(false)
-        onCurrentItemChanged: if(currentItem) currentItem.loadImage = true
+        onAtXEndChanged: if (atXEnd && count > 0 && !pageHeader.busy) Script.refresh(false)
+        onCurrentItemChanged: if (currentItem) currentItem.loadImage = true
     }
 
-    PageHeader{
+    PageHeader {
         id: pageHeader
         text: {
-            switch(settings.selectedSection){
+            switch (settings.selectedSection) {
             case 0: return "Hot"
             case 1: return "Trending"
             case 2: return "Vote"

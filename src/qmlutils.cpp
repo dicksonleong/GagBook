@@ -57,7 +57,7 @@ QString QMLUtils::saveImage(QDeclarativeItem *imageObject, const int id)
     imageObject->paint(&painter, &styleOption, 0);
     bool saved = img.save(filePath, "JPG");
 
-    if(!saved){
+    if (!saved) {
         qWarning("QMLUtils::saveImage: Unable to save image to %s", qPrintable(filePath));
         return "";
     }

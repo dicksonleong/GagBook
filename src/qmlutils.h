@@ -32,10 +32,13 @@ class QMLUtils : public QObject
 public:
     explicit QMLUtils(QObject *parent = 0);
 
+    // Copy text to system clipboard
     Q_INVOKABLE void copyToClipboard(const QString &text);
 
+    // Save a image from QML Image object
     Q_INVOKABLE QString saveImage(QDeclarativeItem *imagObject, const int id);
 
+    // QSettings
     Q_INVOKABLE QVariant getSetting(const QString &key, const QVariant &defaultValue = QVariant());
     Q_INVOKABLE void setSetting(const QString &key, const QVariant &value);
 

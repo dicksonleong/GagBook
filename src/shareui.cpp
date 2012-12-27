@@ -35,18 +35,17 @@ void ShareUI::shareLink(const QString &link, const QString &title)
     uri.setMimeType("text/x-url");
     uri.setTextData(link);
 
-    if(!title.isEmpty()){
+    if (!title.isEmpty())
         uri.setAttribute("title", title);
-    }
 
-    if(!uri.isValid()){
+    if (!uri.isValid()) {
         qCritical("Invalid URI");
         return;
     }
 
     ShareUiInterface shareIf("com.nokia.ShareUi");
 
-    if(!shareIf.isValid()){
+    if (!shareIf.isValid()) {
         qCritical("Invalid Share UI interface");
         return;
     }

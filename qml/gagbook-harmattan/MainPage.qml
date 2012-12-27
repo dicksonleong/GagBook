@@ -26,13 +26,13 @@ Page {
 
     property int nextPageId: 0
 
-    tools: ToolBarLayout{
-        ToolIcon{
+    tools: ToolBarLayout {
+        ToolIcon {
             platformIconId: "toolbar-back" + (enabled ? "" : "-dimmed")
             enabled: gagListView.count > 0 && gagListView.currentItem.imageZoomed
             onClicked: gagListView.currentItem.resetImageZoom()
         }
-        ToolIcon{
+        ToolIcon {
             platformIconId: "toolbar-new-message" + (enabled ? "" : "-dimmed")
             enabled: gagListView.count > 0
             onClicked: {
@@ -40,73 +40,72 @@ Page {
                 pageStack.push(Qt.resolvedUrl("CommentsPage.qml"), prop)
             }
         }
-        ToolIcon{
-            // FIXME: Better toolbar icon for open link
+        ToolIcon {
             iconSource: "image://theme/icon-l-browser-main-view"
             enabled: gagListView.count > 0
             opacity: enabled ? 1 : 0.25
             onClicked: Script.createOpenLinkDialog(gagListView.model.get(gagListView.currentIndex).url)
         }
-        ToolIcon{
+        ToolIcon {
             platformIconId: "toolbar-share" + (enabled ? "" : "-dimmed")
             enabled: gagListView.count > 0
             onClicked: shareUI.shareLink(gagListView.model.get(gagListView.currentIndex).url,
                                          gagListView.model.get(gagListView.currentIndex).title)
         }
-        ToolIcon{
+        ToolIcon {
             platformIconId: "toolbar-view-menu"
             onClicked: mainMenu.open()
         }
     }
 
-    Menu{
+    Menu {
         id: mainMenu
 
-        MenuLayout{
-            MenuItem{
+        MenuLayout {
+            MenuItem {
                 text: "Refresh section"
                 enabled: !pageHeader.busy
                 onClicked: Script.refresh()
             }
-            MenuItem{
+            MenuItem {
                 text: "Save image"
                 enabled: gagListView.count > 0
                 onClicked: {
                     var filePath = gagListView.currentItem.saveImage()
-                    if(filePath) infoBanner.alert("Image saved in " + filePath)
+                    if (filePath) infoBanner.alert("Image saved in " + filePath)
                     else infoBanner.alert("Failed to save image")
                 }
             }
-            MenuItem{
+            MenuItem {
                 text: "Settings"
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
-            MenuItem{
+            MenuItem {
                 text: "About GagBook"
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
             }
         }
     }
 
-    ListView{
+    ListView {
         id: gagListView
-        anchors{ top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
-        model: ListModel{}
+        anchors { top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
+        model: ListModel {}
         boundsBehavior: Flickable.DragOverBounds
         orientation: ListView.Horizontal
         snapMode: ListView.SnapOneItem
         highlightRangeMode: ListView.StrictlyEnforceRange
-        delegate: GagDelegate{}
+        delegate: GagDelegate {}
         interactive: moving || count === 0 || !currentItem.allowDelegateFlicking
 
-        onAtXEndChanged: if(atXEnd && count > 0 && !pageHeader.busy) Script.refresh(false)
-        onCurrentItemChanged: if(currentItem) currentItem.loadImage = true
+        onAtXEndChanged: if (atXEnd && count > 0 && !pageHeader.busy) Script.refresh(false)
+        onCurrentItemChanged: if (currentItem) currentItem.loadImage = true
     }
 
-    PageHeader{
+    PageHeader {
         id: pageHeader
         text: {
-            switch(settings.selectedSection){
+            switch (settings.selectedSection) {
             case 0: return "Hot"
             case 1: return "Trending"
             case 2: return "Vote"

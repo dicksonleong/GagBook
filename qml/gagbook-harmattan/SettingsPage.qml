@@ -19,30 +19,30 @@
 import QtQuick 1.1
 import com.nokia.meego 1.0
 
-Page{
+Page {
     id: settingsPage
 
-    tools: ToolBarLayout{
-        ToolIcon{
+    tools: ToolBarLayout {
+        ToolIcon {
             platformIconId: "toolbar-back"
             onClicked: pageStack.pop()
         }
     }
 
-    Column{
+    Column {
         id: settingsColumn
-        anchors{ left: parent.left; right: parent.right; top: pageHeader.bottom; topMargin: constant.paddingMedium }
+        anchors { top: pageHeader.bottom; topMargin: constant.paddingMedium; left: parent.left; right: parent.right }
         height: childrenRect.height
         spacing: constant.paddingMedium
 
-        SettingButtonRow{
-            text: "White Theme"
+        SettingButtonRow {
+            text: "Theme"
             checkedButtonIndex: settings.whiteTheme ? 1 : 0
             buttonsText: ["Dark", "White"]
             onButtonClicked: settings.whiteTheme = index === 1
         }
 
-        SettingButtonRow{
+        SettingButtonRow {
             text: "Image Size"
             checkedButtonIndex: settings.imageSize
             buttonsText: ["Medium", "Large"]
@@ -50,7 +50,7 @@ Page{
         }
     }
 
-    PageHeader{
+    PageHeader {
         id: pageHeader
         text: "Settings"
     }

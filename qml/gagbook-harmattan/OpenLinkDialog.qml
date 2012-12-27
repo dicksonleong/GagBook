@@ -26,8 +26,8 @@ ContextMenu {
 
     property bool __isClosing: false
 
-    platformTitle: Text{
-        anchors{ left: parent.left; right: parent.right }
+    platformTitle: Text {
+        anchors { left: parent.left; right: parent.right }
         horizontalAlignment: Text.AlignHCenter
         text: link
         font.italic: true
@@ -38,15 +38,15 @@ ContextMenu {
         wrapMode: Text.WrapAnywhere
     }
 
-    MenuLayout{
-        MenuItem{
+    MenuLayout {
+        MenuItem {
             text: "Open link in web browser"
             onClicked: {
                 Qt.openUrlExternally(link)
                 infoBanner.alert("Launching web browser...")
             }
         }
-        MenuItem{
+        MenuItem {
             text: "Copy link"
             onClicked: {
                 QMLUtils.copyToClipboard(link)
@@ -62,7 +62,7 @@ ContextMenu {
     Component.onDestruction: console.log("Dialog destructing:", root)
 
     onStatusChanged: {
-        if(status === DialogStatus.Closing) __isClosing = true
-        else if(status === DialogStatus.Closed && __isClosing) root.destroy(250)
+        if (status === DialogStatus.Closing) __isClosing = true
+        else if (status === DialogStatus.Closed && __isClosing) root.destroy(250)
     }
 }

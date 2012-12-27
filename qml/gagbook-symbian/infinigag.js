@@ -23,7 +23,7 @@ var USER_AGENT = "GagBook/" + APP_VERSION + " (Nokia; Qt; Symbian/3)"
 
 function getGAG(section, page, onSuccess, onFailure) {
     var sectionString = ""
-    switch(section){
+    switch (section) {
     case 0: sectionString = "hot"; break;
     case 1: sectionString = "trending"; break;
     case 2: sectionString = "vote"; break;
@@ -36,10 +36,10 @@ function getGAG(section, page, onSuccess, onFailure) {
     request.open("GET", requestUrl)
     request.setRequestHeader("User-Agent", USER_AGENT)
 
-    request.onreadystatechange = function(){
-        if(request.readyState === XMLHttpRequest.DONE){
-            if(request.status === 200){
-                if(request.responseText) onSuccess(JSON.parse(request.responseText))
+    request.onreadystatechange = function() {
+        if (request.readyState === XMLHttpRequest.DONE) {
+            if (request.status === 200) {
+                if (request.responseText) onSuccess(JSON.parse(request.responseText))
                 else onFailure(-1, "Empty response")
             }
             else onFailure(request.status, request.statusText)
