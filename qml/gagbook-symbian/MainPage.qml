@@ -53,6 +53,13 @@ Page {
         }
         ToolButton {
             platformInverted: settings.whiteTheme
+            iconSource: "toolbar-share"
+            enabled: gagListView.count > 0
+            opacity: enabled ? 1 : 0.25
+            onClicked: Script.createShareDialog(gagListView.model.get(gagListView.currentIndex).url)
+        }
+        ToolButton {
+            platformInverted: settings.whiteTheme
             iconSource: "toolbar-menu"
             onClicked: mainMenu.open()
         }

@@ -32,10 +32,7 @@ function createSectionDialog() {
 function createOpenLinkDialog(link) {
     if (!__openLinkDialogComponent) __openLinkDialogComponent = Qt.createComponent("OpenLinkDialog.qml")
     var dialog = __openLinkDialogComponent.createObject(mainPage, { link: link })
-    if (!dialog) {
-        console.log("Error creating object: " + __openLinkDialogComponent.errorString())
-        return
-    }
+    if (!dialog) console.log("Error creating object: " + __openLinkDialogComponent.errorString())
 }
 
 function refresh(isAll) {

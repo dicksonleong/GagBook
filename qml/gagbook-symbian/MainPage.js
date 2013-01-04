@@ -18,6 +18,7 @@
 
 var __sectionDialogComponent = null
 var __openLinkDialogComponent = null
+var __shareDialogComponent = null
 
 function createSectionDialog() {
     if (!__sectionDialogComponent) __sectionDialogComponent = Qt.createComponent("SectionDialog.qml")
@@ -32,10 +33,13 @@ function createSectionDialog() {
 function createOpenLinkDialog(link) {
     if (!__openLinkDialogComponent) __openLinkDialogComponent = Qt.createComponent("OpenLinkDialog.qml")
     var dialog = __openLinkDialogComponent.createObject(mainPage, { link: link })
-    if (!dialog) {
-        console.log("Error creating object: " + __openLinkDialogComponent.errorString())
-        return
-    }
+    if (!dialog) console.log("Error creating object: " + __openLinkDialogComponent.errorString())
+}
+
+function createShareDialog(link) {
+    if (!__shareDialogComponent) __shareDialogComponent = Qt.createComponent("ShareDialog.qml")
+    var dialog = __shareDialogComponent.createObject(mainPage, { link: link })
+    if (!dialog) console.log("Error creating object: " + __shareDialogComponent.errorString())
 }
 
 function refresh(isAll) {
