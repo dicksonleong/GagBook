@@ -44,7 +44,7 @@ Page {
 
     Column {
         id: settingsColumn
-        anchors { left: parent.left; right: parent.right; top: pageHeader.bottom; topMargin: constant.paddingMedium }
+        anchors { top: pageHeader.bottom; topMargin: constant.paddingMedium; left: parent.left; right: parent.right }
         height: childrenRect.height
         spacing: constant.paddingMedium
 

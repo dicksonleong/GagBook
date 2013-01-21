@@ -47,7 +47,6 @@ QtObject {
     property int paddingMedium: platformStyle.paddingMedium
     property int paddingLarge: platformStyle.paddingLarge
     property int paddingXLarge: platformStyle.paddingLarge + platformStyle.paddingSmall
-    property int paddingXXLarge: platformStyle.paddingLarge + platformStyle.paddingMedium
 
     property int fontSizeXSmall: platformStyle.fontSizeSmall - 2
     property int fontSizeSmall: platformStyle.fontSizeSmall
@@ -58,6 +57,6 @@ QtObject {
 
     property int headerHeight: inPortrait ? 55 : 45
 
-    property url devWebSite: "http://dickson-apps.blogspot.com"
+    property url devWebSite: "http://dickson-dev.blogspot.com"
     property url sourceRepoSite: "https://github.com/dicksonleong/GagBook"
 }

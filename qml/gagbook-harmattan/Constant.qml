@@ -40,10 +40,9 @@ QtObject {
     property color colorDisabled: theme.inverted ? "#444444" : "#b2b2b4"
 
     property int paddingSmall: 4
-    property int paddingMedium: 6
-    property int paddingLarge: 8
-    property int paddingXLarge: 12
-    property int paddingXXLarge: 16
+    property int paddingMedium: 8
+    property int paddingLarge: 12
+    property int paddingXLarge: 16
 
     property int fontSizeXSmall: 20
     property int fontSizeSmall: 22
@@ -54,6 +53,6 @@ QtObject {
 
     property int headerHeight: inPortrait ? 72 : 56
 
-    property url devWebSite: "http://dickson-apps.blogspot.com"
+    property url devWebSite: "http://dickson-dev.blogspot.com"
     property url sourceRepoSite: "https://github.com/dicksonleong/GagBook"
 }

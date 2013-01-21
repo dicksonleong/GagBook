@@ -57,7 +57,7 @@ Item {
             verticalCenter: parent.verticalCenter
             left: parent.left
             right: busyLoader.left
-            margins: constant.paddingXLarge
+            margins: constant.paddingLarge
         }
         font.pixelSize: constant.fontSizeXLarge
         color: "white"
@@ -69,7 +69,7 @@ Item {
         id: busyLoader
         anchors {
             verticalCenter: parent.verticalCenter
-            right: parent.right; rightMargin: constant.paddingXLarge
+            right: parent.right; rightMargin: constant.paddingLarge
         }
         sourceComponent: busy ? updatingIndicator : (comboboxVisible ? combobox : undefined)
     }
