@@ -26,7 +26,7 @@ function createSectionDialog() {
         console.log("Error creating object: " + __sectionDialogComponent.errorString())
         return
     }
-    dialog.accepted.connect(refresh)
+    dialog.accepted.connect(refreshAll)
 }
 
 function createOpenLinkDialog(link) {
@@ -35,12 +35,13 @@ function createOpenLinkDialog(link) {
     if (!dialog) console.log("Error creating object: " + __openLinkDialogComponent.errorString())
 }
 
-function refresh(isAll) {
-    if (isAll == undefined) isAll = true
-    if (isAll) {
-        gagListView.model.clear()
-        nextPageId = 0
-    }
+function refreshAll() {
+    gagListView.model.clear()
+    nextPageId = 0
+    refreshOlder()
+}
+
+function refreshOlder() {
     Server.getGAG(settings.selectedSection, nextPageId, onSuccess, onFailure)
     pageHeader.busy = true
 }

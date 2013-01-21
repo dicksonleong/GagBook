@@ -65,7 +65,7 @@ Page {
             MenuItem {
                 text: "Refresh section"
                 enabled: !pageHeader.busy
-                onClicked: Script.refresh()
+                onClicked: Script.refreshAll()
             }
             MenuItem {
                 text: "Save image"
@@ -98,7 +98,10 @@ Page {
         delegate: GagDelegate {}
         interactive: moving || count === 0 || !currentItem.allowDelegateFlicking
 
-        onAtXEndChanged: if (atXEnd && count > 0 && !pageHeader.busy) Script.refresh(false)
+        onCurrentIndexChanged: {
+            if ((currentIndex === count - 1) && currentIndex >= 0 && !pageHeader.busy)
+                Script.refreshOlder()
+        }
         onCurrentItemChanged: if (currentItem) currentItem.loadImage = true
     }
 
@@ -116,5 +119,5 @@ Page {
         onClicked: Script.createSectionDialog()
     }
 
-    Component.onCompleted: Script.refresh()
+    Component.onCompleted: Script.refreshAll()
 }
