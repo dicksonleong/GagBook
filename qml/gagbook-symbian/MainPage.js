@@ -16,6 +16,10 @@
     along with this program. If not, see http://www.gnu.org/licenses/.
 */
 
+var THUMB_IMAGE_URL = "http://d24w6bsrhbeh9d.cloudfront.net/photo/%1_220x145.jpg"
+var SMALL_IMAGE_URL = "http://d24w6bsrhbeh9d.cloudfront.net/photo/%1_460s.jpg"
+var BIG_IMAGE_URL = "http://d24w6bsrhbeh9d.cloudfront.net/photo/%1_700b.jpg"
+
 var __sectionDialogComponent = null
 var __openLinkDialogComponent = null
 var __shareDialogComponent = null
@@ -55,9 +59,8 @@ function refreshOlder() {
 
 function onSuccess(json) {
     nextPageId = json.attributes.next
-    for (var i=0; i< json.images.length ; i++) {
-        gagListView.model.append(json.images[i])
-    }
+    var imagesArray = json.images
+    imagesArray.forEach(settings.selectedSection === 2 ? __appendVoteImage : __appendImage)
     pageHeader.busy = false
 }
 
@@ -65,4 +68,17 @@ function onFailure(status, statusText) {
     if (status === 0) infoBanner.alert("Server or connection error")
     else infoBanner.alert("Error: " + statusText + " (" + status + ")")
     pageHeader.busy = false
+}
+
+function __appendImage(imageObject) {
+    gagListView.model.append(imageObject)
+}
+
+// The url for image in Vote section is broken, so have to use hardcoded url
+function __appendVoteImage(imageObject) {
+    var idStr = imageObject.id.toString()
+    imageObject.image.thumb = THUMB_IMAGE_URL.arg(idStr)
+    imageObject.image.small = SMALL_IMAGE_URL.arg(idStr)
+    imageObject.image.big = BIG_IMAGE_URL.arg(idStr)
+    gagListView.model.append(imageObject)
 }
