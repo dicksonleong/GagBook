@@ -41,7 +41,7 @@ Item {
     property bool imageZoomed: gagImage.scale !== pinchArea.minScale
 
     function saveImage() {
-        return QMLUtils.saveImage(gagImage, model.id)
+        return QMLUtils.saveImage(gagImage, root.ListView.view.model.get(index).id)
     }
 
     function resetImageZoom() {
@@ -81,7 +81,7 @@ Item {
                 sourceSize.height: 3000
                 cache: false
                 fillMode: Image.PreserveAspectFit
-                source: root.loadImage ? (settings.imageSize === 0 ? model.image.small : model.image.big) : ""
+                source: root.loadImage ? model.imageUrl : ""
 
                 onScaleChanged: {
                     if ((width * scale) > flickable.width) {
@@ -222,7 +222,7 @@ Item {
                 font.pixelSize: constant.fontSizeMedium
                 color: "white"
                 elide: Text.ElideRight
-                text: model.votes + " likes"
+                text: model.votesCount + " likes"
             }
         }
     }

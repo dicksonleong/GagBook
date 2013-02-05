@@ -28,32 +28,103 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-var INFINIGAG_URL = "http://infinigag.com/api.json"
-var USER_AGENT = "GagBook/" + APP_VERSION + " (Nokia; Qt; MeeGo/1.2; Harmattan)"
+#include "gagobject.h"
 
-function getGAG(section, page, onSuccess, onFailure) {
-    var sectionString = ""
-    switch (section) {
-    case 0: sectionString = "hot"; break;
-    case 1: sectionString = "trending"; break;
-    case 2: sectionString = "vote"; break;
-    default: throw new Error("Invalid section: " + section)
-    }
+#include <QtCore/QString>
 
-    var requestUrl = INFINIGAG_URL + "?section=" + sectionString + (page ? "&page=" + page : "")
-    var request = new XMLHttpRequest()
+class GagObjectData : public QSharedData
+{
+public:
+    GagObjectData() : id(0) {}
+    GagObjectData(const GagObjectData &other) :
+        QSharedData(other), id(other.id), url(other.url), title(other.title),
+        imageUrl(other.imageUrl), votesCount(other.votesCount) {}
+    ~GagObjectData() {}
 
-    request.open("GET", requestUrl)
-    request.setRequestHeader("User-Agent", USER_AGENT)
+    int id;
+    QString url;
+    QString title;
+    QString imageUrl;
+    int votesCount;
+};
 
-    request.onreadystatechange = function() {
-        if (request.readyState === XMLHttpRequest.DONE) {
-            if (request.status === 200) {
-                if (request.responseText) onSuccess(JSON.parse(request.responseText))
-                else onFailure(-1, "Empty response")
-            }
-            else onFailure(request.status, request.statusText)
-        }
-    }
-    request.send()
+GagObject::GagObject() :
+    d(new GagObjectData)
+{
+}
+
+GagObject::GagObject(const GagObject &other) :
+    d(other.d)
+{
+}
+
+GagObject &GagObject::operator=(const GagObject &other)
+{
+    d = other.d;
+    return *this;
+}
+
+GagObject::~GagObject()
+{
+}
+
+int GagObject::id() const
+{
+    return d->id;
+}
+
+void GagObject::setId(int id)
+{
+    d->id = id;
+}
+
+QString GagObject::url() const
+{
+    return d->url;
+}
+
+void GagObject::setUrl(const QString &url)
+{
+    d->url = url;
+}
+
+QString GagObject::title() const
+{
+    return d->title;
+}
+
+void GagObject::setTitle(const QString &title)
+{
+    d->title = title;
+}
+
+QString GagObject::imageUrl() const
+{
+    return d->imageUrl;
+}
+
+void GagObject::setImageUrl(const QString &imageUrl)
+{
+    d->imageUrl = imageUrl;
+}
+
+int GagObject::votesCount() const
+{
+    return d->votesCount;
+}
+
+void GagObject::setVotesCount(int votes)
+{
+    d->votesCount = votes;
+}
+
+QVariantMap GagObject::toVariantMap() const
+{
+    QVariantMap gagMap;
+    gagMap["id"] = d->id;
+    gagMap["url"] = d->url;
+    gagMap["title"] = d->title;
+    gagMap["imageUrl"] = d->imageUrl;
+    gagMap["votesCount"] = d->votesCount;
+    return gagMap;
 }

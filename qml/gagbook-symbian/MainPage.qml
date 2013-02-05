@@ -30,13 +30,11 @@
 
 import QtQuick 1.1
 import com.nokia.symbian 1.1
-import "infinigag.js" as Server
 import "MainPage.js" as Script
+import GagModel 1.0
 
 Page {
     id: mainPage
-
-    property int nextPageId: 0
 
     tools: ToolBarLayout {
         ToolButton {
@@ -85,8 +83,8 @@ Page {
             MenuItem {
                 platformInverted: settings.whiteTheme
                 text: "Refresh section"
-                enabled: !pageHeader.busy
-                onClicked: Script.refreshAll()
+                enabled: !gagModel.busy
+                onClicked: gagModel.refresh(GagModel.RefreshAll)
             }
             MenuItem {
                 platformInverted: settings.whiteTheme
@@ -114,7 +112,11 @@ Page {
     ListView {
         id: gagListView
         anchors { top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
-        model: ListModel {}
+        model: GagModel {
+            id: gagModel
+            section: settings.selectedSection
+            onFailure: infoBanner.alert("Error: " + errorMessage);
+        }
         boundsBehavior: Flickable.DragOverBounds
         orientation: ListView.Horizontal
         snapMode: ListView.SnapOneItem
@@ -123,9 +125,10 @@ Page {
         interactive: moving || count === 0 || !currentItem.allowDelegateFlicking
 
         onCurrentIndexChanged: {
-            if ((currentIndex === count - 1) && currentIndex >= 0 && !pageHeader.busy)
-                Script.refreshOlder()
+            if ((currentIndex === count - 1) && currentIndex >= 0 && !gagModel.busy)
+                gagModel.refresh(GagModel.RefreshOlder);
         }
+        onAtXEndChanged: if (atXEnd && !gagModel.busy) gagModel.refresh(GagModel.RefreshOlder);
         onCurrentItemChanged: if (currentItem) currentItem.loadImage = true
     }
 
@@ -140,8 +143,9 @@ Page {
             }
         }
         comboboxVisible: true
+        busy: gagModel.busy
         onClicked: Script.createSectionDialog()
     }
 
-    Component.onCompleted: Script.refreshAll()
+    Component.onCompleted: gagModel.refresh(GagModel.RefreshAll)
 }

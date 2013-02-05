@@ -28,10 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-var THUMB_IMAGE_URL = "http://d24w6bsrhbeh9d.cloudfront.net/photo/%1_220x145.jpg"
-var SMALL_IMAGE_URL = "http://d24w6bsrhbeh9d.cloudfront.net/photo/%1_460s.jpg"
-var BIG_IMAGE_URL = "http://d24w6bsrhbeh9d.cloudfront.net/photo/%1_700b.jpg"
-
 var __sectionDialogComponent = null
 var __openLinkDialogComponent = null
 var __shareDialogComponent = null
@@ -43,7 +39,7 @@ function createSectionDialog() {
         console.log("Error creating object: " + __sectionDialogComponent.errorString())
         return
     }
-    dialog.accepted.connect(refreshAll)
+    dialog.accepted.connect(function() { gagModel.refresh(GagModel.RefreshAll) })
 }
 
 function createOpenLinkDialog(link) {
@@ -56,41 +52,4 @@ function createShareDialog(link) {
     if (!__shareDialogComponent) __shareDialogComponent = Qt.createComponent("ShareDialog.qml")
     var dialog = __shareDialogComponent.createObject(mainPage, { link: link })
     if (!dialog) console.log("Error creating object: " + __shareDialogComponent.errorString())
-}
-
-function refreshAll() {
-    gagListView.model.clear()
-    nextPageId = 0
-    refreshOlder()
-}
-
-function refreshOlder() {
-    Server.getGAG(settings.selectedSection, nextPageId, onSuccess, onFailure)
-    pageHeader.busy = true
-}
-
-function onSuccess(json) {
-    nextPageId = json.attributes.next
-    var imagesArray = json.images
-    imagesArray.forEach(settings.selectedSection === 2 ? __appendVoteImage : __appendImage)
-    pageHeader.busy = false
-}
-
-function onFailure(status, statusText) {
-    if (status === 0) infoBanner.alert("Server or connection error")
-    else infoBanner.alert("Error: " + statusText + " (" + status + ")")
-    pageHeader.busy = false
-}
-
-function __appendImage(imageObject) {
-    gagListView.model.append(imageObject)
-}
-
-// The url for image in Vote section is broken, so have to use hardcoded url
-function __appendVoteImage(imageObject) {
-    var idStr = imageObject.id.toString()
-    imageObject.image.thumb = THUMB_IMAGE_URL.arg(idStr)
-    imageObject.image.small = SMALL_IMAGE_URL.arg(idStr)
-    imageObject.image.big = BIG_IMAGE_URL.arg(idStr)
-    gagListView.model.append(imageObject)
 }

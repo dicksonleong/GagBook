@@ -55,12 +55,12 @@ Page {
             onButtonClicked: settings.whiteTheme = index === 1
         }
 
-        SettingButtonRow {
-            text: "Image Size"
-            checkedButtonIndex: settings.imageSize
-            buttonsText: ["Medium", "Large"]
-            onButtonClicked: settings.imageSize = index
-        }
+//        SettingButtonRow {
+//            text: "Image Size"
+//            checkedButtonIndex: settings.imageSize
+//            buttonsText: ["Medium", "Large"]
+//            onButtonClicked: settings.imageSize = index
+//        }
     }
 
     PageHeader {

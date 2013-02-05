@@ -28,32 +28,41 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-var INFINIGAG_URL = "http://infinigag.com/api.json"
-var USER_AGENT = "GagBook/" + APP_VERSION + " (Nokia; Qt; Symbian/3)"
+#ifndef GAGOBJECT_H
+#define GAGOBJECT_H
 
-function getGAG(section, page, onSuccess, onFailure) {
-    var sectionString = ""
-    switch (section) {
-    case 0: sectionString = "hot"; break;
-    case 1: sectionString = "trending"; break;
-    case 2: sectionString = "vote"; break;
-    default: throw new Error("Invalid section: " + section)
-    }
+#include <QtCore/QSharedDataPointer>
+#include <QtCore/QVariant>
 
-    var requestUrl = INFINIGAG_URL + "?section=" + sectionString + (page ? "&page=" + page : "")
-    var request = new XMLHttpRequest()
+class GagObjectData;
 
-    request.open("GET", requestUrl)
-    request.setRequestHeader("User-Agent", USER_AGENT)
+class GagObject
+{
+public:
+    GagObject();
+    GagObject(const GagObject &other);
+    GagObject &operator=(const GagObject &other);
+    ~GagObject();
 
-    request.onreadystatechange = function() {
-        if (request.readyState === XMLHttpRequest.DONE) {
-            if (request.status === 200) {
-                if (request.responseText) onSuccess(JSON.parse(request.responseText))
-                else onFailure(-1, "Empty response")
-            }
-            else onFailure(request.status, request.statusText)
-        }
-    }
-    request.send()
-}
+    int id() const;
+    void setId(int id);
+
+    QString url() const;
+    void setUrl(const QString &url);
+
+    QString title() const;
+    void setTitle(const QString &title);
+
+    QString imageUrl() const;
+    void setImageUrl(const QString &imageUrl);
+
+    int votesCount() const;
+    void setVotesCount(int votes);
+
+    QVariantMap toVariantMap() const;
+    
+private:
+    QSharedDataPointer<GagObjectData> d;
+};
+
+#endif // GAGOBJECT_H

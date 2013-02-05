@@ -30,6 +30,7 @@
 
 #include <QtGui/QApplication>
 #include <QtDeclarative/QDeclarativeContext>
+#include <QtDeclarative/qdeclarative.h>
 #include "qmlapplicationviewer.h"
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
@@ -37,6 +38,7 @@
 #include <QtGui/QPixmap>
 #endif
 
+#include "src/gagmodel.h"
 #include "src/qmlutils.h"
 
 #if defined(Q_OS_HARMATTAN) || defined(Q_WS_SIMULATOR)
@@ -67,6 +69,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QMLUtils qmlUtils;
     viewer.rootContext()->setContextProperty("QMLUtils", &qmlUtils);
+
+    qmlRegisterType<GagModel>("GagModel", 1, 0, "GagModel");
 
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 #if defined(Q_OS_HARMATTAN)

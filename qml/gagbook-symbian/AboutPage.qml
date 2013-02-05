@@ -79,10 +79,12 @@ Page {
                 textFormat: Text.PlainText
                 text: "GagBook is a 9GAG app that allow you to view the post from 9GAG \
 with a simple and native swipe-based UI. \
-GagBook is using InfiniGAG API but not affiliated with 9GAG or InfiniGAG. \
-This app may involve transmitting huge amount of data when downloading images.\n\n\
+GagBook is not affiliated with 9GAG.\n\n\
+Note: GagBook get the 9GAG posts by parsing HTML from 9GAG website, which can easily failed \
+to working anytime if 9GAG modified their HTML, even slightly. \
+\n\n\
 Copyright © 2012 Dickson\n\
-GagBook is open source and licensed under BSD\n"
+GagBook is open source and licensed under BSD license\n"
             }
 
             Button {

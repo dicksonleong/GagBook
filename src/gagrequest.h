@@ -28,21 +28,46 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-var __sectionDialogComponent = null
-var __openLinkDialogComponent = null
+#ifndef GAGREQUEST_H
+#define GAGREQUEST_H
 
-function createSectionDialog() {
-    if (!__sectionDialogComponent) __sectionDialogComponent = Qt.createComponent("SectionDialog.qml")
-    var dialog = __sectionDialogComponent.createObject(mainPage)
-    if (!dialog) {
-        console.log("Error creating object: " + __sectionDialogComponent.errorString())
-        return
-    }
-    dialog.accepted.connect(function() { gagModel.refresh(GagModel.RefreshAll) })
-}
+#include <QtCore/QObject>
+#include <QtCore/QList>
+#include <QtWebKit/QWebPage>
 
-function createOpenLinkDialog(link) {
-    if (!__openLinkDialogComponent) __openLinkDialogComponent = Qt.createComponent("OpenLinkDialog.qml")
-    var dialog = __openLinkDialogComponent.createObject(mainPage, { link: link })
-    if (!dialog) console.log("Error creating object: " + __openLinkDialogComponent.errorString())
-}
+#include "gagobject.h"
+
+class QNetworkAccessManager;
+class QNetworkReply;
+
+class GagRequest : public QObject
+{
+    Q_OBJECT
+    Q_ENUMS(Section)
+public:
+    explicit GagRequest(QNetworkAccessManager *manager, QObject *parent = 0);
+    ~GagRequest();
+
+    enum Section { Hot, Trending, Vote };
+
+    void send(Section section);
+    void send(Section section, int lastId);
+
+signals:
+    void success(const QList<GagObject> &gagList);
+    void failure(const QString &errorMessage);
+
+private slots:
+    void onFinished();
+
+private:
+    QNetworkAccessManager *m_netManager;
+    QNetworkReply *m_reply;
+
+    QWebPage m_webPage;
+    QList<GagObject> parsedGagList;
+
+    static QString getSectionText(Section section);
+};
+
+#endif // GAGREQUEST_H

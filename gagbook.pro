@@ -4,11 +4,19 @@ TARGET = gagbook
 VERSION = 0.2.3
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
+QT += network webkit
+
 HEADERS += \
-    src/qmlutils.h
+    src/qmlutils.h \
+    src/gagmodel.h \
+    src/gagobject.h \
+    src/gagrequest.h
 
 SOURCES += main.cpp \
-    src/qmlutils.cpp
+    src/qmlutils.cpp \
+    src/gagmodel.cpp \
+    src/gagobject.cpp \
+    src/gagrequest.cpp
 
 # Simulator
 simulator{

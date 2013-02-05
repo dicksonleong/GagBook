@@ -2,7 +2,7 @@ GagBook
 ==========
 
 GagBook is a [9GAG](http://9gag.com) app for MeeGo Harmattan and Symbian^3, written using Qt/QML.
-GagBook is using InfiniGAG API but not affiliated with 9GAG or InfiniGAG.
+GagBook is not affiliated with 9GAG.
 
 Features:
 * View posts in hot, trending or vote section
@@ -15,9 +15,7 @@ Features:
 ToDo
 ---------
 * Better comment section
-* Better app launcher icon
 * Vote and comment (?)
-* OAuth-based Facebook and Twitter sharing
 
 Contact Me
 ---------

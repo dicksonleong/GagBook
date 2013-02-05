@@ -28,21 +28,69 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-var __sectionDialogComponent = null
-var __openLinkDialogComponent = null
+#ifndef GAGMODEL_H
+#define GAGMODEL_H
 
-function createSectionDialog() {
-    if (!__sectionDialogComponent) __sectionDialogComponent = Qt.createComponent("SectionDialog.qml")
-    var dialog = __sectionDialogComponent.createObject(mainPage)
-    if (!dialog) {
-        console.log("Error creating object: " + __sectionDialogComponent.errorString())
-        return
-    }
-    dialog.accepted.connect(function() { gagModel.refresh(GagModel.RefreshAll) })
-}
+#include <QtCore/QAbstractListModel>
 
-function createOpenLinkDialog(link) {
-    if (!__openLinkDialogComponent) __openLinkDialogComponent = Qt.createComponent("OpenLinkDialog.qml")
-    var dialog = __openLinkDialogComponent.createObject(mainPage, { link: link })
-    if (!dialog) console.log("Error creating object: " + __openLinkDialogComponent.errorString())
-}
+#include "gagrequest.h"
+#include "gagobject.h"
+
+class QNetworkAccessManager;
+
+class GagModel : public QAbstractListModel
+{
+    Q_OBJECT
+    Q_ENUMS(GagRequest::Section)
+    Q_ENUMS(RefreshType)
+
+    Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
+    Q_PROPERTY(GagRequest::Section section READ section WRITE setSection NOTIFY sectionChanged)
+public:
+    explicit GagModel(QObject *parent = 0);
+
+    enum Roles {
+        TitleRole = Qt::UserRole,
+        ImageUrlRole,
+        VotesCountRole
+    };
+
+    enum RefreshType {
+        RefreshAll,
+        RefreshOlder
+    };
+
+    int rowCount(const QModelIndex &parent) const;
+    QVariant data(const QModelIndex &index, int role) const;
+
+    Q_INVOKABLE void refresh(RefreshType refreshType);
+    Q_INVOKABLE QVariantMap get(int rowIndex);
+
+    bool busy() const;
+    void setBusy(bool busy);
+
+    GagRequest::Section section() const;
+    void setSection(GagRequest::Section section);
+
+signals:
+    void failure(const QString &errorMessage);
+
+    void busyChanged();
+    void sectionChanged();
+    
+private slots:
+    void onSuccess(const QList<GagObject> &gagList);
+    void onFailure(const QString &errorMessage);
+
+private:
+    QNetworkAccessManager *m_netManager;
+    GagRequest *m_gagRequest;
+    QList<GagObject> m_gagList;
+
+    bool m_busy;
+    GagRequest::Section m_section;
+
+    inline void clearModel();
+};
+
+#endif // GAGMODEL_H
