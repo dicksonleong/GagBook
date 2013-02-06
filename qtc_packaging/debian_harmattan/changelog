@@ -1,3 +1,11 @@
+gagbook (0.3.0) stable; urgency=high
+  * Complete rewrite backend in C++
+  * Posts are scarp directly from 9GAG website instead of using the unstable
+  infiniGAG API
+  * Performance improvement
+
+ -- Dickson <dicksonleong8@gmail.com>  Wed, 06 Feb 2013 14:37:11 +0800
+
 gagbook (0.2.3) stable; urgency=high
   * Change InfiniGAG API url
   * Remove vote section temporary
