@@ -39,6 +39,7 @@
 
 class QNetworkAccessManager;
 class QNetworkReply;
+class QWebElementCollection;
 
 class GagRequest : public QObject
 {
@@ -50,8 +51,10 @@ public:
 
     enum Section { Hot, Trending, Vote };
 
-    void send(Section section);
-    void send(Section section, int lastId);
+    void setSection(Section section);
+    void setLastId(int lastId);
+
+    void send();
 
 signals:
     void success(const QList<GagObject> &gagList);
@@ -64,8 +67,14 @@ private:
     QNetworkAccessManager *m_netManager;
     QNetworkReply *m_reply;
 
+    Section m_section;
+    int m_lastId;
+
     QWebPage m_webPage;
     QList<GagObject> parsedGagList;
+
+    void parseGAG(const QWebElementCollection &entryItems);
+    void parseVoteGAG(const QWebElementCollection &entryItems);
 
     static QString getSectionText(Section section);
 };

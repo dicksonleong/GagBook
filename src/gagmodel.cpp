@@ -81,13 +81,15 @@ void GagModel::refresh(RefreshType refreshType)
         clearModel();
 
     m_gagRequest = new GagRequest(m_netManager, this);
+    m_gagRequest->setSection(m_section);
+    if (refreshType == RefreshOlder)
+        m_gagRequest->setLastId(m_gagList.last().id());
+
     connect(m_gagRequest, SIGNAL(success(QList<GagObject>)), this, SLOT(onSuccess(QList<GagObject>)));
     connect(m_gagRequest, SIGNAL(failure(QString)), this, SLOT(onFailure(QString)));
 
-    switch (refreshType) {
-    case RefreshAll: m_gagRequest->send(m_section); break;
-    case RefreshOlder: m_gagRequest->send(m_section, m_gagList.last().id()); break;
-    }
+    m_gagRequest->send();
+
     setBusy(true);
 }
 
