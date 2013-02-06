@@ -40,6 +40,7 @@
 
 #include "src/gagmodel.h"
 #include "src/qmlutils.h"
+#include "src/settings.h"
 
 #if defined(Q_OS_HARMATTAN) || defined(Q_WS_SIMULATOR)
 #include "src/shareui.h"
@@ -69,6 +70,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QMLUtils qmlUtils;
     viewer.rootContext()->setContextProperty("QMLUtils", &qmlUtils);
+    viewer.rootContext()->setContextProperty("settings", Settings::instance());
 
     qmlRegisterType<GagModel>("GagModel", 1, 0, "GagModel");
 

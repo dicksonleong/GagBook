@@ -39,7 +39,12 @@ PageStackWindow {
     initialPage: MainPage { id: mainPage }
 
     Constant { id: constant }
-    Settings { id: settings }
+
+    Binding {
+        target: theme
+        property: "inverted"
+        value: !settings.whiteTheme
+    }
 
     InfoBanner {
         id: infoBanner

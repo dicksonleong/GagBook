@@ -36,7 +36,6 @@
 
 class QDeclarativeItem;
 class QClipboard;
-class QSettings;
 
 class QMLUtils : public QObject
 {
@@ -50,15 +49,10 @@ public:
     // Save a image from QML Image object
     Q_INVOKABLE QString saveImage(QDeclarativeItem *imagObject, const int id);
 
-    // QSettings
-    Q_INVOKABLE QVariant getSetting(const QString &key, const QVariant &defaultValue = QVariant());
-    Q_INVOKABLE void setSetting(const QString &key, const QVariant &value);
-
 private:
     Q_DISABLE_COPY(QMLUtils)
 
     QClipboard *clipboard;
-    QSettings *settings;
 };
 
 #endif // QMLUTILS_H

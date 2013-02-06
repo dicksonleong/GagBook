@@ -39,7 +39,6 @@ PageStackWindow {
     initialPage: MainPage { id: mainPage }
 
     Constant { id: constant }
-    Settings { id: settings }
 
     InfoBanner {
         id: infoBanner

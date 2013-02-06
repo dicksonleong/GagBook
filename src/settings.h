@@ -28,20 +28,49 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import QtQuick 1.1
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
-QtObject {
-    id: settings
+#include <QtCore/QObject>
+#include <QtCore/QScopedPointer>
 
-    property int selectedSection: QMLUtils.getSetting("selectionSection", 0)
-    onSelectedSectionChanged: QMLUtils.setSetting("selectionSection", selectedSection)
+class QSettings;
 
-    property int imageSize: QMLUtils.getSetting("imageSize", 0)
-    onImageSizeChanged: QMLUtils.setSetting("imageSize", imageSize)
+class Settings : public QObject
+{
+    Q_OBJECT
 
-    property bool whiteTheme: QMLUtils.getSetting("whiteTheme", false)
-    onWhiteThemeChanged: {
-        theme.inverted = !whiteTheme
-        QMLUtils.setSetting("whiteTheme", whiteTheme)
-    }
-}
+    Q_PROPERTY(int selectedSection READ selectedSection WRITE setSelectedSection NOTIFY selectedSectionChanged)
+    Q_PROPERTY(int imageSize READ imageSize WRITE setImageSize NOTIFY imageSizeChanged)
+    Q_PROPERTY(bool whiteTheme READ isWhiteTheme WRITE setWhiteTheme NOTIFY whiteThemeChanged)
+public:
+    static Settings *instance();
+
+    int selectedSection() const;
+    void setSelectedSection(int selectedSection);
+
+    int imageSize() const;
+    void setImageSize(int imageSize);
+
+    bool isWhiteTheme() const;
+    void setWhiteTheme(bool whiteTheme);
+
+signals:
+    void selectedSectionChanged();
+    void imageSizeChanged();
+    void whiteThemeChanged();
+
+private:
+    static QScopedPointer<Settings> m_instance;
+
+    explicit Settings(QObject *parent = 0);
+    Q_DISABLE_COPY(Settings)
+
+    QSettings *m_settings;
+
+    int m_selectedSection;
+    int m_imageSize;
+    bool m_whiteTheme;
+};
+
+#endif // SETTINGS_H

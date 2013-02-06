@@ -32,22 +32,19 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QClipboard>
-#include <QtCore/QSettings>
 #include <QtDeclarative/QDeclarativeItem>
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
 #include <QtGui/QStyleOptionGraphicsItem>
 #include <QtGui/QDesktopServices>
 
-namespace {
-    // NOTE: QDesktopServices::storageLocation(QDesktopServices::PicturesLocation) in Harmattan
-    // may return /home/user/ (?) due to a bug in the tracker.
-    // If you have such problem, check the file /home/user/.config/user-dirs.dirs
-    const QString SAVING_FILE_PATH = QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
-}
+// NOTE: QDesktopServices::storageLocation(QDesktopServices::PicturesLocation) in Harmattan
+// may return /home/user/ (?) due to a bug in the tracker.
+// If you have such problem, check the file /home/user/.config/user-dirs.dirs
+static const QString SAVING_FILE_PATH = QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
 
 QMLUtils::QMLUtils(QObject *parent) :
-    QObject(parent), clipboard(QApplication::clipboard()), settings(new QSettings(this))
+    QObject(parent), clipboard(QApplication::clipboard())
 {
 }
 
@@ -75,14 +72,4 @@ QString QMLUtils::saveImage(QDeclarativeItem *imageObject, const int id)
     }
 
     return filePath;
-}
-
-QVariant QMLUtils::getSetting(const QString &key, const QVariant &defaultValue)
-{
-    return settings->value(key, defaultValue);
-}
-
-void QMLUtils::setSetting(const QString &key, const QVariant &value)
-{
-    settings->setValue(key, value);
 }

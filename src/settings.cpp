@@ -28,17 +28,66 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import QtQuick 1.1
+#include "settings.h"
 
-QtObject {
-    id: settings
+#include <QtCore/QSettings>
 
-    property int selectedSection: QMLUtils.getSetting("selectionSection", 0)
-    onSelectedSectionChanged: QMLUtils.setSetting("selectionSection", selectedSection)
+QScopedPointer<Settings> Settings::m_instance(0);
 
-    property int imageSize: QMLUtils.getSetting("imageSize", 0)
-    onImageSizeChanged: QMLUtils.setSetting("imageSize", imageSize)
+Settings *Settings::instance()
+{
+    if (m_instance.isNull())
+        m_instance.reset(new Settings);
 
-    property bool whiteTheme: QMLUtils.getSetting("whiteTheme", false)
-    onWhiteThemeChanged: QMLUtils.setSetting("whiteTheme", whiteTheme)
+    return m_instance.data();
+}
+
+int Settings::selectedSection() const
+{
+    return m_selectedSection;
+}
+
+void Settings::setSelectedSection(int selectedSection)
+{
+    if (m_selectedSection != selectedSection) {
+        m_selectedSection = selectedSection;
+        m_settings->setValue("selectedSection", m_selectedSection);
+        emit selectedSectionChanged();
+    }
+}
+
+int Settings::imageSize() const
+{
+    return m_imageSize;
+}
+
+void Settings::setImageSize(int imageSize)
+{
+    if (m_imageSize != imageSize) {
+        m_imageSize = imageSize;
+        m_settings->setValue("imageSize", m_imageSize);
+        emit imageSizeChanged();
+    }
+}
+
+bool Settings::isWhiteTheme() const
+{
+    return m_whiteTheme;
+}
+
+void Settings::setWhiteTheme(bool whiteTheme)
+{
+    if (m_whiteTheme != whiteTheme) {
+        m_whiteTheme = whiteTheme;
+        m_settings->setValue("whiteTheme", m_whiteTheme);
+        emit whiteThemeChanged();
+    }
+}
+
+Settings::Settings(QObject *parent) :
+    QObject(parent), m_settings(new QSettings(this))
+{
+    m_selectedSection = m_settings->value("selectedSection", 0).toInt();
+    m_imageSize = m_settings->value("imageSize", 0).toInt();
+    m_whiteTheme = m_settings->value("whiteTheme", false).toBool();
 }
