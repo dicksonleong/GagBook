@@ -158,8 +158,14 @@ void GagRequest::parseGAG(const QWebElementCollection &entryItems)
         const QWebElement img = element.findFirst("img");
         gag.setImageUrl(img.attribute("src"));
 
+        if (img.attribute("alt") == "NSFW")
+            gag.setIsNSFW(true);
+
         const QWebElement loved = element.findFirst("span.loved");
         gag.setVotesCount(loved.attribute("votes").toInt());
+
+        if (element.findFirst("a.play").isNull() == false)
+            gag.setIsVideo(true);
 
         parsedGagList.append(gag);
     }
@@ -186,11 +192,17 @@ void GagRequest::parseVoteGAG(const QWebElementCollection &entryItems)
             else
                 gag.setImageUrl(img.attribute("src"));
 
+            if (img.attribute("alt") == "NSFW")
+                gag.setIsNSFW(true);
+
             break;
         }
 
         const QWebElement loved = element.findFirst("span.loved");
         gag.setVotesCount(loved.attribute("votes").toInt());
+
+        if (element.findFirst("a.play").isNull() == false)
+            gag.setIsVideo(true);
 
         parsedGagList.append(gag);
     }

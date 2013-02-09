@@ -59,6 +59,12 @@ public:
     int votesCount() const;
     void setVotesCount(int votes);
 
+    bool isVideo() const;
+    void setIsVideo(bool isVideo);
+
+    bool isNSFW() const;
+    void setIsNSFW(bool isNSFW);
+
     QVariantMap toVariantMap() const;
     
 private:

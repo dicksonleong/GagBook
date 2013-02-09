@@ -52,7 +52,9 @@ public:
     enum Roles {
         TitleRole = Qt::UserRole,
         ImageUrlRole,
-        VotesCountRole
+        VotesCountRole,
+        IsVideoRole,
+        IsNSFWRole
     };
 
     enum RefreshType {

@@ -35,10 +35,11 @@
 class GagObjectData : public QSharedData
 {
 public:
-    GagObjectData() : id(0) {}
+    GagObjectData() : id(0), votesCount(0), isVideo(false), isNSFW(false) {}
     GagObjectData(const GagObjectData &other) :
         QSharedData(other), id(other.id), url(other.url), title(other.title),
-        imageUrl(other.imageUrl), votesCount(other.votesCount) {}
+        imageUrl(other.imageUrl), votesCount(other.votesCount), isVideo(other.isVideo),
+        isNSFW(other.isNSFW) {}
     ~GagObjectData() {}
 
     int id;
@@ -46,6 +47,8 @@ public:
     QString title;
     QString imageUrl;
     int votesCount;
+    bool isVideo;
+    bool isNSFW;
 };
 
 GagObject::GagObject() :
@@ -118,6 +121,26 @@ void GagObject::setVotesCount(int votes)
     d->votesCount = votes;
 }
 
+bool GagObject::isVideo() const
+{
+    return d->isVideo;
+}
+
+void GagObject::setIsVideo(bool isVideo)
+{
+    d->isVideo = isVideo;
+}
+
+bool GagObject::isNSFW() const
+{
+    return d->isNSFW;
+}
+
+void GagObject::setIsNSFW(bool isNSFW)
+{
+    d->isNSFW = isNSFW;
+}
+
 QVariantMap GagObject::toVariantMap() const
 {
     QVariantMap gagMap;
@@ -126,5 +149,7 @@ QVariantMap GagObject::toVariantMap() const
     gagMap["title"] = d->title;
     gagMap["imageUrl"] = d->imageUrl;
     gagMap["votesCount"] = d->votesCount;
+    gagMap["isVideo"] = d->isVideo;
+    gagMap["isNSFW"] = d->isNSFW;
     return gagMap;
 }

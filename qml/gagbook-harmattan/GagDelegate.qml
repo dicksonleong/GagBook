@@ -214,12 +214,37 @@ Item {
                 text: model.title
             }
 
-            Text {
+            Item {
                 anchors { left: parent.left; right: parent.right }
-                font.pixelSize: constant.fontSizeSmall
-                color: "white"
-                elide: Text.ElideRight
-                text: model.votesCount + " likes"
+                height: childrenRect.height
+
+                Text {
+                    anchors {
+                        left: parent.left; right: videoOrNSFWText.left
+                        rightMargin: videoOrNSFWText.text ? 0 : constant.paddingMedium
+                    }
+                    font.pixelSize: constant.fontSizeSmall
+                    color: "white"
+                    elide: Text.ElideRight
+                    text: model.votesCount + " like(s)"
+                }
+
+                Text {
+                    id: videoOrNSFWText
+
+                    function __text() {
+                        var arrayText = [];
+                        if (model.isVideo) arrayText.push("Video");
+                        if (model.isNSFW) arrayText.push("NSFW");
+                        return arrayText.join(" ");
+                    }
+
+                    anchors.right: parent.right
+                    font.italic: true
+                    font.pixelSize: constant.fontSizeSmall
+                    color: "white"
+                    text: __text()
+                }
             }
         }
     }

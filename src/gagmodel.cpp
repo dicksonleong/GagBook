@@ -39,6 +39,8 @@ GagModel::GagModel(QObject *parent) :
     roles[TitleRole] = "title";
     roles[ImageUrlRole] = "imageUrl";
     roles[VotesCountRole] = "votesCount";
+    roles[IsVideoRole] = "isVideo";
+    roles[IsNSFWRole] = "isNSFW";
     setRoleNames(roles);
 }
 
@@ -52,7 +54,7 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
 {
     Q_ASSERT(index.row() < m_gagList.count());
 
-    const GagObject gag = m_gagList.at(index.row());
+    const GagObject &gag = m_gagList.at(index.row());
 
     switch (role) {
     case TitleRole:
@@ -61,6 +63,10 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
         return gag.imageUrl();
     case VotesCountRole:
         return gag.votesCount();
+    case IsVideoRole:
+        return gag.isVideo();
+    case IsNSFWRole:
+        return gag.isNSFW();
     default:
         qWarning("GagModel::data(): Invalid role");
         return QVariant();
