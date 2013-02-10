@@ -33,7 +33,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 
 GagModel::GagModel(QObject *parent) :
-    QAbstractListModel(parent), m_netManager(new QNetworkAccessManager(this)), m_gagRequest(0)
+    QAbstractListModel(parent)
 {
     QHash<int, QByteArray> roles;
     roles[TitleRole] = "title";
@@ -73,88 +73,37 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
     }
 }
 
-void GagModel::refresh(RefreshType refreshType)
+bool GagModel::isEmpty() const
 {
-    if (m_gagRequest != 0) {
-        m_gagRequest->disconnect();
-        m_gagRequest->deleteLater();
-        m_gagRequest = 0;
-    }
-
-    if (m_gagList.isEmpty())
-        refreshType = RefreshAll;
-    else if (refreshType == RefreshAll)
-        clearModel();
-
-    m_gagRequest = new GagRequest(m_netManager, this);
-    m_gagRequest->setSection(m_section);
-    if (refreshType == RefreshOlder)
-        m_gagRequest->setLastId(m_gagList.last().id());
-
-    connect(m_gagRequest, SIGNAL(success(QList<GagObject>)), this, SLOT(onSuccess(QList<GagObject>)));
-    connect(m_gagRequest, SIGNAL(failure(QString)), this, SLOT(onFailure(QString)));
-
-    m_gagRequest->send();
-
-    setBusy(true);
+    return m_gagList.isEmpty();
 }
 
-QVariantMap GagModel::get(int rowIndex)
-{
-    Q_ASSERT_X(rowIndex < m_gagList.count(), Q_FUNC_INFO, "rowIndex out of range");
-    return m_gagList.at(rowIndex).toVariantMap();
-}
-
-bool GagModel::busy() const
-{
-    return m_busy;
-}
-
-void GagModel::setBusy(bool busy)
-{
-    if (m_busy != busy) {
-        m_busy = busy;
-        emit busyChanged();
-    }
-}
-
-GagRequest::Section GagModel::section() const
-{
-    return m_section;
-}
-
-void GagModel::setSection(GagRequest::Section section)
-{
-    if (m_section != section) {
-        m_section = section;
-        emit sectionChanged();
-    }
-}
-
-void GagModel::onSuccess(const QList<GagObject> &gagList)
-{
-    beginInsertRows(QModelIndex(), m_gagList.count(), m_gagList.count() + gagList.count() - 1);
-    m_gagList.append(gagList);
-    endInsertRows();
-
-    m_gagRequest->deleteLater();
-    m_gagRequest = 0;
-    setBusy(false);
-}
-
-void GagModel::onFailure(const QString &errorMessage)
-{
-    emit failure(errorMessage);
-    m_gagRequest->deleteLater();
-    m_gagRequest = 0;
-    setBusy(false);
-}
-
-inline void GagModel::clearModel()
+int GagModel::lastGagId() const
 {
     Q_ASSERT(!m_gagList.isEmpty());
+    return m_gagList.last().id();
+}
+
+void GagModel::append(const QList<GagObject> &gagList)
+{
+    beginInsertRows(QModelIndex(), m_gagList.count(), m_gagList.count() + gagList.count() - 1);
+    m_gagList.reserve(m_gagList.count() + gagList.count());
+    m_gagList.append(gagList);
+    endInsertRows();
+}
+
+void GagModel::clear()
+{
+    if (m_gagList.isEmpty())
+        return;
 
     beginRemoveRows(QModelIndex(), 0, m_gagList.count() - 1);
     m_gagList.clear();
     endRemoveRows();
+}
+
+QVariantMap GagModel::get(int rowIndex) const
+{
+    Q_ASSERT_X(rowIndex < m_gagList.count(), Q_FUNC_INFO, "rowIndex out of range");
+    return m_gagList.at(rowIndex).toVariantMap();
 }

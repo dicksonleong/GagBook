@@ -39,7 +39,7 @@ function createSectionDialog() {
         console.log("Error creating object: " + __sectionDialogComponent.errorString())
         return
     }
-    dialog.accepted.connect(function() { gagModel.refresh(GagModel.RefreshAll) })
+    dialog.accepted.connect(function() { gagManager.refresh(GagManager.RefreshAll) })
 }
 
 function createOpenLinkDialog(link) {

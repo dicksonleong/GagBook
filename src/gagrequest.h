@@ -44,12 +44,15 @@ class QWebElementCollection;
 class GagRequest : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(Section)
 public:
     explicit GagRequest(QNetworkAccessManager *manager, QObject *parent = 0);
     ~GagRequest();
 
-    enum Section { Hot, Trending, Vote };
+    enum Section {
+        Hot = 0,
+        Trending,
+        Vote
+    };
 
     void setSection(Section section);
     void setLastId(int lastId);

@@ -31,7 +31,7 @@
 import QtQuick 1.1
 import com.nokia.meego 1.0
 import "MainPage.js" as Script
-import GagModel 1.0
+import GagBook 1.0
 
 Page {
     id: mainPage
@@ -74,8 +74,8 @@ Page {
         MenuLayout {
             MenuItem {
                 text: "Refresh section"
-                enabled: !gagModel.busy
-                onClicked: gagModel.refresh(GagModel.RefreshAll)
+                enabled: !gagManager.busy
+                onClicked: gagManager.refresh(GagManager.RefreshAll)
             }
             MenuItem {
                 text: "Save image"
@@ -100,11 +100,7 @@ Page {
     ListView {
         id: gagListView
         anchors { top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
-        model: GagModel {
-            id: gagModel
-            section: settings.selectedSection
-            onFailure: infoBanner.alert("Error: " + errorMessage);
-        }
+        model: gagManager.model
         boundsBehavior: Flickable.DragOverBounds
         orientation: ListView.Horizontal
         snapMode: ListView.SnapOneItem
@@ -113,10 +109,10 @@ Page {
         interactive: moving || count === 0 || !currentItem.allowDelegateFlicking
 
         onCurrentIndexChanged: {
-            if ((currentIndex === count - 1) && currentIndex >= 0 && !gagModel.busy)
-                gagModel.refresh(GagModel.RefreshOlder);
+            if ((currentIndex === count - 1) && currentIndex >= 0 && !gagManager.busy)
+                gagManager.refresh(GagManager.RefreshOlder);
         }
-        onAtXEndChanged: if (count > 0 && atXEnd && !gagModel.busy) gagModel.refresh(GagModel.RefreshOlder);
+        onAtXEndChanged: if (count > 0 && atXEnd && !gagManager.busy) gagManager.refresh(GagManager.RefreshOlder);
         onCurrentItemChanged: if (currentItem) currentItem.loadImage = true
     }
 
@@ -130,10 +126,8 @@ Page {
             default: return ""
             }
         }
-        busy: gagModel.busy
+        busy: gagManager.busy
         comboboxVisible: true
         onClicked: Script.createSectionDialog()
     }
-
-    Component.onCompleted: gagModel.refresh(GagModel.RefreshAll);
 }

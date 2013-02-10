@@ -31,6 +31,7 @@
 import QtQuick 1.1
 import com.nokia.meego 1.0
 import com.nokia.extras 1.1
+import GagBook 1.0
 
 PageStackWindow {
     id: appWindow
@@ -56,5 +57,11 @@ PageStackWindow {
         }
     }
 
-    Component.onCompleted: theme.inverted = !settings.whiteTheme
+    GagManager {
+        id: gagManager
+        model: GagModel {}
+        onRefreshFailure: infoBanner.alert("Error: " + errorMessage)
+    }
+
+    Component.onCompleted: gagManager.refresh(GagManager.RefreshAll)
 }

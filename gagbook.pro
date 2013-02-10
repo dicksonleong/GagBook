@@ -8,6 +8,7 @@ QT += network webkit
 
 HEADERS += \
     src/qmlutils.h \
+    src/gagmanager.h \
     src/gagmodel.h \
     src/gagobject.h \
     src/gagrequest.h \
@@ -15,6 +16,7 @@ HEADERS += \
 
 SOURCES += main.cpp \
     src/qmlutils.cpp \
+    src/gagmanager.cpp \
     src/gagmodel.cpp \
     src/gagobject.cpp \
     src/gagrequest.cpp \

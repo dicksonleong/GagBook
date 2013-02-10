@@ -33,7 +33,6 @@
 
 #include <QtCore/QAbstractListModel>
 
-#include "gagrequest.h"
 #include "gagobject.h"
 
 class QNetworkAccessManager;
@@ -41,11 +40,6 @@ class QNetworkAccessManager;
 class GagModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_ENUMS(GagRequest::Section)
-    Q_ENUMS(RefreshType)
-
-    Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
-    Q_PROPERTY(GagRequest::Section section READ section WRITE setSection NOTIFY sectionChanged)
 public:
     explicit GagModel(QObject *parent = 0);
 
@@ -57,42 +51,20 @@ public:
         IsNSFWRole
     };
 
-    enum RefreshType {
-        RefreshAll,
-        RefreshOlder
-    };
-
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
 
-    Q_INVOKABLE void refresh(RefreshType refreshType);
-    Q_INVOKABLE QVariantMap get(int rowIndex);
+    bool isEmpty() const;
+    int lastGagId() const;
 
-    bool busy() const;
-    void setBusy(bool busy);
+    void append(const QList<GagObject> &gagList);
+    void clear();
 
-    GagRequest::Section section() const;
-    void setSection(GagRequest::Section section);
-
-signals:
-    void failure(const QString &errorMessage);
-
-    void busyChanged();
-    void sectionChanged();
-    
-private slots:
-    void onSuccess(const QList<GagObject> &gagList);
-    void onFailure(const QString &errorMessage);
+    // For QML
+    Q_INVOKABLE QVariantMap get(int rowIndex) const;
 
 private:
-    QNetworkAccessManager *m_netManager;
-    GagRequest *m_gagRequest;
     QList<GagObject> m_gagList;
-
-    bool m_busy;
-    GagRequest::Section m_section;
-
-    inline void clearModel();
 };
 
 #endif // GAGMODEL_H
