@@ -39,11 +39,7 @@ SelectionDialog {
     platformInverted: settings.whiteTheme
     titleText: "Section"
     selectedIndex: settings.selectedSection
-    model: ListModel {
-        ListElement { name: "Hot" }
-        ListElement { name: "Trending" }
-        ListElement { name: "Vote" }
-    }
+    model: sectionModel
     onSelectedIndexChanged: settings.selectedSection = selectedIndex
 
     Component.onCompleted: open()

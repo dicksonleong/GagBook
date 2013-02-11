@@ -42,8 +42,8 @@
 
 static const QByteArray USER_AGENT = "GagBook/" + QByteArray(APP_VERSION);
 
-GagRequest::GagRequest(QNetworkAccessManager *manager, QObject *parent) :
-    QObject(parent), m_netManager(manager), m_reply(0), m_lastId(-1)
+GagRequest::GagRequest(Section section, QNetworkAccessManager *manager, QObject *parent) :
+    QObject(parent), m_section(section), m_netManager(manager), m_reply(0), m_lastId(-1), m_page(0)
 {
     // disable JavaScript and rendering of external object
     m_webPage.settings()->setAttribute(QWebSettings::AutoLoadImages, false);
@@ -62,14 +62,16 @@ GagRequest::~GagRequest()
     }
 }
 
-void GagRequest::setSection(Section section)
-{
-    m_section = section;
-}
-
 void GagRequest::setLastId(int lastId)
 {
+    Q_ASSERT(m_section == Hot || m_section == Trending || m_section == Vote);
     m_lastId = lastId;
+}
+
+void GagRequest::setPage(int page)
+{
+    Q_ASSERT(m_section == TopDay || m_section == TopWeek || m_section == TopMonth || m_section == TopAll);
+    m_page = page;
 }
 
 void GagRequest::send()
@@ -80,7 +82,10 @@ void GagRequest::send()
     request.setRawHeader("User-Agent", USER_AGENT);
 
     if (m_lastId < 0) {
-        request.setUrl(QUrl("http://9gag.com/" + getSectionText(m_section)));
+        QString requestUrl = "http://9gag.com/" + getSectionText(m_section);
+        if (m_page > 0)
+            requestUrl += "/" + QString::number(m_page);
+        request.setUrl(QUrl(requestUrl));
         request.setRawHeader("Accept", "text/html");
     }
     else {
@@ -134,8 +139,8 @@ void GagRequest::onFinished()
 
     const QWebElementCollection entryItems = m_webPage.mainFrame()->findAllElements("li");
     switch (m_section) {
-    case Hot: case Trending: parseGAG(entryItems); break;
     case Vote: parseVoteGAG(entryItems); break;
+    default: parseGAG(entryItems); break;
     }
 
     if (parsedGagList.isEmpty())
@@ -223,6 +228,14 @@ QString GagRequest::getSectionText(Section section)
         return "trending";
     case Vote:
         return "vote";
+    case TopDay:
+        return "top/day";
+    case TopWeek:
+        return "top/week";
+    case TopMonth:
+        return "top/month";
+    case TopAll:
+        return "top/all";
     default:
         qWarning("GagRequest::getSectionText(): Invalid section");
         return QString("");

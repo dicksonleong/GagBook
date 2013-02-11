@@ -130,14 +130,7 @@ Page {
 
     PageHeader {
         id: pageHeader
-        text: {
-            switch (settings.selectedSection) {
-            case 0: return "Hot"
-            case 1: return "Trending"
-            case 2: return "Vote"
-            default: return ""
-            }
-        }
+        text: sectionModel.get(settings.selectedSection).text
         comboboxVisible: true
         busy: gagManager.busy
         onClicked: Script.createSectionDialog()

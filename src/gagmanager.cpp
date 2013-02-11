@@ -8,7 +8,7 @@
 
 GagManager::GagManager(QObject *parent) :
     QObject(parent), m_netManager(new QNetworkAccessManager(this)), m_request(0),
-    m_busy(false), m_model(0)
+    m_busy(false), m_model(0), m_page(1)
 {
 }
 
@@ -24,13 +24,24 @@ void GagManager::refresh(RefreshType refreshType)
 
     if (m_model->isEmpty())
         refreshType = RefreshAll;
-    else if (refreshType == RefreshAll)
-        m_model->clear();
 
-    m_request = new GagRequest(m_netManager, this);
-    m_request->setSection(static_cast<GagRequest::Section>(Settings::instance()->selectedSection()));
-    if (refreshType == RefreshOlder)
-        m_request->setLastId(m_model->lastGagId());
+    GagRequest::Section selectedSection = static_cast<GagRequest::Section>(Settings::instance()->selectedSection());
+    m_request = new GagRequest(selectedSection, m_netManager, this);
+
+    if (refreshType == RefreshAll) {
+        m_model->clear();
+        m_page = 1;
+    }
+    else if (refreshType == RefreshOlder) {
+        switch (selectedSection) {
+        case GagRequest::Hot: case GagRequest::Trending: case GagRequest::Vote:
+            m_request->setLastId(m_model->lastGagId());
+            break;
+        case GagRequest::TopDay: case GagRequest::TopWeek: case GagRequest::TopMonth: case GagRequest::TopAll:
+            m_request->setPage(++m_page);
+            break;
+        }
+    }
 
     connect(m_request, SIGNAL(success(QList<GagObject>)), this, SLOT(onSuccess(QList<GagObject>)));
     connect(m_request, SIGNAL(failure(QString)), this, SLOT(onFailure(QString)));

@@ -45,17 +45,21 @@ class GagRequest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GagRequest(QNetworkAccessManager *manager, QObject *parent = 0);
-    ~GagRequest();
-
     enum Section {
         Hot = 0,
         Trending,
-        Vote
+        Vote,
+        TopDay,
+        TopWeek,
+        TopMonth,
+        TopAll
     };
 
-    void setSection(Section section);
+    explicit GagRequest(Section section, QNetworkAccessManager *manager, QObject *parent = 0);
+    ~GagRequest();
+
     void setLastId(int lastId);
+    void setPage(int page);
 
     void send();
 
@@ -67,11 +71,12 @@ private slots:
     void onFinished();
 
 private:
+    const Section m_section;
     QNetworkAccessManager *m_netManager;
     QNetworkReply *m_reply;
 
-    Section m_section;
     int m_lastId;
+    int m_page;
 
     QWebPage m_webPage;
     QList<GagObject> parsedGagList;

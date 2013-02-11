@@ -63,5 +63,16 @@ PageStackWindow {
         onRefreshFailure: infoBanner.alert("Error: " + errorMessage)
     }
 
+    ListModel {
+        id: sectionModel
+        ListElement { text: "Hot" }
+        ListElement { text: "Trending" }
+        ListElement { text: "Vote" }
+        ListElement { text: "Top (Day)" }
+        ListElement { text: "Top (Week)" }
+        ListElement { text: "Top (Month)" }
+        ListElement { text: "Top (All Time)" }
+    }
+
     Component.onCompleted: gagManager.refresh(GagManager.RefreshAll)
 }

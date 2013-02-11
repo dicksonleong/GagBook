@@ -47,6 +47,7 @@ private:
 
     bool m_busy;
     GagModel *m_model;
+    int m_page;
 };
 
 #endif // GAGMANAGER_H
