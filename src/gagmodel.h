@@ -47,6 +47,7 @@ public:
         TitleRole = Qt::UserRole,
         ImageUrlRole,
         VotesCountRole,
+        CommentsCountRole,
         IsVideoRole,
         IsNSFWRole
     };

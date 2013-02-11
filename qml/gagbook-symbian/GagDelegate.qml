@@ -229,7 +229,8 @@ Item {
                     font.pixelSize: constant.fontSizeSmall
                     color: "white"
                     elide: Text.ElideRight
-                    text: model.votesCount + " like(s)"
+                    text: qsTr("%n like(s)", "", model.votesCount) + " | "
+                          + qsTr("%n comment(s)", "", model.commentsCount)
                 }
 
                 Text {

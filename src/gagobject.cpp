@@ -35,11 +35,11 @@
 class GagObjectData : public QSharedData
 {
 public:
-    GagObjectData() : id(0), votesCount(0), isVideo(false), isNSFW(false) {}
+    GagObjectData() : id(0), votesCount(0), commentsCount(0), isVideo(false), isNSFW(false) {}
     GagObjectData(const GagObjectData &other) :
         QSharedData(other), id(other.id), url(other.url), title(other.title),
-        imageUrl(other.imageUrl), votesCount(other.votesCount), isVideo(other.isVideo),
-        isNSFW(other.isNSFW) {}
+        imageUrl(other.imageUrl), votesCount(other.votesCount), commentsCount(other.commentsCount),
+        isVideo(other.isVideo), isNSFW(other.isNSFW) {}
     ~GagObjectData() {}
 
     int id;
@@ -47,6 +47,7 @@ public:
     QString title;
     QString imageUrl;
     int votesCount;
+    int commentsCount;
     bool isVideo;
     bool isNSFW;
 };
@@ -119,6 +120,16 @@ int GagObject::votesCount() const
 void GagObject::setVotesCount(int votes)
 {
     d->votesCount = votes;
+}
+
+int GagObject::commentsCount() const
+{
+    return d->commentsCount;
+}
+
+void GagObject::setCommentsCount(int comments)
+{
+    d->commentsCount = comments;
 }
 
 bool GagObject::isVideo() const

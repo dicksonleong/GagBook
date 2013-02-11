@@ -59,6 +59,9 @@ public:
     int votesCount() const;
     void setVotesCount(int votes);
 
+    int commentsCount() const;
+    void setCommentsCount(int comments);
+
     bool isVideo() const;
     void setIsVideo(bool isVideo);
 

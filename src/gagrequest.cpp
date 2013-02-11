@@ -164,6 +164,9 @@ void GagRequest::parseGAG(const QWebElementCollection &entryItems)
         const QWebElement loved = element.findFirst("span.loved");
         gag.setVotesCount(loved.attribute("votes").toInt());
 
+        const QWebElement commentSpan = element.findFirst("span.comment");
+        gag.setCommentsCount(commentSpan.toPlainText().toInt());
+
         if (element.findFirst("a.play").isNull() == false)
             gag.setIsVideo(true);
 
@@ -200,6 +203,9 @@ void GagRequest::parseVoteGAG(const QWebElementCollection &entryItems)
 
         const QWebElement loved = element.findFirst("span.loved");
         gag.setVotesCount(loved.attribute("votes").toInt());
+
+        const QWebElement commentSpan = element.findFirst("span.comment");
+        gag.setCommentsCount(commentSpan.toPlainText().toInt());
 
         if (element.findFirst("a.play").isNull() == false)
             gag.setIsVideo(true);
