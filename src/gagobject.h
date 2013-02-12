@@ -31,7 +31,7 @@
 #ifndef GAGOBJECT_H
 #define GAGOBJECT_H
 
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/QExplicitlySharedDataPointer>
 #include <QtCore/QVariant>
 
 class GagObjectData;
@@ -71,7 +71,7 @@ public:
     QVariantMap toVariantMap() const;
     
 private:
-    QSharedDataPointer<GagObjectData> d;
+    QExplicitlySharedDataPointer<GagObjectData> d;
 };
 
 #endif // GAGOBJECT_H
