@@ -38,18 +38,21 @@
 #include <QtGui/QStyleOptionGraphicsItem>
 #include <QtGui/QDesktopServices>
 
-// NOTE: QDesktopServices::storageLocation(QDesktopServices::PicturesLocation) in Harmattan
-// may return /home/user/ (?) due to a bug in the tracker.
-// If you have such problem, check the file /home/user/.config/user-dirs.dirs
+#ifdef Q_OS_HARMATTAN
+#include <MDataUri>
+#include <maemo-meegotouch-interfaces/shareuiinterface.h>
+#endif
+
 static const QString SAVING_FILE_PATH = QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
 
 QMLUtils::QMLUtils(QObject *parent) :
-    QObject(parent), clipboard(QApplication::clipboard())
+    QObject(parent)
 {
 }
 
 void QMLUtils::copyToClipboard(const QString &text)
 {
+    QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(text, QClipboard::Clipboard);
     clipboard->setText(text, QClipboard::Selection);
 }
@@ -72,4 +75,34 @@ QString QMLUtils::saveImage(QDeclarativeItem *imageObject, const int id)
     }
 
     return filePath;
+}
+
+void QMLUtils::shareLink(const QString &link, const QString &title)
+{
+#ifdef Q_OS_HARMATTAN
+    MDataUri uri;
+    uri.setMimeType("text/x-url");
+    uri.setTextData(link);
+
+    if (!title.isEmpty())
+        uri.setAttribute("title", title);
+
+    if (!uri.isValid()) {
+        qCritical("QMLUtils::shareLink(): Invalid URI");
+        return;
+    }
+
+    ShareUiInterface shareIf("com.nokia.ShareUi");
+
+    if (!shareIf.isValid()) {
+        qCritical("QMLUtils::shareLink(): Invalid Share UI interface");
+        return;
+    }
+
+    shareIf.share(QStringList() << uri.toString());
+#else
+    qWarning("QMLUtils::shareLink(): This function only available on Harmattan");
+    Q_UNUSED(title)
+    Q_UNUSED(link)
+#endif
 }

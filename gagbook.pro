@@ -30,8 +30,6 @@ simulator{
     folder_02.target = qml
     DEPLOYMENTFOLDERS = folder_01 folder_02
 
-    HEADERS += src/shareui.h
-    SOURCES += src/shareui.cpp
     RESOURCES += resource.qrc
 }
 
@@ -40,9 +38,6 @@ contains(MEEGO_EDITION,harmattan) {
     folder_01.source = qml/gagbook-harmattan
     folder_01.target = qml
     DEPLOYMENTFOLDERS = folder_01
-
-    HEADERS += src/shareui.h
-    SOURCES += src/shareui.cpp
 
     CONFIG += shareuiinterface-maemo-meegotouch share-ui-plugin share-ui-common mdatauri qdeclarative-boostable
     DEFINES += Q_OS_HARMATTAN

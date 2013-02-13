@@ -59,8 +59,10 @@ Page {
         ToolIcon {
             platformIconId: "toolbar-share" + (enabled ? "" : "-dimmed")
             enabled: gagListView.count > 0
-            onClicked: shareUI.shareLink(gagListView.model.get(gagListView.currentIndex).url,
-                                         gagListView.model.get(gagListView.currentIndex).title)
+            onClicked: {
+                var gag = gagListView.model.get(gagListView.currentIndex);
+                QMLUtils.shareLink(gag.url, gag.title);
+            }
         }
         ToolIcon {
             platformIconId: "toolbar-view-menu"

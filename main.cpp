@@ -43,10 +43,6 @@
 #include "src/qmlutils.h"
 #include "src/settings.h"
 
-#if defined(Q_OS_HARMATTAN) || defined(Q_WS_SIMULATOR)
-#include "src/shareui.h"
-#endif
-
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QScopedPointer<QApplication> app(createApplication(argc, argv));
@@ -63,11 +59,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QmlApplicationViewer viewer;
     viewer.rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
-
-#if defined(Q_OS_HARMATTAN) || defined(Q_WS_SIMULATOR)
-    ShareUI shareUI;
-    viewer.rootContext()->setContextProperty("shareUI", &shareUI);
-#endif
 
     QMLUtils qmlUtils;
     viewer.rootContext()->setContextProperty("QMLUtils", &qmlUtils);

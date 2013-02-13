@@ -35,7 +35,6 @@
 #include <QtCore/QVariant>
 
 class QDeclarativeItem;
-class QClipboard;
 
 class QMLUtils : public QObject
 {
@@ -49,10 +48,11 @@ public:
     // Save a image from QML Image object
     Q_INVOKABLE QString saveImage(QDeclarativeItem *imagObject, const int id);
 
+    // Share a link using Harmattan Share UI
+    Q_INVOKABLE void shareLink(const QString &link, const QString &title = QString());
+
 private:
     Q_DISABLE_COPY(QMLUtils)
-
-    QClipboard *clipboard;
 };
 
 #endif // QMLUTILS_H
