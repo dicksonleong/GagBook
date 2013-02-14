@@ -35,6 +35,7 @@
 #include <QtCore/QVariant>
 
 class QDeclarativeItem;
+class QUrl;
 
 class QMLUtils : public QObject
 {
@@ -50,6 +51,9 @@ public:
 
     // Share a link using Harmattan Share UI
     Q_INVOKABLE void shareLink(const QString &link, const QString &title = QString());
+
+    // Open the link using Symbian's default browser
+    Q_INVOKABLE void openDefaultBrowser(const QUrl &url);
 
 private:
     Q_DISABLE_COPY(QMLUtils)

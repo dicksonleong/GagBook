@@ -56,7 +56,7 @@ ContextMenu {
             text: "Open link in web browser"
             platformInverted: root.platformInverted
             onClicked: {
-                Qt.openUrlExternally(link)
+                QMLUtils.openDefaultBrowser(link)
                 infoBanner.alert("Launching web browser...")
             }
         }

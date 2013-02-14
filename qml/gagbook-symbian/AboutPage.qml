@@ -92,7 +92,7 @@ GagBook is open source and licensed under BSD license\n"
                 platformInverted: settings.whiteTheme
                 text: "Developer's Website"
                 width: parent.width * 0.75
-                onClicked: Qt.openUrlExternally(constant.devWebSite)
+                onClicked: QMLUtils.openDefaultBrowser(constant.devWebSite)
             }
 
             Button {
@@ -100,7 +100,7 @@ GagBook is open source and licensed under BSD license\n"
                 platformInverted: settings.whiteTheme
                 text: "Source Repository"
                 width: parent.width * 0.75
-                onClicked: Qt.openUrlExternally(constant.sourceRepoSite)
+                onClicked: QMLUtils.openDefaultBrowser(constant.sourceRepoSite)
             }
         }
     }

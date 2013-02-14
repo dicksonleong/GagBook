@@ -45,7 +45,7 @@ ContextMenu {
             text: "Share via Facebook"
             platformInverted: root.platformInverted
             onClicked: {
-                Qt.openUrlExternally("http://www.facebook.com/sharer.php?u="+link)
+                QMLUtils.openDefaultBrowser("http://www.facebook.com/sharer.php?u=" + link)
                 infoBanner.alert("Launching web browser...")
             }
         }
@@ -53,7 +53,7 @@ ContextMenu {
             text: "Share via SMS"
             platformInverted: root.platformInverted
             onClicked: {
-                Qt.openUrlExternally("sms:?body="+link)
+                QMLUtils.openDefaultBrowser("sms:?body=" + link)
                 infoBanner.alert("Launching SMS...")
             }
         }
@@ -61,7 +61,7 @@ ContextMenu {
             text: "Share via email"
             platformInverted: root.platformInverted
             onClicked: {
-                Qt.openUrlExternally("mailto:?body="+link)
+                QMLUtils.openDefaultBrowser("mailto:?body=" + link)
                 infoBanner.alert("Launching email client...")
             }
         }

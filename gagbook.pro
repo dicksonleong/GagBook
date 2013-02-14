@@ -69,6 +69,9 @@ symbian{
     # Symbian have a different syntax
     DEFINES -= APP_VERSION=\\\"$$VERSION\\\"
     DEFINES += APP_VERSION=\"$$VERSION\"
+
+    # For QMLUtils::openDefaultBrowser()
+    LIBS += -lapgrfx -leikcore -lcone -lapmime
 }
 
 OTHER_FILES += qtc_packaging/debian_harmattan/* \
