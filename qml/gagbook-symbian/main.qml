@@ -62,9 +62,9 @@ PageStackWindow {
         ListElement { text: "Hot" }
         ListElement { text: "Trending" }
         ListElement { text: "Vote" }
-        ListElement { text: "Top (Day)" }
-        ListElement { text: "Top (Week)" }
-        ListElement { text: "Top (Month)" }
+        ListElement { text: "Top (Today)" }
+        ListElement { text: "Top (This Week)" }
+        ListElement { text: "Top (This Month)" }
         ListElement { text: "Top (All Time)" }
     }
 
