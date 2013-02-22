@@ -50,6 +50,13 @@ Item {
         bounceBackAnimation.start()
     }
 
+    states: State {
+        name: "hidden"
+        AnchorChanges { target: zoomSlider; anchors.right: undefined; anchors.left: root.right }
+        AnchorChanges { target: textContainer; anchors.top: undefined; anchors.bottom: root.top }
+    }
+    transitions: Transition { AnchorAnimation { duration: 250; easing.type: Easing.InOutQuad } }
+
     height: ListView.view.height; width: ListView.view.width
 
     Flickable {
@@ -150,7 +157,7 @@ Item {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: textContainer.state = textContainer.state ? "" : "hidden"
+            onClicked: root.state = (root.state ? "" : "hidden")
         }
     }
 
@@ -182,15 +189,41 @@ Item {
 
     ScrollDecorator { flickableItem: flickable }
 
+    Slider {
+        id: zoomSlider
+        anchors { verticalCenter: parent.verticalCenter; right: parent.right; rightMargin: constant.paddingMedium }
+        enabled: gagImage.status == Image.Ready
+        height: parent.height * 0.6
+        visible: settings.zoomSliderVisible
+        opacity: pressed ? 1 : 0.6
+        minimumValue: pinchArea.minScale
+        maximumValue: pinchArea.maxScale
+        stepSize: (maximumValue - minimumValue) / 20
+        orientation: Qt.Vertical
+
+        Behavior on opacity { NumberAnimation { duration: 150 } }
+
+        // When not pressed, bind slider value to image scale
+        Binding {
+            target: zoomSlider
+            property: "value"
+            value: gagImage.scale
+            when: !zoomSlider.presseds
+        }
+
+        // When pressed, bind image scale to slider value
+        Binding {
+            target: gagImage
+            property: "scale"
+            value: zoomSlider.value
+            when: zoomSlider.pressed
+        }
+    }
+
     Item {
         id: textContainer
         anchors { left: parent.left; right: parent.right; top: parent.top }
         height: textColumn.height + 2 * textColumn.anchors.margins
-        states: State {
-            name: "hidden"
-            AnchorChanges { target: textContainer; anchors.top: undefined; anchors.bottom: root.top }
-        }
-        transitions: Transition { AnchorAnimation { duration: 250; easing.type: Easing.InOutQuad } }
 
         Rectangle {
             anchors.fill: parent

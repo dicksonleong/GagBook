@@ -45,7 +45,7 @@ Page {
         id: settingsColumn
         anchors { top: pageHeader.bottom; topMargin: constant.paddingMedium; left: parent.left; right: parent.right }
         height: childrenRect.height
-        spacing: constant.paddingMedium
+        spacing: constant.paddingLarge
 
         SettingButtonRow {
             text: "Theme"
@@ -60,6 +60,13 @@ Page {
 //            buttonsText: ["Medium", "Large"]
 //            onButtonClicked: settings.imageSize = index
 //        }
+
+        SettingButtonRow {
+            text: "Zoom Slider"
+            checkedButtonIndex: settings.zoomSliderVisible ? 0 : 1
+            buttonsText: ["Show", "Hide"]
+            onButtonClicked: settings.zoomSliderVisible = (index === 0)
+        }
     }
 
     PageHeader {

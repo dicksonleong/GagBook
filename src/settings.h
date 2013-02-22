@@ -43,6 +43,8 @@ class Settings : public QObject
     Q_PROPERTY(int selectedSection READ selectedSection WRITE setSelectedSection NOTIFY selectedSectionChanged)
     Q_PROPERTY(int imageSize READ imageSize WRITE setImageSize NOTIFY imageSizeChanged)
     Q_PROPERTY(bool whiteTheme READ isWhiteTheme WRITE setWhiteTheme NOTIFY whiteThemeChanged)
+    Q_PROPERTY(bool zoomSliderVisible READ isZoomSliderVisible WRITE setZoomSliderVisible
+               NOTIFY zoomSliderVisibleChanged)
 public:
     static Settings *instance();
 
@@ -55,10 +57,14 @@ public:
     bool isWhiteTheme() const;
     void setWhiteTheme(bool whiteTheme);
 
+    bool isZoomSliderVisible() const;
+    void setZoomSliderVisible(bool visible);
+
 signals:
     void selectedSectionChanged();
     void imageSizeChanged();
     void whiteThemeChanged();
+    void zoomSliderVisibleChanged();
 
 private:
     static QScopedPointer<Settings> m_instance;
@@ -71,6 +77,7 @@ private:
     int m_selectedSection;
     int m_imageSize;
     bool m_whiteTheme;
+    bool m_zoomSliderVisible;
 };
 
 #endif // SETTINGS_H
