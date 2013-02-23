@@ -1,3 +1,11 @@
+gagbook (0.4.0) stable; urgency=normal
+  * Add vote and top section
+  * Add zoom slider
+  * Show a text when the post is a video/NSFW
+  * Show number of comments for each post
+
+ -- Dickson <dicksonleong8@gmail.com>  Sat, 23 Feb 2013 21:30:08 +0800
+
 gagbook (0.3.0) stable; urgency=high
   * Complete rewrite backend in C++
   * Posts are scarp directly from 9GAG website instead of using the unstable
