@@ -4,38 +4,35 @@
 
 <title>Comments</title>
 
-<!-- FIXME: Resize height to fit content height instead of using CSS to set manually -->
-<style type="text/css">
-.fb_ltr{height:2000px !important;}
-/*.fb-comments, .fb-comments span, .fb-comments iframe {width: 100% !important;}*/
-</style>
-
 <script type="text/javascript">
 window.onload = function() {
-    var box = document.getElementById("commentsBox");
-    box.setAttribute("data-href", window.qml.gagURL);
-    box.setAttribute("data-width", window.qml.width);
+    var url = "https://www.facebook.com/plugins/comments.php?order_by=social_ranking&numposts=10";
+    url += "&width=" + window.qml.width;
+    url += "&href=" + window.qml.gagURL;
+
     var backgroundCSS = document.createElement('style');
 
     if (window.qml.whiteTheme) {
-        box.setAttribute("colorscheme", "light");
         backgroundCSS.innerHTML = "body {background-color:#E0E1E2;}";
+        url += "&color_scheme=light";
     }
     else {
         backgroundCSS.innerHTML = "body {background-color:black;}";
+        url += "&color_scheme=dark";
     }
     document.head.appendChild(backgroundCSS);
+    var commentsIframe = document.getElementById("comments-iframe");
+    commentsIframe.style.width = window.qml.width + "px";
+    commentsIframe.style.height = "2000px";
+    commentsIframe.src = url;
 }
 </script>
 
 </head>
 <body>
 
-<div id="fb-root"></div>
-<script src="http://connect.facebook.net/en_GB/all.js#xfbml=1"></script>
-
-<div id="commentsBox" class="fb-comments" data-href=" " data-width="480" data-num-posts="10" data-mobile="false"
-data-colorscheme="dark"></div>
+<iframe id="comments-iframe" src="" style="border: none;">
+</iframe>
 
 </body>
 </html>
