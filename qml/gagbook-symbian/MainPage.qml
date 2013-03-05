@@ -88,13 +88,9 @@ Page {
             }
             MenuItem {
                 platformInverted: settings.whiteTheme
-                text: "Save image"
+                text: "Download image"
                 enabled: gagListView.count > 0
-                onClicked: {
-                    var filePath = gagListView.currentItem.saveImage()
-                    if (filePath) infoBanner.alert("Image saved in " + filePath)
-                    else infoBanner.alert("Failed to save image")
-                }
+                onClicked: QMLUtils.downloadImage(gagListView.model.get(gagListView.currentIndex).imageUrl)
             }
             MenuItem {
                 platformInverted: settings.whiteTheme
@@ -132,7 +128,7 @@ Page {
         id: pageHeader
         text: sectionModel.get(settings.selectedSection).text
         comboboxVisible: true
-        busy: gagManager.busy
+        busy: gagManager.busy || QMLUtils.busy
         onClicked: Script.createSectionDialog()
     }
 }

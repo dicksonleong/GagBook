@@ -80,13 +80,9 @@ Page {
                 onClicked: gagManager.refresh(GagManager.RefreshAll)
             }
             MenuItem {
-                text: "Save image"
+                text: "Download image"
                 enabled: gagListView.count > 0
-                onClicked: {
-                    var filePath = gagListView.currentItem.saveImage()
-                    if (filePath) infoBanner.alert("Image saved in " + filePath)
-                    else infoBanner.alert("Failed to save image")
-                }
+                onClicked: QMLUtils.downloadImage(gagListView.model.get(gagListView.currentIndex).imageUrl)
             }
             MenuItem {
                 text: "Settings"
@@ -121,7 +117,7 @@ Page {
     PageHeader {
         id: pageHeader
         text: sectionModel.get(settings.selectedSection).text
-        busy: gagManager.busy
+        busy: gagManager.busy || QMLUtils.busy
         comboboxVisible: true
         onClicked: Script.createSectionDialog()
     }

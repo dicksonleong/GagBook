@@ -40,10 +40,6 @@ Item {
     property bool allowDelegateFlicking: gagImage.status === Image.Ready && gagImage.scale > pinchArea.minScale
     property bool imageZoomed: gagImage.scale !== pinchArea.minScale
 
-    function saveImage() {
-        return QMLUtils.saveImage(gagImage, root.ListView.view.model.get(index).id)
-    }
-
     function resetImageZoom() {
         flickable.returnToBounds()
         bounceBackAnimation.to = pinchArea.minScale

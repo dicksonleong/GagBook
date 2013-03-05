@@ -36,18 +36,23 @@
 
 class QDeclarativeItem;
 class QUrl;
+class QNetworkAccessManager;
+class QNetworkReply;
 
 class QMLUtils : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
 public:
     explicit QMLUtils(QObject *parent = 0);
+
+    void setNetworkAccessManager(QNetworkAccessManager *manager);
 
     // Copy text to system clipboard
     Q_INVOKABLE void copyToClipboard(const QString &text);
 
-    // Save a image from QML Image object
-    Q_INVOKABLE QString saveImage(QDeclarativeItem *imagObject, const int id);
+    // Download an image
+    Q_INVOKABLE void downloadImage(const QString &imageUrl);
 
     // Share a link using Harmattan Share UI
     Q_INVOKABLE void shareLink(const QString &link, const QString &title = QString());
@@ -55,8 +60,22 @@ public:
     // Open the link using Symbian's default browser
     Q_INVOKABLE void openDefaultBrowser(const QUrl &url);
 
+    bool isBusy() const { return m_busy; }
+
+signals:
+    void imageDownloadFinished(const QString &message);
+    void busyChanged();
+
+private slots:
+    void onImageDownloadReplyFinished();
+
 private:
     Q_DISABLE_COPY(QMLUtils)
+
+    QNetworkAccessManager *m_netManager;
+    QNetworkReply *m_imageDowloadReply;
+
+    bool m_busy;
 };
 
 #endif // QMLUTILS_H
