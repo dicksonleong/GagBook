@@ -36,10 +36,6 @@ class GagObjectData : public QSharedData
 {
 public:
     GagObjectData() : id(0), votesCount(0), commentsCount(0), isVideo(false), isNSFW(false) {}
-    GagObjectData(const GagObjectData &other) :
-        QSharedData(other), id(other.id), url(other.url), title(other.title),
-        imageUrl(other.imageUrl), votesCount(other.votesCount), commentsCount(other.commentsCount),
-        isVideo(other.isVideo), isNSFW(other.isNSFW) {}
     ~GagObjectData() {}
 
     int id;
@@ -50,6 +46,9 @@ public:
     int commentsCount;
     bool isVideo;
     bool isNSFW;
+
+private:
+    Q_DISABLE_COPY(GagObjectData) // Disable copy for the data
 };
 
 GagObject::GagObject() :
