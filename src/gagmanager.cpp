@@ -40,6 +40,7 @@ GagManager::GagManager(QObject *parent) :
     QObject(parent), m_netManager(new QNetworkAccessManager(this)), m_request(0),
     m_busy(false), m_model(0), m_page(1)
 {
+    GagRequest::initializeCache();
 }
 
 void GagManager::refresh(RefreshType refreshType)

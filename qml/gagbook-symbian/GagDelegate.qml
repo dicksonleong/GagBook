@@ -79,6 +79,7 @@ Item {
                     prevScale = scale
                 }
 
+                asynchronous: true
                 anchors.centerIn: parent
                 smooth: !flickable.moving
                 sourceSize.height: 3000

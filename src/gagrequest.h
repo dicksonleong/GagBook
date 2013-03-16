@@ -63,26 +63,31 @@ public:
 
     void send();
 
+    static void initializeCache();
+
 signals:
     void success(const QList<GagObject> &gagList);
     void failure(const QString &errorMessage);
 
 private slots:
     void onFinished();
+    void onImageDownloadFinished();
 
 private:
     const Section m_section;
     QNetworkAccessManager *m_netManager;
-    QNetworkReply *m_reply;
 
     int m_lastId;
     int m_page;
 
+    QNetworkReply *m_reply;
     QWebPage m_webPage;
     QList<GagObject> parsedGagList;
+    QHash<QNetworkReply*, GagObject> m_imageDownloadReplyHash;
 
     void parseGAG(const QWebElementCollection &entryItems);
     void parseVoteGAG(const QWebElementCollection &entryItems);
+    void downloadImages();
 
     static QString getSectionText(Section section);
 };

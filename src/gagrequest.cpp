@@ -30,8 +30,12 @@
 
 #include "gagrequest.h"
 
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QCoreApplication> // for qAddPostRoutine()
 #include <QtCore/QRegExp>
 #include <QtCore/QStringList>
+#include <QtGui/QDesktopServices>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
@@ -40,10 +44,32 @@
 #include <QtWebKit/QWebElement>
 #include <QtWebKit/QWebElementCollection>
 
-static const QByteArray USER_AGENT = "GagBook/" + QByteArray(APP_VERSION);
+static QByteArray USER_AGENT = "GagBook/" + QByteArray(APP_VERSION);
+static QString IMAGE_CACHE_PATH = QDesktopServices::storageLocation(QDesktopServices::CacheLocation)
+         + "/gagbook";
+
+static void cacheCleanUp()
+{
+    QDir imageCacheDir(IMAGE_CACHE_PATH);
+    QStringList imageFiles = imageCacheDir.entryList(QDir::Files);
+    foreach (const QString &imageFile, imageFiles) {
+        QFile::remove(IMAGE_CACHE_PATH + "/" + imageFile);
+    }
+}
+
+void GagRequest::initializeCache()
+{
+    // create the cache dir if not exists
+    QDir imageCacheDir(IMAGE_CACHE_PATH);
+    if (!imageCacheDir.exists())
+        imageCacheDir.mkpath(".");
+
+    // clean up all the files in cache dir when app is exiting
+    qAddPostRoutine(cacheCleanUp);
+}
 
 GagRequest::GagRequest(Section section, QNetworkAccessManager *manager, QObject *parent) :
-    QObject(parent), m_section(section), m_netManager(manager), m_reply(0), m_lastId(-1), m_page(0)
+    QObject(parent), m_section(section), m_netManager(manager), m_lastId(-1), m_page(0), m_reply(0)
 {
     // disable JavaScript and rendering of external object
     m_webPage.settings()->setAttribute(QWebSettings::AutoLoadImages, false);
@@ -146,7 +172,7 @@ void GagRequest::onFinished()
     if (parsedGagList.isEmpty())
         emit failure("Unable to parse response :(");
     else
-        emit success(parsedGagList);
+        downloadImages();
 }
 
 void GagRequest::parseGAG(const QWebElementCollection &entryItems)
@@ -217,6 +243,56 @@ void GagRequest::parseVoteGAG(const QWebElementCollection &entryItems)
 
         parsedGagList.append(gag);
     }
+}
+
+void GagRequest::downloadImages()
+{
+    foreach (const GagObject &gag, parsedGagList) {
+        QNetworkRequest request;
+        request.setUrl(gag.imageUrl());
+        request.setRawHeader("User-Agent", USER_AGENT);
+        request.setRawHeader("Accept", "image/*");
+
+        QNetworkReply *reply = m_netManager->get(request);
+        m_imageDownloadReplyHash.insert(reply, gag);
+        connect(reply, SIGNAL(finished()), SLOT(onImageDownloadFinished()));
+    }
+}
+
+void GagRequest::onImageDownloadFinished()
+{
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+    Q_ASSERT_X(reply != 0, Q_FUNC_INFO, "Unable to cast sender() to QNetworkReply *");
+
+    if (reply->error() == QNetworkReply::NoError) {
+        const QString contentType = reply->rawHeader("Content-Type");
+        if (!contentType.startsWith("image")) {
+            qDebug("GagImageDownloader::onImageDownloadFinished(): Downloaded image doesn't has an image/* content type (%s), "
+                   "but still continue anyway", qPrintable(contentType));
+        }
+
+        const QString urlStr = reply->url().toString();
+        const QString fileName = IMAGE_CACHE_PATH + "/" + urlStr.mid(urlStr.lastIndexOf("/") + 1);
+
+        QFile image(fileName);
+        bool opened = image.open(QIODevice::WriteOnly);
+        if (opened) {
+            image.write(reply->readAll());
+            image.close();
+            m_imageDownloadReplyHash[reply].setImageUrl(fileName);
+        } else {
+            qDebug("GagImageDownloader::onImageDownloadFinished(): Unable to open QFile (with fileName = %s) for writing: %s",
+                   qPrintable(fileName), qPrintable(image.errorString()));
+        }
+    } else {
+        qDebug("GagImageDownloader::onImageDownloadFinished(): Network error: %s", qPrintable(reply->errorString()));
+    }
+
+    m_imageDownloadReplyHash.remove(reply);
+    if (m_imageDownloadReplyHash.isEmpty())
+        emit success(parsedGagList);
+
+    reply->deleteLater();
 }
 
 QString GagRequest::getSectionText(Section section)

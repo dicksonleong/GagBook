@@ -6,6 +6,8 @@ case "$1" in
     remove|purge)
         # remove GagBook config file
         rm -rf /home/user/.config/GagBook
+        # remove GagBook cache folder
+        rm -rf /home/user/.cache/gagbook
     ;;
 
     upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
