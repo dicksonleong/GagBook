@@ -48,7 +48,7 @@ public:
     Q_INVOKABLE void copyToClipboard(const QString &text);
 
     // Save an image
-    Q_INVOKABLE QString saveImage(const QString &imageUrl);
+    Q_INVOKABLE QString saveImage(const QUrl &imageUrl);
 
     // Share a link using Harmattan Share UI
     Q_INVOKABLE void shareLink(const QString &link, const QString &title = QString());

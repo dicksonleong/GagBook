@@ -31,7 +31,6 @@
 #include "qmlutils.h"
 
 #include <QtCore/QFile>
-#include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
 #include <QtGui/QApplication>
 #include <QtGui/QClipboard>
@@ -66,13 +65,14 @@ void QMLUtils::copyToClipboard(const QString &text)
     clipboard->setText(text, QClipboard::Selection);
 }
 
-QString QMLUtils::saveImage(const QString &imageUrl)
+QString QMLUtils::saveImage(const QUrl &imageUrl)
 {
-    if (imageUrl.startsWith("http"))
+    if (imageUrl.scheme() != "file")
         return QString("Unable to save image. Please refresh and try again.");
 
-    const QString copyFilePath = IMAGE_SAVING_FILE_PATH + "/" + QFileInfo(imageUrl).fileName();
-    bool success = QFile::copy(imageUrl, copyFilePath);
+    const QString imagePath = imageUrl.toLocalFile();
+    const QString copyFilePath = IMAGE_SAVING_FILE_PATH + "/" + imagePath.mid(imagePath.lastIndexOf("/") + 1);
+    bool success = QFile::copy(imagePath, copyFilePath);
 
     if (success)
         return QString("Image saved to " + copyFilePath);

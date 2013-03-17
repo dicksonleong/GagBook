@@ -47,14 +47,14 @@ public:
     int id() const;
     void setId(int id);
 
-    QString url() const;
-    void setUrl(const QString &url);
+    QUrl url() const;
+    void setUrl(const QUrl &url);
 
     QString title() const;
     void setTitle(const QString &title);
 
-    QString imageUrl() const;
-    void setImageUrl(const QString &imageUrl);
+    QUrl imageUrl() const;
+    void setImageUrl(const QUrl &imageUrl);
 
     int votesCount() const;
     void setVotesCount(int votes);

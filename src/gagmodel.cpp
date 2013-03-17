@@ -30,6 +30,7 @@
 
 #include "gagmodel.h"
 
+#include <QtCore/QUrl>
 #include <QtNetwork/QNetworkAccessManager>
 
 GagModel::GagModel(QObject *parent) :

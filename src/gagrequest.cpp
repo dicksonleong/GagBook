@@ -279,7 +279,7 @@ void GagRequest::onImageDownloadFinished()
         if (opened) {
             image.write(reply->readAll());
             image.close();
-            m_imageDownloadReplyHash[reply].setImageUrl(fileName);
+            m_imageDownloadReplyHash[reply].setImageUrl(QUrl::fromLocalFile(fileName));
         } else {
             qDebug("GagImageDownloader::onImageDownloadFinished(): Unable to open QFile (with fileName = %s) for writing: %s",
                    qPrintable(fileName), qPrintable(image.errorString()));

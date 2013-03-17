@@ -31,6 +31,7 @@
 #include "gagobject.h"
 
 #include <QtCore/QString>
+#include <QtCore/QUrl>
 
 class GagObjectData : public QSharedData
 {
@@ -39,9 +40,9 @@ public:
     ~GagObjectData() {}
 
     int id;
-    QString url;
+    QUrl url;
     QString title;
-    QString imageUrl;
+    QUrl imageUrl;
     int votesCount;
     int commentsCount;
     bool isVideo;
@@ -81,12 +82,12 @@ void GagObject::setId(int id)
     d->id = id;
 }
 
-QString GagObject::url() const
+QUrl GagObject::url() const
 {
     return d->url;
 }
 
-void GagObject::setUrl(const QString &url)
+void GagObject::setUrl(const QUrl &url)
 {
     d->url = url;
 }
@@ -101,12 +102,12 @@ void GagObject::setTitle(const QString &title)
     d->title = title;
 }
 
-QString GagObject::imageUrl() const
+QUrl GagObject::imageUrl() const
 {
     return d->imageUrl;
 }
 
-void GagObject::setImageUrl(const QString &imageUrl)
+void GagObject::setImageUrl(const QUrl &imageUrl)
 {
     d->imageUrl = imageUrl;
 }
