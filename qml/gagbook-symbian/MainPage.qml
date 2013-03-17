@@ -88,9 +88,12 @@ Page {
             }
             MenuItem {
                 platformInverted: settings.whiteTheme
-                text: "Download image"
+                text: "Save image"
                 enabled: gagListView.count > 0
-                onClicked: QMLUtils.downloadImage(gagListView.model.get(gagListView.currentIndex).imageUrl)
+                onClicked: {
+                    var msg = QMLUtils.saveImage(gagListView.model.get(gagListView.currentIndex).imageUrl);
+                    infoBanner.alert(msg);
+                }
             }
             MenuItem {
                 platformInverted: settings.whiteTheme

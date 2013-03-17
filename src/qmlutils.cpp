@@ -30,15 +30,13 @@
 
 #include "qmlutils.h"
 
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
 #include <QtGui/QApplication>
 #include <QtGui/QClipboard>
 #include <QtDeclarative/QDeclarativeItem>
-#include <QtGui/QImage>
 #include <QtGui/QDesktopServices>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
 
 #ifdef Q_OS_HARMATTAN
 #include <MDataUri>
@@ -57,13 +55,8 @@ static const TUid KUidBrowser = { 0x10008D39 };
 static const QString IMAGE_SAVING_FILE_PATH = QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
 
 QMLUtils::QMLUtils(QObject *parent) :
-    QObject(parent), m_netManager(0), m_imageDowloadReply(0), m_busy(false)
+    QObject(parent), m_busy(false)
 {
-}
-
-void QMLUtils::setNetworkAccessManager(QNetworkAccessManager *manager)
-{
-    m_netManager = manager;
 }
 
 void QMLUtils::copyToClipboard(const QString &text)
@@ -73,60 +66,18 @@ void QMLUtils::copyToClipboard(const QString &text)
     clipboard->setText(text, QClipboard::Selection);
 }
 
-void QMLUtils::downloadImage(const QString &imageUrl)
+QString QMLUtils::saveImage(const QString &imageUrl)
 {
-    Q_ASSERT_X(m_netManager != 0, Q_FUNC_INFO, "NetworkAccessManager not set");
+    if (imageUrl.startsWith("http"))
+        return QString("Unable to save image. Please refresh and try again.");
 
-    if (m_imageDowloadReply != 0) {
-        m_imageDowloadReply->disconnect();
-        m_imageDowloadReply->deleteLater();
-        m_imageDowloadReply = 0;
-    }
+    const QString copyFilePath = IMAGE_SAVING_FILE_PATH + "/" + QFileInfo(imageUrl).fileName();
+    bool success = QFile::copy(imageUrl, copyFilePath);
 
-    QNetworkRequest request;
-    request.setUrl(QUrl(imageUrl));
-    m_imageDowloadReply = m_netManager->get(request);
-    connect(m_imageDowloadReply, SIGNAL(finished()), SLOT(onImageDownloadReplyFinished()));
-
-    m_busy = true;
-    emit busyChanged();
-}
-
-void QMLUtils::onImageDownloadReplyFinished()
-{
-    Q_ASSERT(m_imageDowloadReply != 0);
-
-    m_busy = false;
-    emit busyChanged();
-
-    if (m_imageDowloadReply->error()) {
-        emit imageDownloadFinished(m_imageDowloadReply->errorString());
-        m_imageDowloadReply->deleteLater();
-        m_imageDowloadReply = 0;
-        return;
-    }
-
-    QImage gagImage = QImage::fromData(m_imageDowloadReply->readAll());
-
-    if (gagImage.isNull()) {
-        emit imageDownloadFinished("Unable to load image from reply data");
-        m_imageDowloadReply->deleteLater();
-        m_imageDowloadReply = 0;
-        return;
-    }
-
-    QString fileName = m_imageDowloadReply->url().toString();
-    fileName.remove(0, fileName.lastIndexOf("/") + 1);
-    fileName.prepend(IMAGE_SAVING_FILE_PATH + "/");
-    bool saved = gagImage.save(fileName, 0, 100);
-
-    if (!saved)
-        emit imageDownloadFinished("Unable to save image to " + fileName);
+    if (success)
+        return QString("Image saved to " + copyFilePath);
     else
-        emit imageDownloadFinished("Image saved to " + fileName);
-
-    m_imageDowloadReply->deleteLater();
-    m_imageDowloadReply = 0;
+        return QString("Unable to save image");
 }
 
 void QMLUtils::shareLink(const QString &link, const QString &title)

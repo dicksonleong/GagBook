@@ -36,8 +36,6 @@
 
 class QDeclarativeItem;
 class QUrl;
-class QNetworkAccessManager;
-class QNetworkReply;
 
 class QMLUtils : public QObject
 {
@@ -46,13 +44,11 @@ class QMLUtils : public QObject
 public:
     explicit QMLUtils(QObject *parent = 0);
 
-    void setNetworkAccessManager(QNetworkAccessManager *manager);
-
     // Copy text to system clipboard
     Q_INVOKABLE void copyToClipboard(const QString &text);
 
-    // Download an image
-    Q_INVOKABLE void downloadImage(const QString &imageUrl);
+    // Save an image
+    Q_INVOKABLE QString saveImage(const QString &imageUrl);
 
     // Share a link using Harmattan Share UI
     Q_INVOKABLE void shareLink(const QString &link, const QString &title = QString());
@@ -63,17 +59,10 @@ public:
     bool isBusy() const { return m_busy; }
 
 signals:
-    void imageDownloadFinished(const QString &message);
     void busyChanged();
-
-private slots:
-    void onImageDownloadReplyFinished();
 
 private:
     Q_DISABLE_COPY(QMLUtils)
-
-    QNetworkAccessManager *m_netManager;
-    QNetworkReply *m_imageDowloadReply;
 
     bool m_busy;
 };

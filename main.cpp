@@ -62,7 +62,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     viewer.rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
 
     QMLUtils qmlUtils;
-    qmlUtils.setNetworkAccessManager(viewer.engine()->networkAccessManager());
     viewer.rootContext()->setContextProperty("QMLUtils", &qmlUtils);
     viewer.rootContext()->setContextProperty("settings", Settings::instance());
 

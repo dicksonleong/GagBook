@@ -55,8 +55,6 @@ PageStackWindow {
             infoBanner.text = text
             infoBanner.show()
         }
-
-        Connections { target: QMLUtils; onImageDownloadFinished: infoBanner.alert(message) }
     }
 
     GagManager {
