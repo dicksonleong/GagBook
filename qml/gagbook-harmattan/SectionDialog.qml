@@ -39,13 +39,8 @@ SelectionDialog {
     titleText: "Section"
     selectedIndex: settings.selectedSection
     model: sectionModel
-    onSelectedIndexChanged: settings.selectedSection = selectedIndex
 
-    Component.onCompleted: {
-        console.log("Dialog created:", root)
-        open()
-    }
-    Component.onDestruction: console.log("Dialog destructing:", root)
+    Component.onCompleted: open()
 
     onStatusChanged: {
         if (status === DialogStatus.Closing) __isClosing = true

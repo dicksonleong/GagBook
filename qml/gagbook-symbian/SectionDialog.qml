@@ -40,7 +40,6 @@ SelectionDialog {
     titleText: "Section"
     selectedIndex: settings.selectedSection
     model: sectionModel
-    onSelectedIndexChanged: settings.selectedSection = selectedIndex
 
     Component.onCompleted: open()
 

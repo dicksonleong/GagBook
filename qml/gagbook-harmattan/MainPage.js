@@ -38,7 +38,10 @@ function createSectionDialog() {
         console.log("Error creating object: " + __sectionDialogComponent.errorString())
         return
     }
-    dialog.accepted.connect(function() { gagManager.refresh(GagManager.RefreshAll) })
+    dialog.accepted.connect(function() {
+        settings.selectedSection = dialog.selectedIndex;
+        gagManager.refresh(GagManager.RefreshAll);
+    })
 }
 
 function createOpenLinkDialog(link) {
