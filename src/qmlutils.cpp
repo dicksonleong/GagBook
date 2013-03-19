@@ -51,6 +51,16 @@ _LIT(KBrowserPrefix, "4 " );
 static const TUid KUidBrowser = { 0x10008D39 };
 #endif
 
+QScopedPointer<QMLUtils> QMLUtils::m_instance(0);
+
+QMLUtils *QMLUtils::instance()
+{
+    if (m_instance.isNull())
+        m_instance.reset(new QMLUtils);
+
+    return m_instance.data();
+}
+
 static const QString IMAGE_SAVING_FILE_PATH = QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
 
 QMLUtils::QMLUtils(QObject *parent) :
@@ -63,6 +73,9 @@ void QMLUtils::copyToClipboard(const QString &text)
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(text, QClipboard::Clipboard);
     clipboard->setText(text, QClipboard::Selection);
+#ifdef Q_WS_SIMULATOR
+    qDebug("Copied to clipboard: %s", qPrintable(text));
+#endif
 }
 
 QString QMLUtils::saveImage(const QUrl &imageUrl)

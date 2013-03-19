@@ -33,6 +33,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
+#include <QtCore/QScopedPointer>
 
 class QDeclarativeItem;
 class QUrl;
@@ -42,7 +43,7 @@ class QMLUtils : public QObject
     Q_OBJECT
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
 public:
-    explicit QMLUtils(QObject *parent = 0);
+    static QMLUtils *instance();
 
     // Copy text to system clipboard
     Q_INVOKABLE void copyToClipboard(const QString &text);
@@ -62,6 +63,9 @@ signals:
     void busyChanged();
 
 private:
+    static QScopedPointer<QMLUtils> m_instance;
+
+    explicit QMLUtils(QObject *parent = 0);
     Q_DISABLE_COPY(QMLUtils)
 
     bool m_busy;

@@ -61,8 +61,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QmlApplicationViewer viewer;
     viewer.rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
 
-    QMLUtils qmlUtils;
-    viewer.rootContext()->setContextProperty("QMLUtils", &qmlUtils);
+    viewer.rootContext()->setContextProperty("QMLUtils", QMLUtils::instance());
     viewer.rootContext()->setContextProperty("settings", Settings::instance());
 
     qmlRegisterType<GagManager>("GagBook", 1, 0, "GagManager");
