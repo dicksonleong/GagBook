@@ -64,7 +64,7 @@ QMLUtils *QMLUtils::instance()
 static const QString IMAGE_SAVING_FILE_PATH = QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
 
 QMLUtils::QMLUtils(QObject *parent) :
-    QObject(parent), m_busy(false)
+    QObject(parent), m_busy(false), m_dataDownloaded(0), m_dataDownloadedStr("0.00")
 {
 }
 
@@ -177,4 +177,14 @@ void QMLUtils::openDefaultBrowser(const QUrl &url)
     qWarning("QMLUtils::openDefaultBrowser(): This function only available on Symbian");
     Q_UNUSED(url)
 #endif
+}
+
+void QMLUtils::increaseDataDownloaded(qint64 bytesDownloaded)
+{
+    m_dataDownloaded += bytesDownloaded;
+    const QString mbDownloadedStr = QString::number(qreal(m_dataDownloaded) / 1024 / 1024, 'f', 2);
+    if (m_dataDownloadedStr != mbDownloadedStr) {
+        m_dataDownloadedStr = mbDownloadedStr;
+        emit dataDownloadedChanged();
+    }
 }

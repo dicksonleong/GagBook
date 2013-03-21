@@ -42,6 +42,7 @@ class QMLUtils : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
+    Q_PROPERTY(QString dataDownloaded READ dataDownloaded NOTIFY dataDownloadedChanged)
 public:
     static QMLUtils *instance();
 
@@ -59,8 +60,12 @@ public:
 
     bool isBusy() const { return m_busy; }
 
+    QString dataDownloaded() const { return m_dataDownloadedStr; }
+    void increaseDataDownloaded(qint64 bytesDownloaded);
+
 signals:
     void busyChanged();
+    void dataDownloadedChanged();
 
 private:
     static QScopedPointer<QMLUtils> m_instance;
@@ -69,6 +74,8 @@ private:
     Q_DISABLE_COPY(QMLUtils)
 
     bool m_busy;
+    qint64 m_dataDownloaded; // in bytes
+    QString m_dataDownloadedStr; // in MB
 };
 
 #endif // QMLUTILS_H

@@ -44,6 +44,8 @@
 #include <QtWebKit/QWebElement>
 #include <QtWebKit/QWebElementCollection>
 
+#include "qmlutils.h"
+
 static QByteArray USER_AGENT = "GagBook/" + QByteArray(APP_VERSION);
 static QString IMAGE_CACHE_PATH = QDesktopServices::storageLocation(QDesktopServices::CacheLocation)
          + "/gagbook";
@@ -132,6 +134,8 @@ void GagRequest::send()
 
 void GagRequest::onFinished()
 {
+    QMLUtils::instance()->increaseDataDownloaded(m_reply->size());
+
     if (m_reply->error()) {
         emit failure(m_reply->errorString());
         m_reply->deleteLater();
@@ -263,6 +267,7 @@ void GagRequest::onImageDownloadFinished()
 {
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
     Q_ASSERT_X(reply != 0, Q_FUNC_INFO, "Unable to cast sender() to QNetworkReply *");
+    QMLUtils::instance()->increaseDataDownloaded(reply->size());
 
     if (reply->error() == QNetworkReply::NoError) {
         const QString contentType = reply->rawHeader("Content-Type");

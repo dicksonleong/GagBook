@@ -66,7 +66,7 @@ Page {
                 font.pixelSize: constant.fontSizeMedium
                 horizontalAlignment: Text.AlignHCenter
                 color: constant.colorMid
-                text: "v" + APP_VERSION
+                text: "v" + APP_VERSION + "\nCopyright © 2012 Dickson"
             }
 
             Text {
@@ -82,8 +82,7 @@ GagBook is not affiliated with 9GAG.\n\n\
 Note: GagBook get the 9GAG posts by parsing HTML from 9GAG website, which can easily failed \
 to working anytime if 9GAG modified their HTML, even slightly. \
 \n\n\
-Copyright © 2012 Dickson\n\
-GagBook is open source and licensed under BSD license\n"
+~ " + QMLUtils.dataDownloaded + " MB downloaded"
             }
 
             Button {
