@@ -37,18 +37,15 @@ Item {
 
     property string text
     property bool busy: false
-    property bool comboboxVisible: false
-    signal clicked
 
     height: constant.headerHeight
     width: parent.width
 
-    Image {
+    BorderImage {
         id: background
         anchors.fill: parent
-        sourceSize { width: parent.width; height: parent.height }
-        source: headerPress.pressed ? "Images/color10-meegotouch-view-header-fixed-pressed.png"
-                                    : "Images/color10-meegotouch-view-header-fixed.png"
+        border { top: 15; left: 15; right: 15 }
+        source: "Images/meegotouch-view-header" + (settings.whiteTheme ? ".png" : "-inverted.png")
     }
 
     Text {
@@ -60,7 +57,7 @@ Item {
             margins: constant.paddingLarge
         }
         font.pixelSize: constant.fontSizeXLarge
-        color: "white"
+        color: constant.colorLight
         elide: Text.ElideRight
         text: root.text
     }
@@ -71,7 +68,7 @@ Item {
             verticalCenter: parent.verticalCenter
             right: parent.right; rightMargin: constant.paddingLarge
         }
-        sourceComponent: busy ? updatingIndicator : (comboboxVisible ? combobox : undefined)
+        sourceComponent: busy ? updatingIndicator : undefined
     }
 
     Component {
@@ -82,23 +79,5 @@ Item {
             width: platformStyle.graphicSizeSmall; height: width
             running: true
         }
-    }
-
-    Component { id: combobox; Image { source: "Images/meegotouch-combobox-indicator-inverted.png" } }
-
-    Image {
-        anchors { top: parent.top; left: parent.left }
-        source: "Images/meegoTLCorner.png"
-    }
-
-    Image {
-        anchors { top: parent.top; right: parent.right }
-        source: "Images/meegoTRCorner.png"
-    }
-
-    MouseArea {
-        id: headerPress
-        anchors.fill: parent
-        onClicked: root.clicked()
     }
 }

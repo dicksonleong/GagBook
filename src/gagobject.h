@@ -56,6 +56,9 @@ public:
     QUrl imageUrl() const;
     void setImageUrl(const QUrl &imageUrl);
 
+    int imageHeight() const;
+    void setImageHeight(int imageHeight);
+
     int votesCount() const;
     void setVotesCount(int votes);
 

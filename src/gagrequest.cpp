@@ -36,6 +36,7 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QStringList>
 #include <QtGui/QDesktopServices>
+#include <QtGui/QImageReader>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
@@ -285,6 +286,7 @@ void GagRequest::onImageDownloadFinished()
             image.write(reply->readAll());
             image.close();
             m_imageDownloadReplyHash[reply].setImageUrl(QUrl::fromLocalFile(fileName));
+            m_imageDownloadReplyHash[reply].setImageHeight(QImageReader(&image).size().height());
         } else {
             qDebug("GagImageDownloader::onImageDownloadFinished(): Unable to open QFile (with fileName = %s) for writing: %s",
                    qPrintable(fileName), qPrintable(image.errorString()));

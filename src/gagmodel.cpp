@@ -38,7 +38,9 @@ GagModel::GagModel(QObject *parent) :
 {
     QHash<int, QByteArray> roles;
     roles[TitleRole] = "title";
+    roles[UrlRole] = "url";
     roles[ImageUrlRole] = "imageUrl";
+    roles[ImageHeightRole] = "imageHeight";
     roles[VotesCountRole] = "votesCount";
     roles[CommentsCountRole] = "commentsCount";
     roles[IsVideoRole] = "isVideo";
@@ -61,8 +63,12 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case TitleRole:
         return gag.title();
+    case UrlRole:
+        return gag.url();
     case ImageUrlRole:
         return gag.imageUrl();
+    case ImageHeightRole:
+        return gag.imageHeight();
     case VotesCountRole:
         return gag.votesCount();
     case CommentsCountRole:

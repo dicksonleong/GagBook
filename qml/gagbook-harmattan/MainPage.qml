@@ -30,7 +30,6 @@
 
 import QtQuick 1.1
 import com.nokia.meego 1.0
-import "MainPage.js" as Script
 import GagBook 1.0
 
 Page {
@@ -38,31 +37,17 @@ Page {
 
     tools: ToolBarLayout {
         ToolIcon {
-            platformIconId: "toolbar-back" + (enabled ? "" : "-dimmed")
-            enabled: gagListView.count > 0 && gagListView.currentItem.imageZoomed
-            onClicked: gagListView.currentItem.resetImageZoom()
+            platformIconId: "toolbar-back-dimmed"
+            enabled: false
         }
         ToolIcon {
-            platformIconId: "toolbar-new-message" + (enabled ? "" : "-dimmed")
-            enabled: gagListView.count > 0
-            onClicked: {
-                var prop = {gagURL: gagListView.model.get(gagListView.currentIndex).url}
-                pageStack.push(Qt.resolvedUrl("CommentsPage.qml"), prop)
-            }
+            platformIconId: "toolbar-list"
+            onClicked: dialogManager.createSectionDialog()
         }
         ToolIcon {
-            iconSource: "image://theme/icon-l-browser-main-view"
-            enabled: gagListView.count > 0
-            opacity: enabled ? 1 : 0.25
-            onClicked: Script.createOpenLinkDialog(gagListView.model.get(gagListView.currentIndex).url)
-        }
-        ToolIcon {
-            platformIconId: "toolbar-share" + (enabled ? "" : "-dimmed")
-            enabled: gagListView.count > 0
-            onClicked: {
-                var gag = gagListView.model.get(gagListView.currentIndex);
-                QMLUtils.shareLink(gag.url, gag.title);
-            }
+            platformIconId: "toolbar-refresh" + (enabled ? "" : "-dimmed")
+            enabled: !gagManager.busy
+            onClicked: gagManager.refresh(GagManager.RefreshAll)
         }
         ToolIcon {
             platformIconId: "toolbar-view-menu"
@@ -75,17 +60,8 @@ Page {
 
         MenuLayout {
             MenuItem {
-                text: "Refresh section"
-                enabled: !gagManager.busy
-                onClicked: gagManager.refresh(GagManager.RefreshAll)
-            }
-            MenuItem {
-                text: "Save image"
-                enabled: gagListView.count > 0
-                onClicked: {
-                    var msg = QMLUtils.saveImage(gagListView.model.get(gagListView.currentIndex).imageUrl);
-                    infoBanner.alert(msg);
-                }
+                text: "Back to top"
+                onClicked: gagListView.positionViewAtBeginning()
             }
             MenuItem {
                 text: "Settings"
@@ -100,28 +76,70 @@ Page {
 
     ListView {
         id: gagListView
-        anchors { top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
+        anchors.fill: parent
         model: gagManager.model
-        boundsBehavior: Flickable.DragOverBounds
-        orientation: ListView.Horizontal
-        snapMode: ListView.SnapOneItem
-        highlightRangeMode: ListView.StrictlyEnforceRange
+        orientation: ListView.Vertical
         delegate: GagDelegate {}
-        interactive: moving || count === 0 || !currentItem.allowDelegateFlicking
+        header: PageHeader { text: sectionModel.get(settings.selectedSection).text; busy: gagManager.busy }
+        footer: Item {
+            width: ListView.view.width
+            height: loadingIndicatorLoader.height + 2 * constant.paddingMedium
+            visible: ListView.view.count > 0 && gagManager.busy
 
-        onCurrentIndexChanged: {
-            if ((currentIndex === count - 1) && currentIndex >= 0 && !gagManager.busy)
-                gagManager.refresh(GagManager.RefreshOlder);
+            Loader {
+                id: loadingIndicatorLoader
+                anchors.centerIn: parent
+                sourceComponent: parent.visible ? loadingIndicator : undefined
+            }
+
+            Component {
+                id: loadingIndicator
+
+                Row {
+                    width: childrenRect.width
+                    height: footerBusyIndicator.height
+                    spacing: constant.paddingMedium
+
+                    BusyIndicator { id: footerBusyIndicator; running: true }
+
+                    Text {
+                        id: loadingText
+                        anchors.verticalCenter: parent.verticalCenter
+                        font.pixelSize: constant.fontSizeMedium
+                        color: constant.colorLight
+                        text: "Loading..."
+                    }
+                }
+            }
         }
-        onAtXEndChanged: if (count > 0 && atXEnd && !gagManager.busy) gagManager.refresh(GagManager.RefreshOlder);
-        onCurrentItemChanged: if (currentItem) currentItem.loadImage = true
+
+        onAtYEndChanged: if (atYEnd && !gagManager.busy && count > 0) gagManager.refresh(GagManager.RefreshOlder)
     }
 
-    PageHeader {
-        id: pageHeader
-        text: sectionModel.get(settings.selectedSection).text
-        busy: gagManager.busy || QMLUtils.busy
-        comboboxVisible: true
-        onClicked: Script.createSectionDialog()
+    QtObject {
+        id: dialogManager
+
+        property Component __sectionDialogComponent: null
+        property Component __openLinkDialogComponent: null
+
+        function createSectionDialog() {
+            if (!__sectionDialogComponent) __sectionDialogComponent = Qt.createComponent("SectionDialog.qml")
+            var dialog = __sectionDialogComponent.createObject(mainPage)
+            if (!dialog) {
+                console.log("Error creating object: " + __sectionDialogComponent.errorString())
+                return
+            }
+            dialog.accepted.connect(function() {
+                settings.selectedSection = dialog.selectedIndex;
+                gagManager.refresh(GagManager.RefreshAll);
+            })
+        }
+
+        function createOpenLinkDialog(link) {
+            if (!__openLinkDialogComponent) __openLinkDialogComponent = Qt.createComponent("OpenLinkDialog.qml")
+            var dialog = __openLinkDialogComponent.createObject(mainPage, { link: link })
+            if (!dialog) console.log("Error creating object: " + __openLinkDialogComponent.errorString())
+        }
+
     }
 }

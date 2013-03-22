@@ -71,24 +71,11 @@ Page {
 
             Connections { target: appWindow; onInPortraitChanged: commentsWebView.reload.trigger() }
         }
-
-        NumberAnimation {
-            id: backToTopAnimation
-            target: webViewFlickable
-            property: "contentY"
-            duration: 500
-            to: 0
-            easing.type: Easing.OutBack
-        }
     }
 
     ScrollDecorator { flickableItem: webViewFlickable; platformInverted: settings.whiteTheme }
 
-    PageHeader {
-        id: pageHeader
-        text: "Comments"
-        onClicked: backToTopAnimation.start()
-    }
+    PageHeader { id: pageHeader; text: "Comments" }
 
     Component.onCompleted: commentsWebView.url = "comments.html"
 }

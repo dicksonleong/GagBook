@@ -36,13 +36,14 @@
 class GagObjectData : public QSharedData
 {
 public:
-    GagObjectData() : id(0), votesCount(0), commentsCount(0), isVideo(false), isNSFW(false) {}
+    GagObjectData() : id(0), imageHeight(0), votesCount(0), commentsCount(0), isVideo(false), isNSFW(false) {}
     ~GagObjectData() {}
 
     int id;
     QUrl url;
     QString title;
     QUrl imageUrl;
+    int imageHeight;
     int votesCount;
     int commentsCount;
     bool isVideo;
@@ -110,6 +111,16 @@ QUrl GagObject::imageUrl() const
 void GagObject::setImageUrl(const QUrl &imageUrl)
 {
     d->imageUrl = imageUrl;
+}
+
+int GagObject::imageHeight() const
+{
+    return d->imageHeight;
+}
+
+void GagObject::setImageHeight(int imageHeight)
+{
+    d->imageHeight = imageHeight;
 }
 
 int GagObject::votesCount() const

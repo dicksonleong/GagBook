@@ -45,7 +45,9 @@ public:
 
     enum Roles {
         TitleRole = Qt::UserRole,
+        UrlRole,
         ImageUrlRole,
+        ImageHeightRole,
         VotesCountRole,
         CommentsCountRole,
         IsVideoRole,
