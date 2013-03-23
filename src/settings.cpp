@@ -56,20 +56,6 @@ void Settings::setSelectedSection(int selectedSection)
     }
 }
 
-int Settings::imageSize() const
-{
-    return m_imageSize;
-}
-
-void Settings::setImageSize(int imageSize)
-{
-    if (m_imageSize != imageSize) {
-        m_imageSize = imageSize;
-        m_settings->setValue("imageSize", m_imageSize);
-        emit imageSizeChanged();
-    }
-}
-
 bool Settings::isWhiteTheme() const
 {
     return m_whiteTheme;
@@ -84,25 +70,9 @@ void Settings::setWhiteTheme(bool whiteTheme)
     }
 }
 
-bool Settings::isZoomSliderVisible() const
-{
-    return m_zoomSliderVisible;
-}
-
-void Settings::setZoomSliderVisible(bool visible)
-{
-    if (m_zoomSliderVisible != visible) {
-        m_zoomSliderVisible = visible;
-        m_settings->setValue("zoomSliderVisible", m_zoomSliderVisible);
-        emit zoomSliderVisibleChanged();
-    }
-}
-
 Settings::Settings(QObject *parent) :
     QObject(parent), m_settings(new QSettings(this))
 {
     m_selectedSection = m_settings->value("selectedSection", 0).toInt();
-    m_imageSize = m_settings->value("imageSize", 0).toInt();
     m_whiteTheme = m_settings->value("whiteTheme", false).toBool();
-    m_zoomSliderVisible = m_settings->value("zoomSliderVisible", true).toBool();
 }

@@ -53,20 +53,6 @@ Page {
             buttonsText: ["Dark", "White"]
             onButtonClicked: settings.whiteTheme = index === 1
         }
-
-//        SettingButtonRow {
-//            text: "Image Size"
-//            checkedButtonIndex: settings.imageSize
-//            buttonsText: ["Medium", "Large"]
-//            onButtonClicked: settings.imageSize = index
-//        }
-
-        SettingButtonRow {
-            text: "Zoom Slider"
-            checkedButtonIndex: settings.zoomSliderVisible ? 0 : 1
-            buttonsText: ["Show", "Hide"]
-            onButtonClicked: settings.zoomSliderVisible = (index === 0)
-        }
     }
 
     PageHeader {
