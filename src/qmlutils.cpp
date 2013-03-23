@@ -64,7 +64,7 @@ QMLUtils *QMLUtils::instance()
 static const QString IMAGE_SAVING_FILE_PATH = QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
 
 QMLUtils::QMLUtils(QObject *parent) :
-    QObject(parent), m_busy(false), m_dataDownloaded(0), m_dataDownloadedStr("0.00")
+    QObject(parent), m_dataDownloaded(0), m_dataDownloadedStr("0.00")
 {
 }
 
