@@ -270,6 +270,10 @@ void GagRequest::onImageDownloadFinished()
     Q_ASSERT_X(reply != 0, Q_FUNC_INFO, "Unable to cast sender() to QNetworkReply *");
     QMLUtils::instance()->increaseDataDownloaded(reply->size());
 
+    const QString urlStr = reply->url().toString();
+    const QString fileName = IMAGE_CACHE_PATH + "/" + urlStr.mid(urlStr.lastIndexOf("/") + 1);
+    m_imageDownloadReplyHash[reply].setImageUrl(QUrl::fromLocalFile(fileName));
+
     if (reply->error() == QNetworkReply::NoError) {
         const QString contentType = reply->rawHeader("Content-Type");
         if (!contentType.startsWith("image")) {
@@ -277,15 +281,11 @@ void GagRequest::onImageDownloadFinished()
                    "but still continue anyway", qPrintable(contentType));
         }
 
-        const QString urlStr = reply->url().toString();
-        const QString fileName = IMAGE_CACHE_PATH + "/" + urlStr.mid(urlStr.lastIndexOf("/") + 1);
-
         QFile image(fileName);
         bool opened = image.open(QIODevice::WriteOnly);
         if (opened) {
             image.write(reply->readAll());
             image.close();
-            m_imageDownloadReplyHash[reply].setImageUrl(QUrl::fromLocalFile(fileName));
             m_imageDownloadReplyHash[reply].setImageHeight(QImageReader(&image).size().height());
         } else {
             qDebug("GagImageDownloader::onImageDownloadFinished(): Unable to open QFile (with fileName = %s) for writing: %s",
