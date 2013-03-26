@@ -41,9 +41,13 @@ class QUrl;
 class QMLUtils : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int IMAGE_MAX_HEIGHT READ imageMaxHeight CONSTANT)
     Q_PROPERTY(QString dataDownloaded READ dataDownloaded NOTIFY dataDownloadedChanged)
 public:
     static QMLUtils *instance();
+
+    static const int IMAGE_MAX_HEIGHT;
+    int imageMaxHeight() const { return IMAGE_MAX_HEIGHT; }
 
     // Copy text to system clipboard
     Q_INVOKABLE void copyToClipboard(const QString &text);

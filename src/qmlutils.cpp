@@ -53,6 +53,14 @@ static const TUid KUidBrowser = { 0x10008D39 };
 
 QScopedPointer<QMLUtils> QMLUtils::m_instance(0);
 
+#if defined(Q_OS_HARMATTAN)
+const int QMLUtils::IMAGE_MAX_HEIGHT = 2048;
+#elif defined(Q_OS_SYMBIAN)
+const int QMLUtils::IMAGE_MAX_HEIGHT = 2500;
+#else
+const int QMLUtils::IMAGE_MAX_HEIGHT = 3000;
+#endif
+
 QMLUtils *QMLUtils::instance()
 {
     if (m_instance.isNull())
