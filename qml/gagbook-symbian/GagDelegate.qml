@@ -85,17 +85,31 @@ Item {
 
             Loader {
                 id: errorTextLoader
-                anchors.centerIn: parent
-                sourceComponent: gagImage.status == Image.Error ? errorText : undefined
+                anchors.fill: parent
+                sourceComponent: {
+                    switch (gagImage.status) {
+                    case Image.Loading: return loadingRect;
+                    case Image.Error: return errorText;
+                    default: return undefined;
+                    }
+                }
 
                 Component {
                     id: errorText
 
                     Text {
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
                         font.pixelSize: constant.fontSizeLarge
                         color: constant.colorLight
                         text: "Error loading image"
                     }
+                }
+
+                Component {
+                    id: loadingRect
+
+                    Rectangle { color: constant.colorMid }
                 }
             }
         }
