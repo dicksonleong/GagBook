@@ -60,10 +60,6 @@ Page {
 
         MenuLayout {
             MenuItem {
-                text: "Back to top"
-                onClicked: gagListView.positionViewAtBeginning()
-            }
-            MenuItem {
                 text: "Settings"
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
@@ -76,11 +72,10 @@ Page {
 
     ListView {
         id: gagListView
-        anchors.fill: parent
+        anchors { top: pageHeader.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
         model: gagManager.model
         orientation: ListView.Vertical
         delegate: GagDelegate {}
-        header: PageHeader { text: sectionModel.get(settings.selectedSection).text; busy: gagManager.busy }
         footer: Item {
             width: ListView.view.width
             height: loadingIndicatorLoader.height + 2 * constant.paddingMedium
@@ -114,6 +109,14 @@ Page {
         }
 
         onAtYEndChanged: if (atYEnd && !gagManager.busy && count > 0) gagManager.refresh(GagManager.RefreshOlder)
+    }
+
+    PageHeader {
+        id: pageHeader
+        anchors { top: parent.top; left: parent.left; right: parent.right }
+        text: sectionModel.get(settings.selectedSection).text
+        busy: gagManager.busy
+        onClicked: gagListView.positionViewAtBeginning()
     }
 
     QtObject {

@@ -58,6 +58,8 @@ Page {
 
     PageHeader {
         id: pageHeader
+        anchors { top: parent.top; left: parent.left; right: parent.right }
         text: "Settings"
+        enabled: false
     }
 }

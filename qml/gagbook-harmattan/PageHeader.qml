@@ -37,14 +37,17 @@ Item {
     property string text
     property bool busy: false
 
+    signal clicked
+
     height: constant.headerHeight
-    width: parent.width
+    implicitWidth: parent.width
 
     BorderImage {
         id: background
         anchors.fill: parent
         border { top: 15; left: 15; right: 15 }
-        source: "image://theme/meegotouch-view-header" + (settings.whiteTheme ? "" : "-inverted")
+        source: "image://theme/meegotouch-view-header-fixed" + (settings.whiteTheme ? "" : "-inverted")
+                + (mouseArea.pressed ? "-pressed" : "")
     }
 
     Text {
@@ -70,5 +73,12 @@ Item {
         sourceComponent: busy ? updatingIndicator : undefined
 
         Component { id: updatingIndicator; BusyIndicator { running: true } }
+    }
+
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+        enabled: root.enabled
+        onClicked: root.clicked()
     }
 }

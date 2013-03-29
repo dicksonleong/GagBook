@@ -38,14 +38,17 @@ Item {
     property string text
     property bool busy: false
 
+    signal clicked
+
     height: constant.headerHeight
-    width: parent.width
+    implicitWidth: parent.width
 
     BorderImage {
         id: background
         anchors.fill: parent
         border { top: 15; left: 15; right: 15 }
-        source: "Images/meegotouch-view-header" + (settings.whiteTheme ? ".png" : "-inverted.png")
+        source: "Images/meegotouch-view-header-fixed" + (settings.whiteTheme ? "" : "-inverted")
+                + (mouseArea.pressed ? "-pressed" : "") + ".png"
     }
 
     Text {
@@ -79,5 +82,22 @@ Item {
             width: platformStyle.graphicSizeSmall; height: width
             running: true
         }
+    }
+
+    Image {
+        anchors { top: parent.top; left: parent.left }
+        source: "Images/corner-top-left.png"
+    }
+
+    Image {
+        anchors { top: parent.top; right: parent.right }
+        source: "Images/corner-top-right.png"
+    }
+
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+        enabled: root.enabled
+        onClicked: root.clicked()
     }
 }

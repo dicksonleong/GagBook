@@ -108,6 +108,8 @@ to working anytime if 9GAG modified their HTML, even slightly. \
 
     PageHeader {
         id: pageHeader
+        anchors { top: parent.top; left: parent.left; right: parent.right }
         text: "About"
+        enabled: false
     }
 }

@@ -75,7 +75,12 @@ Page {
 
     ScrollDecorator { flickableItem: webViewFlickable; platformInverted: settings.whiteTheme }
 
-    PageHeader { id: pageHeader; text: "Comments" }
+    PageHeader {
+        id: pageHeader
+        anchors { top: parent.top; left: parent.left; right: parent.right }
+        text: "Comments"
+        onClicked: webViewFlickable.contentY = 0;
+    }
 
     Component.onCompleted: commentsWebView.url = "comments.html"
 }
