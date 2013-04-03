@@ -191,11 +191,18 @@ void GagRequest::parseGAG(const QWebElementCollection &entryItems)
         gag.setUrl(element.attribute("data-url"));
         gag.setTitle(element.attribute("data-text"));
 
-        const QWebElement img = element.findFirst("img");
-        gag.setImageUrl(img.attribute("src"));
-
-        if (img.attribute("alt") == "NSFW")
-            gag.setIsNSFW(true);
+        const QWebElementCollection imgCollection = element.findAll("img");
+        foreach (const QWebElement &img, imgCollection) {
+            if (img.attribute("alt") == "NSFW") {
+                gag.setImageUrl(img.attribute("src"));
+                gag.setIsNSFW(true);
+                break;
+            }
+            else if (!img.styleProperty("max-width", QWebElement::InlineStyle).isEmpty()) {
+                gag.setImageUrl(img.attribute("src"));
+                break;
+            }
+        }
 
         const QWebElement loved = element.findFirst("span.loved");
         gag.setVotesCount(loved.attribute("votes").toInt());
