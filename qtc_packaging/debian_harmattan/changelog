@@ -1,3 +1,11 @@
+gagbook (0.5.0) stable; urgency=high
+  * Fix sudden not working due to changes in 9GAG's HTML
+  * Redesign UI
+  * Images caching
+  * Add data counter
+
+ -- Dickson <dicksonleong8@gmail.com>  Wed, 03 Apr 2013 23:04:38 +0800
+
 gagbook (0.4.0) stable; urgency=normal
   * Add vote and top section
   * Add zoom slider

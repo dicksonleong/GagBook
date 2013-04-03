@@ -1,7 +1,7 @@
 TEMPLATE = app
 TARGET = gagbook
 
-VERSION = 0.4.0
+VERSION = 0.5.0
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 QT += network webkit
