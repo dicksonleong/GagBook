@@ -50,10 +50,18 @@ ContextMenu {
             }
         }
         MenuItem {
+            text: "Share via Twitter"
+            platformInverted: root.platformInverted
+            onClicked: {
+                QMLUtils.openDefaultBrowser("https://twitter.com/intent/tweet?url=" + link);
+                infoBanner.alert("Launching web browser...");
+            }
+        }
+        MenuItem {
             text: "Share via SMS"
             platformInverted: root.platformInverted
             onClicked: {
-                QMLUtils.openDefaultBrowser("sms:?body=" + link)
+                Qt.openUrlExternally("sms:?body=" + link)
                 infoBanner.alert("Launching SMS...")
             }
         }
@@ -61,7 +69,7 @@ ContextMenu {
             text: "Share via email"
             platformInverted: root.platformInverted
             onClicked: {
-                QMLUtils.openDefaultBrowser("mailto:?body=" + link)
+                Qt.openUrlExternally("mailto:?body=" + link)
                 infoBanner.alert("Launching email client...")
             }
         }
