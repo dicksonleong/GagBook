@@ -58,7 +58,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
 
     bool isEmpty() const;
-    int lastGagId() const;
+    QString lastGagId() const;
 
     void append(const QList<GagObject> &gagList);
     void clear();

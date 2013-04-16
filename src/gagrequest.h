@@ -58,7 +58,7 @@ public:
     explicit GagRequest(Section section, QNetworkAccessManager *manager, QObject *parent = 0);
     ~GagRequest();
 
-    void setLastId(int lastId);
+    void setLastId(const QString &lastId);
     void setPage(int page);
 
     void send();
@@ -77,7 +77,7 @@ private:
     const Section m_section;
     QNetworkAccessManager *m_netManager;
 
-    int m_lastId;
+    QString m_lastId;
     int m_page;
 
     QNetworkReply *m_reply;

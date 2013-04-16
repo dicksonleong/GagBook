@@ -72,7 +72,7 @@ void GagRequest::initializeCache()
 }
 
 GagRequest::GagRequest(Section section, QNetworkAccessManager *manager, QObject *parent) :
-    QObject(parent), m_section(section), m_netManager(manager), m_lastId(-1), m_page(0), m_reply(0)
+    QObject(parent), m_section(section), m_netManager(manager), m_page(0), m_reply(0)
 {
     // disable JavaScript and rendering of external object
     m_webPage.settings()->setAttribute(QWebSettings::AutoLoadImages, false);
@@ -91,7 +91,7 @@ GagRequest::~GagRequest()
     }
 }
 
-void GagRequest::setLastId(int lastId)
+void GagRequest::setLastId(const QString &lastId)
 {
     Q_ASSERT(m_section == Hot || m_section == Trending || m_section == Vote);
     m_lastId = lastId;
@@ -110,7 +110,7 @@ void GagRequest::send()
     QNetworkRequest request;
     request.setRawHeader("User-Agent", USER_AGENT);
 
-    if (m_lastId < 0) {
+    if (m_lastId.isEmpty()) {
         QString requestUrl = "http://9gag.com/" + getSectionText(m_section);
         if (m_page > 0)
             requestUrl += "/" + QString::number(m_page);
@@ -121,7 +121,7 @@ void GagRequest::send()
         QUrl requestUrl("http://9gag.com/new/json");
         QList< QPair<QString,QString> > query;
         query << qMakePair(QString("list"), getSectionText(m_section));
-        query << qMakePair(QString("id"), QString::number(m_lastId));
+        query << qMakePair(QString("id"), m_lastId);
         requestUrl.setQueryItems(query);
 
         request.setUrl(requestUrl);
@@ -183,12 +183,12 @@ void GagRequest::onFinished()
 void GagRequest::parseGAG(const QWebElementCollection &entryItems)
 {
     foreach (const QWebElement &element, entryItems) {
-        if (!element.hasAttribute("data-url"))
+        if (!element.hasAttribute("gagid"))
             continue;
 
         GagObject gag;
-        gag.setId(element.attribute("gagid").toInt());
-        gag.setUrl(element.attribute("data-url"));
+        gag.setId(element.attribute("gagid"));
+        gag.setUrl(element.findFirst("a").attribute("href"));
         gag.setTitle(element.attribute("data-text"));
 
         const QWebElementCollection imgCollection = element.findAll("img");
@@ -220,12 +220,12 @@ void GagRequest::parseGAG(const QWebElementCollection &entryItems)
 void GagRequest::parseVoteGAG(const QWebElementCollection &entryItems)
 {
     foreach (const QWebElement &element, entryItems) {
-        if (!element.hasAttribute("data-url"))
+        if (!element.hasAttribute("gagid"))
             continue;
 
         GagObject gag;
-        gag.setId(element.attribute("gagid").toInt());
-        gag.setUrl(element.attribute("data-url"));
+        gag.setId(element.attribute("gagid"));
+        gag.setUrl(element.findFirst("a").attribute("href"));
         gag.setTitle(element.attribute("data-text"));
 
         const QWebElementCollection imgCollection = element.findAll("img");

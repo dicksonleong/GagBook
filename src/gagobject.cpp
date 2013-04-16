@@ -36,10 +36,10 @@
 class GagObjectData : public QSharedData
 {
 public:
-    GagObjectData() : id(0), imageHeight(0), votesCount(0), commentsCount(0), isVideo(false), isNSFW(false) {}
+    GagObjectData() : imageHeight(0), votesCount(0), commentsCount(0), isVideo(false), isNSFW(false) {}
     ~GagObjectData() {}
 
-    int id;
+    QString id;
     QUrl url;
     QString title;
     QUrl imageUrl;
@@ -73,12 +73,12 @@ GagObject::~GagObject()
 {
 }
 
-int GagObject::id() const
+QString GagObject::id() const
 {
     return d->id;
 }
 
-void GagObject::setId(int id)
+void GagObject::setId(const QString &id)
 {
     d->id = id;
 }

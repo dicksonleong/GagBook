@@ -88,7 +88,7 @@ bool GagModel::isEmpty() const
     return m_gagList.isEmpty();
 }
 
-int GagModel::lastGagId() const
+QString GagModel::lastGagId() const
 {
     Q_ASSERT(!m_gagList.isEmpty());
     return m_gagList.last().id();

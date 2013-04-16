@@ -44,8 +44,8 @@ public:
     GagObject &operator=(const GagObject &other);
     ~GagObject();
 
-    int id() const;
-    void setId(int id);
+    QString id() const;
+    void setId(const QString &id);
 
     QUrl url() const;
     void setUrl(const QUrl &url);
