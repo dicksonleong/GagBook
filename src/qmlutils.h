@@ -34,20 +34,28 @@
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 #include <QtCore/QScopedPointer>
+#include <QtCore/QUrl>
 
 class QDeclarativeItem;
-class QUrl;
 
 class QMLUtils : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int IMAGE_MAX_HEIGHT READ imageMaxHeight CONSTANT)
+    Q_PROPERTY(QUrl DEV_WEBSITE READ devWebsite CONSTANT)
+    Q_PROPERTY(QUrl REPO_WEBSITE READ repoWebsite CONSTANT)
     Q_PROPERTY(QString dataDownloaded READ dataDownloaded NOTIFY dataDownloadedChanged)
 public:
     static QMLUtils *instance();
 
     static const int IMAGE_MAX_HEIGHT;
     int imageMaxHeight() const { return IMAGE_MAX_HEIGHT; }
+
+    static const QUrl DEV_WEBSITE;
+    QUrl devWebsite() const { return DEV_WEBSITE; }
+
+    static const QUrl REPO_WEBSITE;
+    QUrl repoWebsite() const { return REPO_WEBSITE; }
 
     // Copy text to system clipboard
     Q_INVOKABLE void copyToClipboard(const QString &text);

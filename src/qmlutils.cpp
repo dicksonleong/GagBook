@@ -31,7 +31,6 @@
 #include "qmlutils.h"
 
 #include <QtCore/QFile>
-#include <QtCore/QUrl>
 #include <QtGui/QApplication>
 #include <QtGui/QClipboard>
 #include <QtDeclarative/QDeclarativeItem>
@@ -60,6 +59,9 @@ const int QMLUtils::IMAGE_MAX_HEIGHT = 2500;
 #else
 const int QMLUtils::IMAGE_MAX_HEIGHT = 3000;
 #endif
+
+const QUrl QMLUtils::DEV_WEBSITE("http://dickson-dev.blogspot.com");
+const QUrl QMLUtils::REPO_WEBSITE("https://github.com/dicksonleong/GagBook");
 
 QMLUtils *QMLUtils::instance()
 {

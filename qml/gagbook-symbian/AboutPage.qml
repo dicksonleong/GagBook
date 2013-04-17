@@ -91,7 +91,7 @@ to working anytime if 9GAG modified their HTML, even slightly. \
                 platformInverted: settings.whiteTheme
                 text: "Developer's Website"
                 width: parent.width * 0.75
-                onClicked: QMLUtils.openDefaultBrowser(constant.devWebSite)
+                onClicked: QMLUtils.openDefaultBrowser(QMLUtils.DEV_WEBSITE)
             }
 
             Button {
@@ -99,7 +99,7 @@ to working anytime if 9GAG modified their HTML, even slightly. \
                 platformInverted: settings.whiteTheme
                 text: "Source Repository"
                 width: parent.width * 0.75
-                onClicked: QMLUtils.openDefaultBrowser(constant.sourceRepoSite)
+                onClicked: QMLUtils.openDefaultBrowser(QMLUtils.REPO_WEBSITE)
             }
         }
     }

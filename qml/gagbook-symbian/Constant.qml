@@ -56,7 +56,4 @@ QtObject {
     property int fontSizeXXLarge: platformStyle.fontSizeLarge + 4
 
     property int headerHeight: inPortrait ? 55 : 45
-
-    property url devWebSite: "http://dickson-dev.blogspot.com"
-    property url sourceRepoSite: "https://github.com/dicksonleong/GagBook"
 }

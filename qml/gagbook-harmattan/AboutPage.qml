@@ -88,13 +88,13 @@ to working anytime if 9GAG modified their HTML, even slightly. \
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Developer's Website"
-                onClicked: Qt.openUrlExternally(constant.devWebSite)
+                onClicked: Qt.openUrlExternally(QMLUtils.DEV_WEBSITE)
             }
 
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Source Repository"
-                onClicked: Qt.openUrlExternally(constant.sourceRepoSite)
+                onClicked: Qt.openUrlExternally(QMLUtils.REPO_WEBSITE)
             }
         }
     }
