@@ -1,3 +1,10 @@
+gagbook (0.5.1) stable; urgency=high
+  * Fix not working due to 9GAG website changes
+  * Add fullscreen view for image with zooming
+  * Show a text when the post is video and/or NSFW
+
+ -- Dickson <dicksonleong8@gmail.com>  Fri, 19 Apr 2013 18:29:37 +0800
+
 gagbook (0.5.0) stable; urgency=high
   * Fix sudden not working due to changes in 9GAG's HTML
   * Redesign UI
