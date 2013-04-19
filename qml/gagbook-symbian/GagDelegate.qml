@@ -58,6 +58,8 @@ Item {
             elide: Text.ElideRight
             text: qsTr("%n like(s)", "", model.votesCount) + " · "
                   + qsTr("%n comment(s)", "", model.commentsCount)
+                  + (model.isVideo ? " · Video" : "")
+                  + (model.isNSFW ? " · NSFW" : "")
         }
 
         Image {
