@@ -112,6 +112,11 @@ Item {
                     Rectangle { color: constant.colorMid }
                 }
             }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: pageStack.push(Qt.resolvedUrl("ImagePage.qml"), { imageUrl: model.imageUrl })
+            }
         }
 
         ButtonRow{
