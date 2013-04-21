@@ -76,7 +76,8 @@ symbian{
 
 OTHER_FILES += qtc_packaging/debian_harmattan/* \
     gagbook_harmattan.desktop \
-    README.md
+    README.md \
+    LICENSE
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
