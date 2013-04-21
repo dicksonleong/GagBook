@@ -50,6 +50,13 @@ Page {
             buttonsText: ["Dark", "White"]
             onButtonClicked: settings.whiteTheme = index === 1
         }
+
+        SettingButtonRow {
+            text: "API"
+            checkedButtonIndex: settings.useInfiniGag ? 1 : 0
+            buttonsText: ["9GAG", "InfiniGAG"]
+            onButtonClicked: settings.useInfiniGag = (index === 1)
+        }
     }
 
     PageHeader {

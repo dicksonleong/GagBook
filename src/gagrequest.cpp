@@ -30,17 +30,11 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QCoreApplication> // for qAddPostRoutine()
-#include <QtCore/QRegExp>
-#include <QtCore/QStringList>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QImageReader>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
-
-#include <QtWebKit/QWebFrame>
-#include <QtWebKit/QWebElement>
-#include <QtWebKit/QWebElementCollection>
 
 #include "qmlutils.h"
 
@@ -71,12 +65,6 @@ void GagRequest::initializeCache()
 GagRequest::GagRequest(Section section, QNetworkAccessManager *manager, QObject *parent) :
     QObject(parent), m_section(section), m_netManager(manager), m_page(0), m_reply(0)
 {
-    // disable JavaScript and rendering of external object
-    m_webPage.settings()->setAttribute(QWebSettings::AutoLoadImages, false);
-    m_webPage.settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
-    m_webPage.settings()->setAttribute(QWebSettings::PrintElementBackgrounds, false);
-    m_webPage.settings()->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls, false);
-    m_webPage.settings()->setAttribute(QWebSettings::LocalContentCanAccessFileUrls, false);
 }
 
 GagRequest::~GagRequest()
@@ -105,26 +93,8 @@ void GagRequest::send()
     Q_ASSERT(m_reply == 0);
 
     QNetworkRequest request;
+    request.setUrl(contructRequestUrl(m_section, m_lastId, m_page));
     request.setRawHeader("User-Agent", USER_AGENT);
-
-    if (m_lastId.isEmpty()) {
-        QString requestUrl = "http://9gag.com/" + getSectionText(m_section);
-        if (m_page > 0)
-            requestUrl += "/" + QString::number(m_page);
-        request.setUrl(QUrl(requestUrl));
-        request.setRawHeader("Accept", "text/html");
-    }
-    else {
-        QUrl requestUrl("http://9gag.com/new/json");
-        QList< QPair<QString,QString> > query;
-        query << qMakePair(QString("list"), getSectionText(m_section));
-        query << qMakePair(QString("id"), m_lastId);
-        requestUrl.setQueryItems(query);
-
-        request.setUrl(requestUrl);
-        request.setRawHeader("Accept", "application/json");
-        request.setRawHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-    }
 
     m_reply = m_netManager->get(request);
     connect(m_reply, SIGNAL(finished()), this, SLOT(onFinished()));
@@ -141,122 +111,20 @@ void GagRequest::onFinished()
         return;
     }
 
-    QString response = QString::fromUtf8(m_reply->readAll());
-
+    QByteArray response = m_reply->readAll();
     m_reply->deleteLater();
     m_reply = 0;
 
-    // Extract the <li> tags using QRegExp
-    // For web, it looks like <li class=" entry-item" ... <!--end div.info--> ... </li>
-    // For JSON, it looks like <li class=\"  entry-item\" ... <!--end div.info--><\/li>
-    QStringList entryItemsString;
-    QRegExp entryItemRX("<li\\sclass=\\\\?\"[^\"]*entry-item\\\\?\".+<!--end div.info-->.*<\\\\?/li>",
-                        Qt::CaseInsensitive);
-    entryItemRX.setMinimal(true);
-    int pos = 0;
-    while ((pos = entryItemRX.indexIn(response, pos)) != -1) {
-        entryItemsString << entryItemRX.cap().remove('\\');
-        pos += entryItemRX.matchedLength();
-    }
-
-    // prepend and append with html and body tags to make it looks like valid html
-    entryItemsString.prepend("<!DOCTYPE html><html><body>");
-    entryItemsString.append("</body></html>");
-
-    m_webPage.mainFrame()->setHtml(entryItemsString.join(""));
-
-    const QWebElementCollection entryItems = m_webPage.mainFrame()->findAllElements("li");
-    switch (m_section) {
-    case Vote: parseVoteGAG(entryItems); break;
-    default: parseGAG(entryItems); break;
-    }
-
-    if (parsedGagList.isEmpty())
-        emit failure("Unable to parse response :(");
+    m_parsedGagList = parseResponse(response, m_section);
+    if (m_parsedGagList.isEmpty())
+        emit failure("Unable to parse response");
     else
         downloadImages();
 }
 
-void GagRequest::parseGAG(const QWebElementCollection &entryItems)
-{
-    foreach (const QWebElement &element, entryItems) {
-        if (!element.hasAttribute("gagid"))
-            continue;
-
-        GagObject gag;
-        gag.setId(element.attribute("gagid"));
-        gag.setUrl(element.findFirst("a").attribute("href"));
-        gag.setTitle(element.attribute("data-text"));
-
-        const QWebElementCollection imgCollection = element.findAll("img");
-        foreach (const QWebElement &img, imgCollection) {
-            if (img.attribute("alt") == "NSFW") {
-                gag.setImageUrl(img.attribute("src"));
-                gag.setIsNSFW(true);
-                break;
-            }
-            else if (!img.styleProperty("max-width", QWebElement::InlineStyle).isEmpty()) {
-                gag.setImageUrl(img.attribute("src"));
-                break;
-            }
-        }
-
-        const QWebElement loved = element.findFirst("span.loved");
-        gag.setVotesCount(loved.attribute("votes").toInt());
-
-        const QWebElement commentSpan = element.findFirst("span.comment");
-        gag.setCommentsCount(commentSpan.toPlainText().toInt());
-
-        if (element.findFirst("a.play").isNull() == false)
-            gag.setIsVideo(true);
-
-        parsedGagList.append(gag);
-    }
-}
-
-void GagRequest::parseVoteGAG(const QWebElementCollection &entryItems)
-{
-    foreach (const QWebElement &element, entryItems) {
-        if (!element.hasAttribute("gagid"))
-            continue;
-
-        GagObject gag;
-        gag.setId(element.attribute("gagid"));
-        gag.setUrl(element.findFirst("a").attribute("href"));
-        gag.setTitle(element.attribute("data-text"));
-
-        const QWebElementCollection imgCollection = element.findAll("img");
-        foreach (const QWebElement &img, imgCollection) {
-            if (!img.attribute("src").startsWith("http"))
-                continue;
-
-            if (img.hasAttribute("large-src"))
-                gag.setImageUrl(img.attribute("large-src"));
-            else
-                gag.setImageUrl(img.attribute("src"));
-
-            if (img.attribute("alt") == "NSFW")
-                gag.setIsNSFW(true);
-
-            break;
-        }
-
-        const QWebElement loved = element.findFirst("span.loved");
-        gag.setVotesCount(loved.attribute("votes").toInt());
-
-        const QWebElement commentSpan = element.findFirst("span.comment");
-        gag.setCommentsCount(commentSpan.toPlainText().toInt());
-
-        if (element.findFirst("a.play").isNull() == false)
-            gag.setIsVideo(true);
-
-        parsedGagList.append(gag);
-    }
-}
-
 void GagRequest::downloadImages()
 {
-    foreach (const GagObject &gag, parsedGagList) {
+    foreach (const GagObject &gag, m_parsedGagList) {
         QNetworkRequest request;
         request.setUrl(gag.imageUrl());
         request.setRawHeader("User-Agent", USER_AGENT);
@@ -301,7 +169,7 @@ void GagRequest::onImageDownloadFinished()
 
     m_imageDownloadReplyHash.remove(reply);
     if (m_imageDownloadReplyHash.isEmpty())
-        emit success(parsedGagList);
+        emit success(m_parsedGagList);
 
     reply->deleteLater();
 }

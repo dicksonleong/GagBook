@@ -6,21 +6,29 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 QT += network webkit
 
+# Backported JSON lib from Qt 5
+# TODO: Update the JSON source from the lastest Qt release!
+include(src/json/json.pri)
+
 HEADERS += \
     src/qmlutils.h \
+    src/settings.h \
     src/gagmanager.h \
     src/gagmodel.h \
     src/gagobject.h \
     src/gagrequest.h \
-    src/settings.h
+    src/ninegagrequest.h \
+    src/infinigagrequest.h
 
 SOURCES += main.cpp \
     src/qmlutils.cpp \
+    src/settings.cpp \
     src/gagmanager.cpp \
     src/gagmodel.cpp \
     src/gagobject.cpp \
     src/gagrequest.cpp \
-    src/settings.cpp
+    src/ninegagrequest.cpp \
+    src/infinigagrequest.cpp
 
 # Simulator
 simulator{

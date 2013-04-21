@@ -25,45 +25,25 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import QtQuick 1.1
-import com.nokia.symbian 1.1
+#ifndef NINEGAGREQUEST_H
+#define NINEGAGREQUEST_H
 
-Page {
-    id: settingsPage
+#include <QtWebKit/QWebPage>
 
-    tools: ToolBarLayout {
-        ToolButton {
-            platformInverted: settings.whiteTheme
-            iconSource: "toolbar-back"
-            onClicked: pageStack.pop()
-        }
-    }
+#include "gagrequest.h"
 
-    Column {
-        id: settingsColumn
-        anchors { top: pageHeader.bottom; topMargin: constant.paddingMedium; left: parent.left; right: parent.right }
-        height: childrenRect.height
-        spacing: constant.paddingLarge
+class NineGagRequest : public GagRequest
+{
+    Q_OBJECT
+public:
+    explicit NineGagRequest(Section section, QNetworkAccessManager *manager, QObject *parent = 0);
 
-        SettingButtonRow {
-            text: "Theme"
-            checkedButtonIndex: settings.whiteTheme ? 1 : 0
-            buttonsText: ["Dark", "White"]
-            onButtonClicked: settings.whiteTheme = index === 1
-        }
+protected:
+    QUrl contructRequestUrl(Section section, const QString &lastId, int page);
+    QList<GagObject> parseResponse(const QByteArray &response, const Section section);
 
-        SettingButtonRow {
-            text: "API"
-            checkedButtonIndex: settings.useInfiniGag ? 1 : 0
-            buttonsText: ["9GAG", "InfiniGAG"]
-            onButtonClicked: settings.useInfiniGag = (index === 1)
-        }
-    }
+private:
+    QWebPage m_webPage;
+};
 
-    PageHeader {
-        id: pageHeader
-        anchors { top: parent.top; left: parent.left; right: parent.right }
-        text: "Settings"
-        enabled: false
-    }
-}
+#endif // NINEGAGREQUEST_H

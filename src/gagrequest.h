@@ -30,13 +30,11 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QList>
-#include <QtWebKit/QWebPage>
 
 #include "gagobject.h"
 
 class QNetworkAccessManager;
 class QNetworkReply;
-class QWebElementCollection;
 
 class GagRequest : public QObject
 {
@@ -52,6 +50,8 @@ public:
         TopAll
     };
 
+    static void initializeCache();
+
     explicit GagRequest(Section section, QNetworkAccessManager *manager, QObject *parent = 0);
     ~GagRequest();
 
@@ -60,11 +60,16 @@ public:
 
     void send();
 
-    static void initializeCache();
-
 signals:
     void success(const QList<GagObject> &gagList);
     void failure(const QString &errorMessage);
+
+protected:
+    // must be override
+    virtual QUrl contructRequestUrl(Section section, const QString &lastId, int page) = 0;
+    virtual QList<GagObject> parseResponse(const QByteArray &response, const Section section) = 0;
+
+    static QString getSectionText(Section section);
 
 private slots:
     void onFinished();
@@ -78,15 +83,10 @@ private:
     int m_page;
 
     QNetworkReply *m_reply;
-    QWebPage m_webPage;
-    QList<GagObject> parsedGagList;
+    QList<GagObject> m_parsedGagList;
     QHash<QNetworkReply*, GagObject> m_imageDownloadReplyHash;
 
-    void parseGAG(const QWebElementCollection &entryItems);
-    void parseVoteGAG(const QWebElementCollection &entryItems);
     void downloadImages();
-
-    static QString getSectionText(Section section);
 };
 
 #endif // GAGREQUEST_H

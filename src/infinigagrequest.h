@@ -25,45 +25,21 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import QtQuick 1.1
-import com.nokia.symbian 1.1
+#ifndef INFINIGAGREQUEST_H
+#define INFINIGAGREQUEST_H
 
-Page {
-    id: settingsPage
+#include "gagrequest.h"
 
-    tools: ToolBarLayout {
-        ToolButton {
-            platformInverted: settings.whiteTheme
-            iconSource: "toolbar-back"
-            onClicked: pageStack.pop()
-        }
-    }
+class InfiniGagRequest : public GagRequest
+{
+    Q_OBJECT
+public:
+    explicit InfiniGagRequest(Section section, QNetworkAccessManager *manager, QObject *parent = 0);
 
-    Column {
-        id: settingsColumn
-        anchors { top: pageHeader.bottom; topMargin: constant.paddingMedium; left: parent.left; right: parent.right }
-        height: childrenRect.height
-        spacing: constant.paddingLarge
+protected:
+    QUrl contructRequestUrl(Section section, const QString &lastId, int page);
+    QList<GagObject> parseResponse(const QByteArray &response, const Section section);
 
-        SettingButtonRow {
-            text: "Theme"
-            checkedButtonIndex: settings.whiteTheme ? 1 : 0
-            buttonsText: ["Dark", "White"]
-            onButtonClicked: settings.whiteTheme = index === 1
-        }
+};
 
-        SettingButtonRow {
-            text: "API"
-            checkedButtonIndex: settings.useInfiniGag ? 1 : 0
-            buttonsText: ["9GAG", "InfiniGAG"]
-            onButtonClicked: settings.useInfiniGag = (index === 1)
-        }
-    }
-
-    PageHeader {
-        id: pageHeader
-        anchors { top: parent.top; left: parent.left; right: parent.right }
-        text: "Settings"
-        enabled: false
-    }
-}
+#endif // INFINIGAGREQUEST_H

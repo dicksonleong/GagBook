@@ -30,7 +30,8 @@
 #include <QtNetwork/QNetworkAccessManager>
 
 #include "gagmodel.h"
-#include "gagrequest.h"
+#include "ninegagrequest.h"
+#include "infinigagrequest.h"
 #include "settings.h"
 
 GagManager::GagManager(QObject *parent) :
@@ -54,7 +55,11 @@ void GagManager::refresh(RefreshType refreshType)
         refreshType = RefreshAll;
 
     GagRequest::Section selectedSection = static_cast<GagRequest::Section>(Settings::instance()->selectedSection());
-    m_request = new GagRequest(selectedSection, m_netManager, this);
+
+    if (Settings::instance()->useInfiniGag())
+        m_request = new InfiniGagRequest(selectedSection, m_netManager, this);
+    else
+        m_request = new NineGagRequest(selectedSection, m_netManager, this);
 
     if (refreshType == RefreshAll) {
         m_model->clear();
