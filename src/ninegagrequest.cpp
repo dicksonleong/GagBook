@@ -72,7 +72,7 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
 
         GagObject gag;
         gag.setId(element.attribute("gagid"));
-        gag.setUrl(element.findFirst("a").attribute("href"));
+        gag.setUrl(element.attribute("data-url"));
         gag.setTitle(element.attribute("data-text"));
 
         const QWebElementCollection imgCollection = element.findAll("img");
@@ -113,7 +113,7 @@ static QList<GagObject> parseVoteGAG(const QWebElementCollection &entryItems)
 
         GagObject gag;
         gag.setId(element.attribute("gagid"));
-        gag.setUrl(element.findFirst("a").attribute("href"));
+        gag.setUrl(element.attribute("data-url"));
         gag.setTitle(element.attribute("data-text"));
 
         const QWebElementCollection imgCollection = element.findAll("img");

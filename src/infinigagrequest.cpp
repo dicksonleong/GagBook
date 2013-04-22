@@ -64,8 +64,7 @@ QList<GagObject> InfiniGagRequest::parseResponse(const QByteArray &response, con
 
         GagObject gag;
         gag.setId(gagJsonObject.value("id").toString());
-        // the "links" from InfiniGAG is wrong, so I contruct the url myself
-        gag.setUrl("http://9gag.com/gag/" + gag.id());
+        gag.setUrl(gagJsonObject.value("link").toString());
         gag.setTitle(gagJsonObject.value("caption").toString());
         gag.setImageUrl(gagJsonObject.value("images").toObject().value("normal").toString());
         gag.setVotesCount(gagJsonObject.value("votes").toObject().value("count").toDouble());
