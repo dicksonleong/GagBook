@@ -53,10 +53,16 @@ Item {
             font.pixelSize: constant.fontSizeSmall
             color: constant.colorMid
             elide: Text.ElideRight
-            text: qsTr("%n like(s)", "", model.votesCount) + " · "
-                  + qsTr("%n comment(s)", "", model.commentsCount)
-                  + (model.isVideo ? " · Video" : "")
-                  + (model.isNSFW ? " · NSFW" : "")
+            text: {
+                var t = (model.votesCount == 1 ? "1 like" : model.votesCount + " likes");
+                if (model.commentsCount > 0)
+                    t += " · " + (model.commentsCount == 1 ? "1 comment" : model.commentsCount + " comments");
+                if (model.isVideo)
+                    t += " · Video";
+                if (model.isNSFW)
+                    t += " · NSFW";
+                return t;
+            }
         }
 
         Image {
