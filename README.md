@@ -26,5 +26,5 @@ License
 
 GagBook is licensed under the Simplified BSD License, see the file "LICENSE" for more info.
 
-GagBook use a backported version of JSON library from Qt 5 (in src/json/), which is licensed under the
-[GNU LGPL 2.1](http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html).
+GagBook use the [Qt-Json library](https://github.com/ereilin/qt-json), which is also licensed
+under the Simplified BSD License, see the file "qt-json/LICENSE" for more info.

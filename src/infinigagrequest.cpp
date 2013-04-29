@@ -28,9 +28,7 @@
 #include "infinigagrequest.h"
 
 #include <QtCore/QUrl>
-#include "json/qjsondocument.h"
-#include "json/qjsonobject.h"
-#include "json/qjsonarray.h"
+#include <qt-json/json.h>
 
 InfiniGagRequest::InfiniGagRequest(Section section, QNetworkAccessManager *manager, QObject *parent) :
     GagRequest(section, manager, parent)
@@ -51,23 +49,22 @@ QList<GagObject> InfiniGagRequest::parseResponse(const QByteArray &response, con
 {
     Q_UNUSED(section)
 
-    QJsonParseError parseError;
-    const QJsonDocument jsonDocument = QJsonDocument::fromJson(response, &parseError);
+    bool ok;
+    const QVariantList results = QtJson::parse(QString::fromUtf8(response), ok).toMap().value("data").toList();
 
-    Q_ASSERT_X(parseError.error == QJsonParseError::NoError, Q_FUNC_INFO, "Error parsing JSON");
-
-    const QJsonArray gagJsonArray = jsonDocument.object().value("data").toArray();
+    Q_ASSERT_X(ok, Q_FUNC_INFO, "Error parsing JSON");
+    Q_ASSERT_X(!results.isEmpty(), Q_FUNC_INFO, "Error parsing JSON or JSON is empty");
 
     QList<GagObject> gagList;
-    foreach (const QJsonValue &gagJsonValue, gagJsonArray) {
-        const QJsonObject gagJsonObject = gagJsonValue.toObject();
+    foreach (const QVariant &gagJson, results) {
+        const QVariantMap gagJsonMap = gagJson.toMap();
 
         GagObject gag;
-        gag.setId(gagJsonObject.value("id").toString());
-        gag.setUrl(gagJsonObject.value("link").toString());
-        gag.setTitle(gagJsonObject.value("caption").toString());
-        gag.setImageUrl(gagJsonObject.value("images").toObject().value("normal").toString());
-        gag.setVotesCount(gagJsonObject.value("votes").toObject().value("count").toDouble());
+        gag.setId(gagJsonMap.value("id").toString());
+        gag.setUrl(gagJsonMap.value("link").toString());
+        gag.setTitle(gagJsonMap.value("caption").toString());
+        gag.setImageUrl(gagJsonMap.value("images").toMap().value("normal").toString());
+        gag.setVotesCount(gagJsonMap.value("votes").toMap().value("count").toInt());
 
         gagList.append(gag);
     }

@@ -6,9 +6,9 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 QT += network webkit
 
-# Backported JSON lib from Qt 5
-# TODO: Update the JSON source from the lastest Qt release!
-include(src/json/json.pri)
+# Qt-Json
+HEADERS += qt-json/json.h
+SOURCES += qt-json/json.cpp
 
 HEADERS += \
     src/qmlutils.h \
