@@ -1,3 +1,9 @@
+gagbook (0.6.0) stable; urgency=high
+  * Add InfiniGAG API as a fallback API
+  * Fix wrong/missing 9GAG links and broken comment section
+
+ -- Dickson <dicksonleong8@gmail.com>  Tue, 30 Apr 2013 16:22:42 +0800
+
 gagbook (0.5.1) stable; urgency=high
   * Fix not working due to 9GAG website changes
   * Add fullscreen view for image with zooming
