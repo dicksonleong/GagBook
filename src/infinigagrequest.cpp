@@ -45,10 +45,8 @@ QUrl InfiniGagRequest::contructRequestUrl(Section section, const QString &lastId
     return QUrl(requestUrl);
 }
 
-QList<GagObject> InfiniGagRequest::parseResponse(const QByteArray &response, const Section section)
+QList<GagObject> InfiniGagRequest::parseResponse(const QByteArray &response)
 {
-    Q_UNUSED(section)
-
     bool ok;
     const QVariantList results = QtJson::parse(QString::fromUtf8(response), ok).toMap().value("data").toList();
 

@@ -28,8 +28,6 @@
 #ifndef NINEGAGREQUEST_H
 #define NINEGAGREQUEST_H
 
-#include <QtWebKit/QWebPage>
-
 #include "gagrequest.h"
 
 class NineGagRequest : public GagRequest
@@ -40,10 +38,7 @@ public:
 
 protected:
     QUrl contructRequestUrl(Section section, const QString &lastId, int page);
-    QList<GagObject> parseResponse(const QByteArray &response, const Section section);
-
-private:
-    QWebPage m_webPage;
+    QList<GagObject> parseResponse(const QByteArray &response);
 };
 
 #endif // NINEGAGREQUEST_H

@@ -115,7 +115,7 @@ void GagRequest::onFinished()
     m_reply->deleteLater();
     m_reply = 0;
 
-    m_parsedGagList = parseResponse(response, m_section);
+    m_parsedGagList = parseResponse(response);
     if (m_parsedGagList.isEmpty())
         emit failure("Unable to parse response");
     else

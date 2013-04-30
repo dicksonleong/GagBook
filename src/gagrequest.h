@@ -67,7 +67,7 @@ signals:
 protected:
     // must be override
     virtual QUrl contructRequestUrl(Section section, const QString &lastId, int page) = 0;
-    virtual QList<GagObject> parseResponse(const QByteArray &response, const Section section) = 0;
+    virtual QList<GagObject> parseResponse(const QByteArray &response) = 0;
 
     static QString getSectionText(Section section);
 

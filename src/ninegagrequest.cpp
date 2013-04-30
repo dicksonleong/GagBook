@@ -28,7 +28,7 @@
 #include "ninegagrequest.h"
 
 #include <QtCore/QRegExp>
-#include <QtCore/QStringList>
+#include <QtWebKit/QWebPage>
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebElement>
 #include <QtWebKit/QWebElementCollection>
@@ -36,12 +36,6 @@
 NineGagRequest::NineGagRequest(Section section, QNetworkAccessManager *manager, QObject *parent) :
     GagRequest(section, manager, parent)
 {
-    // disable JavaScript and rendering of external object
-    m_webPage.settings()->setAttribute(QWebSettings::AutoLoadImages, false);
-    m_webPage.settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
-    m_webPage.settings()->setAttribute(QWebSettings::PrintElementBackgrounds, false);
-    m_webPage.settings()->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls, false);
-    m_webPage.settings()->setAttribute(QWebSettings::LocalContentCanAccessFileUrls, false);
 }
 
 QUrl NineGagRequest::contructRequestUrl(Section section, const QString &lastId, int page)
@@ -62,14 +56,58 @@ QUrl NineGagRequest::contructRequestUrl(Section section, const QString &lastId, 
     return requestUrl;
 }
 
+static QWebElementCollection getEntryItemsFromHtml(const QString &html);
+static QWebElementCollection getEntryItemsFromJson(const QString &json);
+static QList<GagObject> parseGAG(const QWebElementCollection &entryItems);
+
+QList<GagObject> NineGagRequest::parseResponse(const QByteArray &response)
+{
+    const QString responseStr = QString::fromUtf8(response);
+
+    if (responseStr.startsWith('{') && responseStr.endsWith('}')) // JSON
+        return parseGAG(getEntryItemsFromJson(responseStr));
+    else
+        return parseGAG(getEntryItemsFromHtml(responseStr));
+}
+
+static QWebElementCollection getEntryItemsFromHtml(const QString &html)
+{
+    QWebPage webPage;
+    // disable JavaScript and rendering of external object
+    webPage.settings()->setAttribute(QWebSettings::AutoLoadImages, false);
+    webPage.settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
+    webPage.settings()->setAttribute(QWebSettings::PrintElementBackgrounds, false);
+    webPage.settings()->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls, false);
+    webPage.settings()->setAttribute(QWebSettings::LocalContentCanAccessFileUrls, false);
+
+    webPage.mainFrame()->setHtml(html);
+    return webPage.mainFrame()->findAllElements("li.entry-item");
+}
+
+// can not use Qt-Json to parse this JSON because it will cause the order
+// of entry-item to be sorted when parsed into a QVariantMap
+static QWebElementCollection getEntryItemsFromJson(const QString &json)
+{
+    QString html = "<html>";
+
+    QRegExp entryItemsRx("\"(<li.+<\\\\/li>)\"");
+    entryItemsRx.setMinimal(true);
+    int pos = 0;
+    while ((pos = entryItemsRx.indexIn(json, pos)) != -1) {
+        html += entryItemsRx.cap(1).remove('\\');
+        pos += entryItemsRx.matchedLength();
+    }
+
+    html += "</html>";
+
+    return getEntryItemsFromHtml(html);
+}
+
 static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
 {
     QList<GagObject> gagList;
 
     foreach (const QWebElement &element, entryItems) {
-        if (!element.hasAttribute("gagid"))
-            continue;
-
         GagObject gag;
         gag.setId(element.attribute("gagid"));
         gag.setUrl(element.attribute("data-url"));
@@ -77,13 +115,14 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
 
         const QWebElementCollection imgCollection = element.findAll("img");
         foreach (const QWebElement &img, imgCollection) {
-            if (img.attribute("alt") == "NSFW") {
-                gag.setImageUrl(img.attribute("src"));
-                gag.setIsNSFW(true);
+            if (!img.styleProperty("max-width", QWebElement::InlineStyle).isEmpty()) {
+                gag.setImageUrl(img.hasAttribute("large-src") ? img.attribute("large-src")
+                                                              : img.attribute("src"));
                 break;
             }
-            else if (!img.styleProperty("max-width", QWebElement::InlineStyle).isEmpty()) {
+            else if (img.attribute("alt") == "NSFW") {
                 gag.setImageUrl(img.attribute("src"));
+                gag.setIsNSFW(true);
                 break;
             }
         }
@@ -101,82 +140,4 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
     }
 
     return gagList;
-}
-
-static QList<GagObject> parseVoteGAG(const QWebElementCollection &entryItems)
-{
-    QList<GagObject> gagList;
-
-    foreach (const QWebElement &element, entryItems) {
-        if (!element.hasAttribute("gagid"))
-            continue;
-
-        GagObject gag;
-        gag.setId(element.attribute("gagid"));
-        gag.setUrl(element.attribute("data-url"));
-        gag.setTitle(element.attribute("data-text"));
-
-        const QWebElementCollection imgCollection = element.findAll("img");
-        foreach (const QWebElement &img, imgCollection) {
-            if (!img.attribute("src").startsWith("http"))
-                continue;
-
-            if (img.hasAttribute("large-src"))
-                gag.setImageUrl(img.attribute("large-src"));
-            else
-                gag.setImageUrl(img.attribute("src"));
-
-            if (img.attribute("alt") == "NSFW")
-                gag.setIsNSFW(true);
-
-            break;
-        }
-
-        const QWebElement loved = element.findFirst("span.loved");
-        gag.setVotesCount(loved.attribute("votes").toInt());
-
-        const QWebElement commentSpan = element.findFirst("span.comment");
-        gag.setCommentsCount(commentSpan.toPlainText().toInt());
-
-        if (element.findFirst("a.play").isNull() == false)
-            gag.setIsVideo(true);
-
-        gagList.append(gag);
-    }
-
-    return gagList;
-}
-
-QList<GagObject> NineGagRequest::parseResponse(const QByteArray &response, const Section section)
-{
-    QString responseStr = QString::fromUtf8(response);
-
-    // Extract the <li> tags using QRegExp
-    // For web, it looks like <li class=" entry-item" ... <!--end div.info--> ... </li>
-    // For JSON, it looks like <li class=\"  entry-item\" ... <!--end div.info--><\/li>
-    QStringList entryItemsString;
-    QRegExp entryItemRX("<li\\sclass=\\\\?\"[^\"]*entry-item\\\\?\".+<!--end div.info-->.*<\\\\?/li>",
-                        Qt::CaseInsensitive);
-    entryItemRX.setMinimal(true);
-    int pos = 0;
-    while ((pos = entryItemRX.indexIn(responseStr, pos)) != -1) {
-        entryItemsString << entryItemRX.cap().remove('\\');
-        pos += entryItemRX.matchedLength();
-    }
-
-    // prepend and append with html and body tags to make it looks like valid html
-    entryItemsString.prepend("<!DOCTYPE html><html><body>");
-    entryItemsString.append("</body></html>");
-
-    m_webPage.mainFrame()->setHtml(entryItemsString.join(""));
-
-    const QWebElementCollection entryItems = m_webPage.mainFrame()->findAllElements("li");
-
-    QList<GagObject> parsedGagList;
-    switch (section) {
-    case Vote: parsedGagList = parseVoteGAG(entryItems); break;
-    default: parsedGagList = parseGAG(entryItems); break;
-    }
-
-    return parsedGagList;
 }

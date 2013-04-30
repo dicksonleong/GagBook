@@ -38,7 +38,7 @@ public:
 
 protected:
     QUrl contructRequestUrl(Section section, const QString &lastId, int page);
-    QList<GagObject> parseResponse(const QByteArray &response, const Section section);
+    QList<GagObject> parseResponse(const QByteArray &response);
 
 };
 
