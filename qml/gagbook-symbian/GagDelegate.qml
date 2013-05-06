@@ -145,11 +145,25 @@ Item {
                 onClicked: dialogManager.createShareDialog(model.url)
             }
             Button {
+                property string __savedFilePath: ""
                 platformInverted: settings.whiteTheme
-                iconSource: "Images/download" + (platformInverted ? "_inverted.svg" : ".svg")
+                iconSource: {
+                    if (!__savedFilePath)
+                        return "Images/download" + (platformInverted ? "_inverted.svg" : ".svg");
+                    else
+                        return "Images/photos" + (platformInverted ? "_inverted.svg" : ".svg");
+                }
                 onClicked: {
-                    var msg = QMLUtils.saveImage(model.imageUrl);
-                    infoBanner.alert(msg);
+                    if (!__savedFilePath) {
+                        __savedFilePath = QMLUtils.saveImage(model.imageUrl);
+                        if (__savedFilePath)
+                            infoBanner.alert("Image saved to " + __savedFilePath);
+                        else
+                            infoBanner.alert("Unable to save image");
+                    } else {
+                        Qt.openUrlExternally(__savedFilePath);
+                        __savedFilePath = "";
+                    }
                 }
             }
         }

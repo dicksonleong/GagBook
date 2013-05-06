@@ -88,16 +88,16 @@ void QMLUtils::copyToClipboard(const QString &text)
 QString QMLUtils::saveImage(const QUrl &imageUrl)
 {
     if (imageUrl.scheme() != "file")
-        return QString("Unable to save image. Please refresh and try again.");
+        return QString("");
 
     const QString imagePath = imageUrl.toLocalFile();
     const QString copyFilePath = IMAGE_SAVING_FILE_PATH + "/" + imagePath.mid(imagePath.lastIndexOf("/") + 1);
     bool success = QFile::copy(imagePath, copyFilePath);
 
     if (success)
-        return QString("Image saved to " + copyFilePath);
+        return QUrl::fromLocalFile(copyFilePath).toString(); // use QUrl to get the "file://" scheme
     else
-        return QString("Unable to save image");
+        return QString("");
 }
 
 void QMLUtils::shareLink(const QString &link, const QString &title)

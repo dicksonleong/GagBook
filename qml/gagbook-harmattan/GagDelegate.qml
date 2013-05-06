@@ -142,10 +142,24 @@ Item {
                 onClicked: QMLUtils.shareLink(model.url, model.title);
             }
             Button {
-                iconSource: "image://theme/icon-s-transfer-download" + (settings.whiteTheme ? "" : "-inverse")
+                property string __savedFilePath: ""
+                iconSource: {
+                    if (!__savedFilePath)
+                        return "image://theme/icon-s-transfer-download" + (settings.whiteTheme ? "" : "-inverse")
+                    else
+                        return "image://theme/icon-m-toolbar-gallery" + (settings.whiteTheme ? "" : "-selected")
+                }
                 onClicked: {
-                    var msg = QMLUtils.saveImage(model.imageUrl);
-                    infoBanner.alert(msg);
+                    if (!__savedFilePath) {
+                        __savedFilePath = QMLUtils.saveImage(model.imageUrl);
+                        if (__savedFilePath)
+                            infoBanner.alert("Image saved to " + __savedFilePath);
+                        else
+                            infoBanner.alert("Unable to save image");
+                    } else {
+                        Qt.openUrlExternally(__savedFilePath);
+                        __savedFilePath = "";
+                    }
                 }
             }
         }
