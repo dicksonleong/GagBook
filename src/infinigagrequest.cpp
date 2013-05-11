@@ -30,6 +30,8 @@
 #include <QtCore/QUrl>
 #include <qt-json/json.h>
 
+// For more information about InfiniGAG API, see <https://github.com/k3min/infinigag>
+
 InfiniGagRequest::InfiniGagRequest(Section section, QNetworkAccessManager *manager, QObject *parent) :
     GagRequest(section, manager, parent)
 {
@@ -39,7 +41,7 @@ QUrl InfiniGagRequest::contructRequestUrl(Section section, const QString &lastId
 {
     Q_UNUSED(page)
 
-    QString requestUrl = QString("http://infinigag.eu01.aws.af.cm/2/%1/%2.json")
+    QString requestUrl = QString("http://infinigag.eu01.aws.af.cm/%1/%2")
             .arg(getSectionText(section), (lastId.isEmpty() ? "0" : lastId));
 
     return QUrl(requestUrl);
