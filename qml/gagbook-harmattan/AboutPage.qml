@@ -62,8 +62,16 @@ Page {
                 anchors { left: parent.left; right: parent.right }
                 font.pixelSize: constant.fontSizeMedium
                 horizontalAlignment: Text.AlignHCenter
-                color: constant.colorMid
-                text: "v" + APP_VERSION + "\nCopyright © 2012 Dickson"
+                color: constant.colorLight
+                wrapMode: Text.Wrap
+                textFormat: Text.RichText
+                text: "v" + APP_VERSION + "<br>\
+Copyright © 2012-2013 Dickson Leong<br><br>\
+GagBook is a 9GAG app that allow you to view posts from 9GAG \
+with a simple and native user interface. GagBook is not affiliated with 9GAG.<br><br>\
+By using this app you agree to 9GAG's <a href=\"http://9gag.com/tos\">Terms of Service</a> \
+and <a href=\"http://9gag.com/privacy\">Privacy Policy</a>.<br>"
+                onLinkActivated: Qt.openUrlExternally(link)
             }
 
             Text {
@@ -73,13 +81,7 @@ Page {
                 color: constant.colorLight
                 wrapMode: Text.Wrap
                 textFormat: Text.PlainText
-                text: "GagBook is a 9GAG app that allow you to view the post from 9GAG \
-with a simple and native UI. \
-GagBook is not affiliated with 9GAG.\n\n\
-Note: GagBook get the 9GAG posts by parsing HTML from 9GAG website, which can easily failed \
-to working anytime if 9GAG modified their HTML, even slightly. \
-\n\n\
-~ " + QMLUtils.dataDownloaded + " MB downloaded"
+                text: "~ " + QMLUtils.dataDownloaded + " MB downloaded"
             }
 
             Button {
