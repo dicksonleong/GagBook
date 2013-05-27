@@ -32,13 +32,10 @@
 #include <QtCore/QCoreApplication> // for qAddPostRoutine()
 #include <QtGui/QDesktopServices>
 #include <QtGui/QImageReader>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 
-#include "qmlutils.h"
+#include "networkmanager.h"
 
-static QByteArray USER_AGENT = "GagBook/" + QByteArray(APP_VERSION);
 static QString IMAGE_CACHE_PATH = QDesktopServices::storageLocation(QDesktopServices::CacheLocation)
          + "/gagbook";
 
@@ -62,8 +59,8 @@ void GagRequest::initializeCache()
     qAddPostRoutine(cacheCleanUp);
 }
 
-GagRequest::GagRequest(Section section, QNetworkAccessManager *manager, QObject *parent) :
-    QObject(parent), m_section(section), m_netManager(manager), m_page(0), m_reply(0)
+GagRequest::GagRequest(Section section, QObject *parent) :
+    QObject(parent), m_section(section), m_page(0), m_reply(0)
 {
 }
 
@@ -92,18 +89,12 @@ void GagRequest::send()
 {
     Q_ASSERT(m_reply == 0);
 
-    QNetworkRequest request;
-    request.setUrl(contructRequestUrl(m_section, m_lastId, m_page));
-    request.setRawHeader("User-Agent", USER_AGENT);
-
-    m_reply = m_netManager->get(request);
+    m_reply = NetworkManager::createGetRequest(contructRequestUrl(m_section, m_lastId, m_page));
     connect(m_reply, SIGNAL(finished()), this, SLOT(onFinished()));
 }
 
 void GagRequest::onFinished()
 {
-    QMLUtils::instance()->increaseDataDownloaded(m_reply->size());
-
     if (m_reply->error()) {
         emit failure(m_reply->errorString());
         m_reply->deleteLater();
@@ -125,12 +116,7 @@ void GagRequest::onFinished()
 void GagRequest::downloadImages()
 {
     foreach (const GagObject &gag, m_parsedGagList) {
-        QNetworkRequest request;
-        request.setUrl(gag.imageUrl());
-        request.setRawHeader("User-Agent", USER_AGENT);
-        request.setRawHeader("Accept", "image/*");
-
-        QNetworkReply *reply = m_netManager->get(request);
+        QNetworkReply *reply = NetworkManager::createGetRequest(gag.imageUrl());
         m_imageDownloadReplyHash.insert(reply, gag);
         connect(reply, SIGNAL(finished()), SLOT(onImageDownloadFinished()));
     }
@@ -140,7 +126,6 @@ void GagRequest::onImageDownloadFinished()
 {
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
     Q_ASSERT_X(reply != 0, Q_FUNC_INFO, "Unable to cast sender() to QNetworkReply *");
-    QMLUtils::instance()->increaseDataDownloaded(reply->size());
 
     const QString urlStr = reply->url().toString();
     const QString fileName = IMAGE_CACHE_PATH + "/" + urlStr.mid(urlStr.lastIndexOf("/") + 1);

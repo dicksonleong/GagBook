@@ -33,7 +33,6 @@
 
 #include "gagobject.h"
 
-class QNetworkAccessManager;
 class QNetworkReply;
 
 class GagRequest : public QObject
@@ -52,7 +51,7 @@ public:
 
     static void initializeCache();
 
-    explicit GagRequest(Section section, QNetworkAccessManager *manager, QObject *parent = 0);
+    explicit GagRequest(Section section, QObject *parent = 0);
     ~GagRequest();
 
     void setLastId(const QString &lastId);
@@ -77,7 +76,6 @@ private slots:
 
 private:
     const Section m_section;
-    QNetworkAccessManager *m_netManager;
 
     QString m_lastId;
     int m_page;

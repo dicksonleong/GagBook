@@ -34,7 +34,7 @@ class NineGagRequest : public GagRequest
 {
     Q_OBJECT
 public:
-    explicit NineGagRequest(Section section, QNetworkAccessManager *manager, QObject *parent = 0);
+    explicit NineGagRequest(Section section, QObject *parent = 0);
 
 protected:
     QUrl contructRequestUrl(Section section, const QString &lastId, int page);

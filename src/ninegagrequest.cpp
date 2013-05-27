@@ -33,8 +33,8 @@
 #include <QtWebKit/QWebElement>
 #include <QtWebKit/QWebElementCollection>
 
-NineGagRequest::NineGagRequest(Section section, QNetworkAccessManager *manager, QObject *parent) :
-    GagRequest(section, manager, parent)
+NineGagRequest::NineGagRequest(Section section, QObject *parent) :
+    GagRequest(section, parent)
 {
 }
 

@@ -34,7 +34,7 @@ class InfiniGagRequest : public GagRequest
 {
     Q_OBJECT
 public:
-    explicit InfiniGagRequest(Section section, QNetworkAccessManager *manager, QObject *parent = 0);
+    explicit InfiniGagRequest(Section section, QObject *parent = 0);
 
 protected:
     QUrl contructRequestUrl(Section section, const QString &lastId, int page);

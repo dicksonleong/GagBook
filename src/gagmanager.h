@@ -32,7 +32,6 @@
 
 #include "gagobject.h"
 
-class QNetworkAccessManager;
 class GagRequest;
 class GagModel;
 
@@ -69,7 +68,6 @@ private slots:
     void onFailure(const QString &errorMessage);
 
 private:
-    QNetworkAccessManager *m_netManager;
     GagRequest *m_request;
 
     bool m_busy;

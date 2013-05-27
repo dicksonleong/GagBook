@@ -35,8 +35,7 @@
 #include "settings.h"
 
 GagManager::GagManager(QObject *parent) :
-    QObject(parent), m_netManager(new QNetworkAccessManager(this)), m_request(0),
-    m_busy(false), m_model(0), m_page(1)
+    QObject(parent), m_request(0), m_busy(false), m_model(0), m_page(1)
 {
     GagRequest::initializeCache();
 }
@@ -57,9 +56,9 @@ void GagManager::refresh(RefreshType refreshType)
     GagRequest::Section selectedSection = static_cast<GagRequest::Section>(Settings::instance()->selectedSection());
 
     if (Settings::instance()->useInfiniGag())
-        m_request = new InfiniGagRequest(selectedSection, m_netManager, this);
+        m_request = new InfiniGagRequest(selectedSection, this);
     else
-        m_request = new NineGagRequest(selectedSection, m_netManager, this);
+        m_request = new NineGagRequest(selectedSection, this);
 
     if (refreshType == RefreshAll) {
         m_model->clear();

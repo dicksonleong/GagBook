@@ -32,8 +32,8 @@
 
 // For more information about InfiniGAG API, see <https://github.com/k3min/infinigag>
 
-InfiniGagRequest::InfiniGagRequest(Section section, QNetworkAccessManager *manager, QObject *parent) :
-    GagRequest(section, manager, parent)
+InfiniGagRequest::InfiniGagRequest(Section section, QObject *parent) :
+    GagRequest(section, parent)
 {
 }
 

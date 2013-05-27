@@ -18,7 +18,8 @@ HEADERS += \
     src/gagobject.h \
     src/gagrequest.h \
     src/ninegagrequest.h \
-    src/infinigagrequest.h
+    src/infinigagrequest.h \
+    src/networkmanager.h
 
 SOURCES += main.cpp \
     src/qmlutils.cpp \
@@ -28,7 +29,8 @@ SOURCES += main.cpp \
     src/gagobject.cpp \
     src/gagrequest.cpp \
     src/ninegagrequest.cpp \
-    src/infinigagrequest.cpp
+    src/infinigagrequest.cpp \
+    src/networkmanager.cpp
 
 # Simulator
 simulator{
