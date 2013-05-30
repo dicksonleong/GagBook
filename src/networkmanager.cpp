@@ -27,5 +27,5 @@ QNetworkReply *NetworkManager::createGetRequest(const QUrl &url)
 
 void NetworkManager::trackDownloadSize(QNetworkReply *reply)
 {
-    QMLUtils::instance()->increaseDataDownloaded(reply->size());
+    QMLUtils::instance()->increaseDownloadCounter(reply->size());
 }

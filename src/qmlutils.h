@@ -41,7 +41,7 @@ class QMLUtils : public QObject
     Q_PROPERTY(int IMAGE_MAX_HEIGHT READ imageMaxHeight CONSTANT)
     Q_PROPERTY(QUrl DEV_WEBSITE READ devWebsite CONSTANT)
     Q_PROPERTY(QUrl REPO_WEBSITE READ repoWebsite CONSTANT)
-    Q_PROPERTY(QString dataDownloaded READ dataDownloaded NOTIFY dataDownloadedChanged)
+    Q_PROPERTY(QString downloadCounter READ downloadCounter NOTIFY downloadCounterChanged)
 public:
     static QMLUtils *instance();
 
@@ -66,11 +66,11 @@ public:
     // Open the link using Symbian's default browser
     Q_INVOKABLE void openDefaultBrowser(const QUrl &url);
 
-    QString dataDownloaded() const { return m_dataDownloadedStr; }
-    void increaseDataDownloaded(qint64 bytesDownloaded);
+    QString downloadCounter() const { return m_downloadCounterStr; }
+    void increaseDownloadCounter(qint64 bytes);
 
 signals:
-    void dataDownloadedChanged();
+    void downloadCounterChanged();
 
 private:
     static QScopedPointer<QMLUtils> m_instance;
@@ -78,8 +78,8 @@ private:
     explicit QMLUtils(QObject *parent = 0);
     Q_DISABLE_COPY(QMLUtils)
 
-    qint64 m_dataDownloaded; // in bytes
-    QString m_dataDownloadedStr; // in MB
+    qint64 m_downloadCounter; // in bytes
+    QString m_downloadCounterStr; // in MB
 };
 
 #endif // QMLUTILS_H

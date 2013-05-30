@@ -82,7 +82,7 @@ and <a href=\"http://9gag.com/privacy\">Privacy Policy</a>.<br>"
                 color: constant.colorLight
                 wrapMode: Text.Wrap
                 textFormat: Text.PlainText
-                text: "~ " + QMLUtils.dataDownloaded + " MB downloaded"
+                text: "~ " + QMLUtils.downloadCounter + " MB downloaded"
             }
 
             Button {
