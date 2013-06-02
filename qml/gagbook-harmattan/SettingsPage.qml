@@ -52,10 +52,10 @@ Page {
         }
 
         SettingButtonRow {
-            text: "API"
-            checkedButtonIndex: settings.useInfiniGag ? 1 : 0
+            text: "Source"
+            checkedButtonIndex: settings.source
             buttonsText: ["9GAG", "InfiniGAG"]
-            onButtonClicked: settings.useInfiniGag = (index === 1)
+            onButtonClicked: settings.source = index
         }
     }
 

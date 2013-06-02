@@ -67,17 +67,17 @@ void Settings::setWhiteTheme(bool whiteTheme)
     }
 }
 
-bool Settings::useInfiniGag() const
+int Settings::source() const
 {
-    return m_useInfiniGag;
+    return m_source;
 }
 
-void Settings::setUseInfiniGag(bool useInfiniGag)
+void Settings::setSource(int source)
 {
-    if (m_useInfiniGag != useInfiniGag) {
-        m_useInfiniGag = useInfiniGag;
-        m_settings->setValue("useInfiniGag", m_useInfiniGag);
-        emit useInfiniGagChanged();
+    if (m_source != source) {
+        m_source = source;
+        m_settings->setValue("source", m_source);
+        emit sourceChanged();
     }
 }
 
@@ -86,5 +86,5 @@ Settings::Settings(QObject *parent) :
 {
     m_selectedSection = m_settings->value("selectedSection", 0).toInt();
     m_whiteTheme = m_settings->value("whiteTheme", false).toBool();
-    m_useInfiniGag = m_settings->value("useInfiniGag", false).toBool();
+    m_source = m_settings->value("source", 0).toInt();
 }

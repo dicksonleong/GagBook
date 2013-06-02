@@ -55,16 +55,16 @@ void GagManager::refresh(RefreshType refreshType)
 
     GagRequest::Section selectedSection = static_cast<GagRequest::Section>(Settings::instance()->selectedSection());
 
-    if (Settings::instance()->useInfiniGag())
-        m_request = new InfiniGagRequest(selectedSection, this);
-    else
-        m_request = new NineGagRequest(selectedSection, this);
+    switch (Settings::instance()->source()) {
+    case 0: m_request = new NineGagRequest(selectedSection, this); break;
+    case 1: m_request = new InfiniGagRequest(selectedSection, this); break;
+    default: qCritical("GagManager::refresh(): Invalid source");
+    }
 
     if (refreshType == RefreshAll) {
         m_model->clear();
         m_page = 1;
-    }
-    else if (refreshType == RefreshOlder) {
+    } else if (refreshType == RefreshOlder) {
         switch (selectedSection) {
         case GagRequest::Hot: case GagRequest::Trending: case GagRequest::Vote:
             m_request->setLastId(m_model->lastGagId());

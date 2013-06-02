@@ -39,7 +39,7 @@ class Settings : public QObject
 
     Q_PROPERTY(int selectedSection READ selectedSection WRITE setSelectedSection NOTIFY selectedSectionChanged)
     Q_PROPERTY(bool whiteTheme READ isWhiteTheme WRITE setWhiteTheme NOTIFY whiteThemeChanged)
-    Q_PROPERTY(bool useInfiniGag READ useInfiniGag WRITE setUseInfiniGag NOTIFY useInfiniGagChanged)
+    Q_PROPERTY(int source READ source WRITE setSource NOTIFY sourceChanged)
 public:
     static Settings *instance();
 
@@ -49,13 +49,13 @@ public:
     bool isWhiteTheme() const;
     void setWhiteTheme(bool whiteTheme);
 
-    bool useInfiniGag() const;
-    void setUseInfiniGag(bool useInfiniGag);
+    int source() const;
+    void setSource(int source);
 
 signals:
     void selectedSectionChanged();
     void whiteThemeChanged();
-    void useInfiniGagChanged();
+    void sourceChanged();
 
 private:
     static QScopedPointer<Settings> m_instance;
@@ -67,7 +67,7 @@ private:
 
     int m_selectedSection;
     bool m_whiteTheme;
-    bool m_useInfiniGag;
+    int m_source;
 };
 
 #endif // SETTINGS_H
