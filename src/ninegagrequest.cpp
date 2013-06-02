@@ -40,16 +40,10 @@ NineGagRequest::NineGagRequest(Section section, QObject *parent) :
 
 QUrl NineGagRequest::constructRequestUrl(Section section, const QString &lastId)
 {
-    if (lastId.isEmpty()) {
-        QString requestUrl = "http://9gag.com/" + getSectionText(section);
-        return QUrl(requestUrl);
-    }
-
-    QUrl requestUrl("http://9gag.com/new/json");
-    QList< QPair<QString,QString> > query;
-    query << qMakePair(QString("list"), getSectionText(section));
-    query << qMakePair(QString("id"), lastId);
-    requestUrl.setQueryItems(query);
+    QUrl requestUrl("http://9gag.com/" + getSectionText(section));
+    requestUrl.addQueryItem("format", "json");
+    if (!lastId.isEmpty())
+        requestUrl.addQueryItem("id", lastId);
 
     return requestUrl;
 }
@@ -60,12 +54,7 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems);
 
 QList<GagObject> NineGagRequest::parseResponse(const QByteArray &response)
 {
-    const QString responseStr = QString::fromUtf8(response);
-
-    if (responseStr.startsWith('{') && responseStr.endsWith('}')) // JSON
-        return parseGAG(getEntryItemsFromJson(responseStr));
-    else
-        return parseGAG(getEntryItemsFromHtml(responseStr));
+    return parseGAG(getEntryItemsFromJson(QString::fromUtf8(response)));
 }
 
 static QWebElementCollection getEntryItemsFromHtml(const QString &html)
