@@ -37,10 +37,8 @@ InfiniGagRequest::InfiniGagRequest(Section section, QObject *parent) :
 {
 }
 
-QUrl InfiniGagRequest::contructRequestUrl(Section section, const QString &lastId, int page)
+QUrl InfiniGagRequest::constructRequestUrl(Section section, const QString &lastId)
 {
-    Q_UNUSED(page)
-
     QString requestUrl = QString("http://infinigag.eu01.aws.af.cm/%1/%2")
             .arg(getSectionText(section), (lastId.isEmpty() ? "0" : lastId));
 

@@ -65,14 +65,7 @@ void GagManager::refresh(RefreshType refreshType)
         m_model->clear();
         m_page = 1;
     } else if (refreshType == RefreshOlder) {
-        switch (selectedSection) {
-        case GagRequest::Hot: case GagRequest::Trending: case GagRequest::Vote:
-            m_request->setLastId(m_model->lastGagId());
-            break;
-        case GagRequest::TopDay: case GagRequest::TopWeek: case GagRequest::TopMonth: case GagRequest::TopAll:
-            m_request->setPage(++m_page);
-            break;
-        }
+        m_request->setLastId(m_model->lastGagId());
     }
 
     connect(m_request, SIGNAL(success(QList<GagObject>)), this, SLOT(onSuccess(QList<GagObject>)));

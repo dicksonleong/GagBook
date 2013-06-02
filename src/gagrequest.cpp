@@ -60,7 +60,7 @@ void GagRequest::initializeCache()
 }
 
 GagRequest::GagRequest(Section section, QObject *parent) :
-    QObject(parent), m_section(section), m_page(0), m_reply(0)
+    QObject(parent), m_section(section), m_reply(0)
 {
 }
 
@@ -79,17 +79,11 @@ void GagRequest::setLastId(const QString &lastId)
     m_lastId = lastId;
 }
 
-void GagRequest::setPage(int page)
-{
-    Q_ASSERT(m_section == TopDay || m_section == TopWeek || m_section == TopMonth || m_section == TopAll);
-    m_page = page;
-}
-
 void GagRequest::send()
 {
     Q_ASSERT(m_reply == 0);
 
-    m_reply = NetworkManager::createGetRequest(contructRequestUrl(m_section, m_lastId, m_page));
+    m_reply = NetworkManager::createGetRequest(constructRequestUrl(m_section, m_lastId));
     connect(m_reply, SIGNAL(finished()), this, SLOT(onFinished()));
 }
 
@@ -168,14 +162,6 @@ QString GagRequest::getSectionText(Section section)
         return "trending";
     case Vote:
         return "vote";
-    case TopDay:
-        return "top/day";
-    case TopWeek:
-        return "top/week";
-    case TopMonth:
-        return "top/month";
-    case TopAll:
-        return "top/all";
     default:
         qWarning("GagRequest::getSectionText(): Invalid section");
         return QString("");

@@ -38,12 +38,10 @@ NineGagRequest::NineGagRequest(Section section, QObject *parent) :
 {
 }
 
-QUrl NineGagRequest::contructRequestUrl(Section section, const QString &lastId, int page)
+QUrl NineGagRequest::constructRequestUrl(Section section, const QString &lastId)
 {
     if (lastId.isEmpty()) {
         QString requestUrl = "http://9gag.com/" + getSectionText(section);
-        if (page > 0)
-            requestUrl += "/" + QString::number(page);
         return QUrl(requestUrl);
     }
 

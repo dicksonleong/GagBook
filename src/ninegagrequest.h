@@ -37,7 +37,7 @@ public:
     explicit NineGagRequest(Section section, QObject *parent = 0);
 
 protected:
-    QUrl contructRequestUrl(Section section, const QString &lastId, int page);
+    QUrl constructRequestUrl(Section section, const QString &lastId);
     QList<GagObject> parseResponse(const QByteArray &response);
 };
 

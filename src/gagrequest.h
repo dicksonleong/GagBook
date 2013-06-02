@@ -42,11 +42,7 @@ public:
     enum Section {
         Hot = 0,
         Trending,
-        Vote,
-        TopDay,
-        TopWeek,
-        TopMonth,
-        TopAll
+        Vote
     };
 
     static void initializeCache();
@@ -55,7 +51,6 @@ public:
     ~GagRequest();
 
     void setLastId(const QString &lastId);
-    void setPage(int page);
 
     void send();
 
@@ -65,7 +60,7 @@ signals:
 
 protected:
     // must be override
-    virtual QUrl contructRequestUrl(Section section, const QString &lastId, int page) = 0;
+    virtual QUrl constructRequestUrl(Section section, const QString &lastId) = 0;
     virtual QList<GagObject> parseResponse(const QByteArray &response) = 0;
 
     static QString getSectionText(Section section);
@@ -78,7 +73,6 @@ private:
     const Section m_section;
 
     QString m_lastId;
-    int m_page;
 
     QNetworkReply *m_reply;
     QList<GagObject> m_parsedGagList;
