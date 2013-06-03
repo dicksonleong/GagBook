@@ -33,7 +33,8 @@
 class GagObjectData : public QSharedData
 {
 public:
-    GagObjectData() : imageHeight(0), votesCount(0), commentsCount(0), isVideo(false), isNSFW(false) {}
+    GagObjectData() : imageHeight(0), votesCount(0), commentsCount(0),
+        isVideo(false), isNSFW(false), isGIF(false) {}
     ~GagObjectData() {}
 
     QString id;
@@ -45,6 +46,7 @@ public:
     int commentsCount;
     bool isVideo;
     bool isNSFW;
+    bool isGIF;
 
 private:
     Q_DISABLE_COPY(GagObjectData) // Disable copy for the data
@@ -160,6 +162,16 @@ void GagObject::setIsNSFW(bool isNSFW)
     d->isNSFW = isNSFW;
 }
 
+bool GagObject::isGIF() const
+{
+    return d->isGIF;
+}
+
+void GagObject::setIsGIF(bool isGIF)
+{
+    d->isGIF = isGIF;
+}
+
 QVariantMap GagObject::toVariantMap() const
 {
     QVariantMap gagMap;
@@ -167,8 +179,11 @@ QVariantMap GagObject::toVariantMap() const
     gagMap["url"] = d->url;
     gagMap["title"] = d->title;
     gagMap["imageUrl"] = d->imageUrl;
+    gagMap["imageHeight"] = d->imageHeight;
     gagMap["votesCount"] = d->votesCount;
+    gagMap["commentsCount"] = d->commentsCount;
     gagMap["isVideo"] = d->isVideo;
     gagMap["isNSFW"] = d->isNSFW;
+    gagMap["isGIF"] = d->isGIF;
     return gagMap;
 }

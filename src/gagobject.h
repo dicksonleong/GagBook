@@ -68,6 +68,9 @@ public:
     bool isNSFW() const;
     void setIsNSFW(bool isNSFW);
 
+    bool isGIF() const;
+    void setIsGIF(bool isGIF);
+
     QVariantMap toVariantMap() const;
     
 private:

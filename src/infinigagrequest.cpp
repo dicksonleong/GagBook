@@ -61,7 +61,11 @@ QList<GagObject> InfiniGagRequest::parseResponse(const QByteArray &response)
         gag.setId(gagJsonMap.value("id").toString());
         gag.setUrl(gagJsonMap.value("link").toString());
         gag.setTitle(gagJsonMap.value("caption").toString());
-        gag.setImageUrl(gagJsonMap.value("images").toMap().value("normal").toString());
+
+        const QString imageUrl = gagJsonMap.value("images").toMap().value("normal").toString();
+        gag.setImageUrl(imageUrl);
+        gag.setIsGIF(imageUrl.endsWith(".gif"));
+
         gag.setVotesCount(gagJsonMap.value("votes").toMap().value("count").toInt());
 
         gagList.append(gag);

@@ -48,7 +48,8 @@ public:
         VotesCountRole,
         CommentsCountRole,
         IsVideoRole,
-        IsNSFWRole
+        IsNSFWRole,
+        IsGIFRole
     };
 
     int rowCount(const QModelIndex &parent) const;

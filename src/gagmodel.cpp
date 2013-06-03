@@ -42,6 +42,7 @@ GagModel::GagModel(QObject *parent) :
     roles[CommentsCountRole] = "commentsCount";
     roles[IsVideoRole] = "isVideo";
     roles[IsNSFWRole] = "isNSFW";
+    roles[IsGIFRole] = "isGIF";
     setRoleNames(roles);
 }
 
@@ -74,6 +75,8 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
         return gag.isVideo();
     case IsNSFWRole:
         return gag.isNSFW();
+    case IsGIFRole:
+        return gag.isGIF();
     default:
         qWarning("GagModel::data(): Invalid role");
         return QVariant();

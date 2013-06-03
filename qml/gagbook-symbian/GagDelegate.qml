@@ -61,6 +61,8 @@ Item {
                     t += " · Video";
                 if (model.isNSFW)
                     t += " · NSFW";
+                if (model.isGIF)
+                    t += " · GIF";
                 return t;
             }
         }

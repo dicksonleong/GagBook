@@ -72,7 +72,7 @@ Page {
             width: Math.max(gagImage.width * gagImage.scale, flickable.width)
             height: Math.max(gagImage.height * gagImage.scale, flickable.height)
 
-            Image {
+            AnimatedImage {
                 id: gagImage
 
                 property real prevScale
@@ -86,7 +86,6 @@ Page {
                 asynchronous: true
                 anchors.centerIn: parent
                 smooth: !flickable.moving
-                sourceSize.height: QMLUtils.IMAGE_MAX_HEIGHT
                 cache: false
                 fillMode: Image.PreserveAspectFit
 

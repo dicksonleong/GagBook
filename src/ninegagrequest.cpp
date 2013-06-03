@@ -51,6 +51,8 @@ QUrl NineGagRequest::constructRequestUrl(Section section, const QString &lastId)
 static QWebElementCollection getEntryItemsFromHtml(const QString &html);
 static QWebElementCollection getEntryItemsFromJson(const QString &json);
 static QList<GagObject> parseGAG(const QWebElementCollection &entryItems);
+static QString getGagJPEG(const QWebElementCollection &imgs);
+static QString getGagGIF(const QWebElementCollection &imgs);
 
 QList<GagObject> NineGagRequest::parseResponse(const QByteArray &response)
 {
@@ -100,18 +102,13 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
         gag.setUrl(element.attribute("data-url"));
         gag.setTitle(element.attribute("data-text"));
 
-        const QWebElementCollection imgCollection = element.findAll("img");
-        foreach (const QWebElement &img, imgCollection) {
-            if (!img.styleProperty("max-width", QWebElement::InlineStyle).isEmpty()) {
-                gag.setImageUrl(img.hasAttribute("large-src") ? img.attribute("large-src")
-                                                              : img.attribute("src"));
-                break;
-            }
-            else if (img.attribute("alt") == "NSFW") {
-                gag.setImageUrl(img.attribute("src"));
-                gag.setIsNSFW(true);
-                break;
-            }
+        const QWebElementCollection imgs = element.findAll("img");
+
+        if (element.findFirst("span.gif-play").isNull()) {
+            gag.setImageUrl(getGagJPEG(imgs));
+        } else {
+            gag.setIsGIF(true);
+            gag.setImageUrl(getGagGIF(imgs));
         }
 
         const QWebElement loved = element.findFirst("span.loved");
@@ -120,11 +117,36 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
         const QWebElement commentSpan = element.findFirst("span.comment");
         gag.setCommentsCount(commentSpan.toPlainText().toInt());
 
-        if (element.findFirst("a.play").isNull() == false)
-            gag.setIsVideo(true);
+        gag.setIsNSFW(!element.findFirst("span.nsfw-badge").isNull());
+        gag.setIsVideo(!element.findFirst("a.play").isNull());
 
         gagList.append(gag);
     }
 
     return gagList;
+}
+
+static QString getGagJPEG(const QWebElementCollection &imgs)
+{
+    foreach (const QWebElement &img, imgs) {
+        if (!img.styleProperty("max-width", QWebElement::InlineStyle).isEmpty()
+                || img.attribute("alt") == "NSFW") {
+            return img.attribute("src");
+        }
+    }
+
+    qWarning("NineGagRequest::getGagJPEG(): Unable to find JPEG");
+    return QString();
+}
+
+static QString getGagGIF(const QWebElementCollection &imgs)
+{
+    foreach (const QWebElement &img, imgs) {
+        const QString src = img.attribute("src");
+        if (src.endsWith(".gif"))
+            return src;
+    }
+
+    qWarning("NineGagRequest::getGagGIF(): Unable to find GIF");
+    return QString();
 }
