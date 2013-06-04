@@ -59,10 +59,6 @@ PageStackWindow {
         ListElement { text: "Hot" }
         ListElement { text: "Trending" }
         ListElement { text: "Vote" }
-        ListElement { text: "Top (Today)" }
-        ListElement { text: "Top (This Week)" }
-        ListElement { text: "Top (This Month)" }
-        ListElement { text: "Top (All Time)" }
     }
 
     Component.onCompleted: gagManager.refresh(GagManager.RefreshAll)
