@@ -1,3 +1,10 @@
+gagbook (0.7.0) stable; urgency=normal
+  * Fix InfiniGAG source
+  * Remove top section support
+  * Add support for animated GIF images
+
+ -- Dickson <dicksonleong8@gmail.com>  Sun, 09 Jun 2013 00:00:43 +0800
+
 gagbook (0.6.0) stable; urgency=high
   * Add InfiniGAG API as a fallback API
   * Fix wrong/missing 9GAG links and broken comment section
