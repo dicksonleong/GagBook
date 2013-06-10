@@ -86,6 +86,8 @@ Page {
                 smooth: !flickable.moving
                 cache: false
                 fillMode: Image.PreserveAspectFit
+                // pause the animation when app is in background
+                paused: !platformWindow.active
 
                 onScaleChanged: {
                     if ((width * scale) > flickable.width) {
