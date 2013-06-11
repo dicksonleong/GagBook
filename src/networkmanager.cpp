@@ -43,11 +43,19 @@ NetworkManager::NetworkManager(QObject *parent) :
     connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), SLOT(trackDownloadSize(QNetworkReply*)));
 }
 
-QNetworkReply *NetworkManager::createGetRequest(const QUrl &url)
+QNetworkReply *NetworkManager::createGetRequest(const QUrl &url, AcceptType acceptType)
 {
     QNetworkRequest request;
     request.setUrl(url);
     request.setRawHeader("User-Agent", USER_AGENT);
+
+    switch (acceptType) {
+    case None: break;
+    case JSON: request.setRawHeader("Accept", "application/json"); break;
+    case HTML: request.setRawHeader("Accept", "text/html"); break;
+    case Image: request.setRawHeader("Accept", "image/*"); break;
+    default: qWarning("NetworkManager::createGetRequest(): Invalid acceptType"); break;
+    }
 
     return m_instance->m_networkAccessManager->get(request);
 }

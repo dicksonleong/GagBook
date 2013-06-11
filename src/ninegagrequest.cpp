@@ -33,19 +33,21 @@
 #include <QtWebKit/QWebElement>
 #include <QtWebKit/QWebElementCollection>
 
+#include "networkmanager.h"
+
 NineGagRequest::NineGagRequest(Section section, QObject *parent) :
     GagRequest(section, parent)
 {
 }
 
-QUrl NineGagRequest::constructRequestUrl(Section section, const QString &lastId)
+QNetworkReply *NineGagRequest::createRequest(Section section, const QString &lastId)
 {
     QUrl requestUrl("http://9gag.com/" + getSectionText(section));
     requestUrl.addQueryItem("format", "json");
     if (!lastId.isEmpty())
         requestUrl.addQueryItem("id", lastId);
 
-    return requestUrl;
+    return NetworkManager::createGetRequest(requestUrl, NetworkManager::JSON);
 }
 
 static QWebElementCollection getEntryItemsFromHtml(const QString &html);

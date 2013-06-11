@@ -39,7 +39,14 @@ class NetworkManager : public QObject
 {
     Q_OBJECT
 public:
-    static QNetworkReply *createGetRequest(const QUrl &url);
+    enum AcceptType {
+        None,
+        JSON,
+        HTML,
+        Image
+    };
+
+    static QNetworkReply *createGetRequest(const QUrl &url, AcceptType acceptType = None);
 
 private slots:
     void trackDownloadSize(QNetworkReply *reply);

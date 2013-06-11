@@ -60,7 +60,7 @@ signals:
 
 protected:
     // must be override
-    virtual QUrl constructRequestUrl(Section section, const QString &lastId) = 0;
+    virtual QNetworkReply *createRequest(Section section, const QString &lastId) = 0;
     virtual QList<GagObject> parseResponse(const QByteArray &response) = 0;
 
     static QString getSectionText(Section section);
@@ -71,7 +71,6 @@ private slots:
 
 private:
     const Section m_section;
-
     QString m_lastId;
 
     QNetworkReply *m_reply;

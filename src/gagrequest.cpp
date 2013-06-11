@@ -83,7 +83,7 @@ void GagRequest::send()
 {
     Q_ASSERT(m_reply == 0);
 
-    m_reply = NetworkManager::createGetRequest(constructRequestUrl(m_section, m_lastId));
+    m_reply = createRequest(m_section, m_lastId);
     connect(m_reply, SIGNAL(finished()), this, SLOT(onFinished()));
 }
 
@@ -110,7 +110,7 @@ void GagRequest::onFinished()
 void GagRequest::downloadImages()
 {
     foreach (const GagObject &gag, m_parsedGagList) {
-        QNetworkReply *reply = NetworkManager::createGetRequest(gag.imageUrl());
+        QNetworkReply *reply = NetworkManager::createGetRequest(gag.imageUrl(), NetworkManager::Image);
         m_imageDownloadReplyHash.insert(reply, gag);
         connect(reply, SIGNAL(finished()), SLOT(onImageDownloadFinished()));
     }
