@@ -110,6 +110,9 @@ void GagRequest::onFinished()
 void GagRequest::downloadImages()
 {
     foreach (const GagObject &gag, m_parsedGagList) {
+        if (gag.imageUrl().isEmpty())
+            continue;
+
         QNetworkReply *reply = NetworkManager::createGetRequest(gag.imageUrl(), NetworkManager::Image);
         m_imageDownloadReplyHash.insert(reply, gag);
         connect(reply, SIGNAL(finished()), SLOT(onImageDownloadFinished()));
@@ -128,8 +131,8 @@ void GagRequest::onImageDownloadFinished()
     if (reply->error() == QNetworkReply::NoError) {
         const QString contentType = reply->rawHeader("Content-Type");
         if (!contentType.startsWith("image")) {
-            qDebug("GagImageDownloader::onImageDownloadFinished(): Downloaded image doesn't has an image/* content type (%s), "
-                   "but still continue anyway", qPrintable(contentType));
+            qDebug("GagRequest::onImageDownloadFinished(): Downloaded image doesn't has an image/* "
+                   "content type [%s], but still continue anyway", qPrintable(contentType));
         }
 
         QFile image(fileName);
@@ -139,11 +142,12 @@ void GagRequest::onImageDownloadFinished()
             image.close();
             m_imageDownloadReplyHash[reply].setImageHeight(QImageReader(&image).size().height());
         } else {
-            qDebug("GagImageDownloader::onImageDownloadFinished(): Unable to open QFile (with fileName = %s) for writing: %s",
+            qDebug("GagRequest::onImageDownloadFinished(): Unable to open QFile [with fileName = %s] for writing: %s",
                    qPrintable(fileName), qPrintable(image.errorString()));
         }
     } else {
-        qDebug("GagImageDownloader::onImageDownloadFinished(): Network error: %s", qPrintable(reply->errorString()));
+        qDebug("GagRequest::onImageDownloadFinished(): Network error for [%s]: %s",
+               qPrintable(reply->url().toString()), qPrintable(reply->errorString()));
     }
 
     m_imageDownloadReplyHash.remove(reply);

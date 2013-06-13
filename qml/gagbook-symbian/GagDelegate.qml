@@ -59,8 +59,6 @@ Item {
                     t += " · " + (model.commentsCount == 1 ? "1 comment" : model.commentsCount + " comments");
                 if (model.isVideo)
                     t += " · Video";
-                if (model.isNSFW)
-                    t += " · NSFW";
                 if (model.isGIF)
                     t += " · GIF";
                 return t;
@@ -94,10 +92,46 @@ Item {
                 id: errorTextLoader
                 anchors.fill: parent
                 sourceComponent: {
+                    if (model.isNSFW) return nsfwText;
+
                     switch (gagImage.status) {
                     case Image.Loading: return loadingRect;
                     case Image.Error: return errorText;
                     default: return undefined;
+                    }
+                }
+
+                Component {
+                    id: nsfwText
+
+                    Item {
+                        Column {
+                            anchors {
+                                left: parent.left; right: parent.right
+                                verticalCenter: parent.verticalCenter
+                            }
+                            height: childrenRect.height
+                            spacing: constant.paddingMedium
+
+                            Text {
+                                anchors { left: parent.left; right: parent.right }
+                                horizontalAlignment: Text.AlignHCenter
+                                font.pixelSize: constant.fontSizeLarge
+                                color: constant.colorLight
+                                font.bold: true
+                                wrapMode: Text.Wrap
+                                text: "Not Safe For Work"
+                            }
+
+                            Text {
+                                anchors { left: parent.left; right: parent.right }
+                                horizontalAlignment: Text.AlignHCenter
+                                font.pixelSize: constant.fontSizeMedium
+                                color: constant.colorLight
+                                wrapMode: Text.Wrap
+                                text: "Unfortunately, GagBook does not support viewing NSFW images yet"
+                            }
+                        }
                     }
                 }
 
@@ -109,6 +143,7 @@ Item {
                         verticalAlignment: Text.AlignVCenter
                         font.pixelSize: constant.fontSizeLarge
                         color: constant.colorLight
+                        wrapMode: Text.Wrap
                         text: "Error loading image"
                     }
                 }
@@ -122,7 +157,10 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: pageStack.push(Qt.resolvedUrl("ImagePage.qml"), { imageUrl: model.imageUrl })
+                onClicked: {
+                    if (model.isNSFW) return;
+                    pageStack.push(Qt.resolvedUrl("ImagePage.qml"), { imageUrl: model.imageUrl })
+                }
             }
         }
 

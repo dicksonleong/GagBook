@@ -43,7 +43,6 @@ NineGagRequest::NineGagRequest(Section section, QObject *parent) :
 QNetworkReply *NineGagRequest::createRequest(Section section, const QString &lastId)
 {
     QUrl requestUrl("http://9gag.com/" + getSectionText(section));
-    requestUrl.addQueryItem("format", "json");
     if (!lastId.isEmpty())
         requestUrl.addQueryItem("id", lastId);
 
@@ -53,8 +52,6 @@ QNetworkReply *NineGagRequest::createRequest(Section section, const QString &las
 static QWebElementCollection getEntryItemsFromHtml(const QString &html);
 static QWebElementCollection getEntryItemsFromJson(const QString &json);
 static QList<GagObject> parseGAG(const QWebElementCollection &entryItems);
-static QString getGagJPEG(const QWebElementCollection &imgs);
-static QString getGagGIF(const QWebElementCollection &imgs);
 
 QList<GagObject> NineGagRequest::parseResponse(const QByteArray &response)
 {
@@ -72,7 +69,7 @@ static QWebElementCollection getEntryItemsFromHtml(const QString &html)
     webPage.settings()->setAttribute(QWebSettings::LocalContentCanAccessFileUrls, false);
 
     webPage.mainFrame()->setHtml(html);
-    return webPage.mainFrame()->findAllElements("li.entry-item");
+    return webPage.mainFrame()->findAllElements("article");
 }
 
 // can not use Qt-Json to parse this JSON because it will cause the order
@@ -81,11 +78,11 @@ static QWebElementCollection getEntryItemsFromJson(const QString &json)
 {
     QString html = "<html>";
 
-    QRegExp entryItemsRx("\"(<li.+<\\\\/li>)\"");
+    QRegExp entryItemsRx("<article.+<\\\\/article>");
     entryItemsRx.setMinimal(true);
     int pos = 0;
     while ((pos = entryItemsRx.indexIn(json, pos)) != -1) {
-        html += entryItemsRx.cap(1).remove('\\');
+        html += entryItemsRx.cap().remove('\\');
         pos += entryItemsRx.matchedLength();
     }
 
@@ -100,55 +97,27 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
 
     foreach (const QWebElement &element, entryItems) {
         GagObject gag;
-        gag.setId(element.attribute("gagid"));
-        gag.setUrl(element.attribute("data-url"));
-        gag.setTitle(element.attribute("data-text"));
+        gag.setId(element.attribute("data-entry-id"));
+        gag.setUrl(element.attribute("data-entry-url"));
+        gag.setVotesCount(element.attribute("data-entry-votes").toInt());
+        gag.setCommentsCount(element.attribute("data-entry-comments").toInt());
+        gag.setTitle(element.findFirst("a").toPlainText().trimmed());
 
-        const QWebElementCollection imgs = element.findAll("img");
-
-        if (element.findFirst("span.gif-play").isNull()) {
-            gag.setImageUrl(getGagJPEG(imgs));
-        } else {
+        const QWebElement postContainer = element.findFirst("div.post-container");
+        if (!postContainer.findFirst("div.nsfw-post").isNull()) {
+            gag.setIsNSFW(true);
+        } else if (!postContainer.findFirst("span.play").isNull()) {
             gag.setIsGIF(true);
-            gag.setImageUrl(getGagGIF(imgs));
+            gag.setImageUrl(postContainer.findFirst("img.badge-item-animated-img").attribute("src"));
+        } else if (!postContainer.findFirst("div.video-post").isNull()) {
+            gag.setIsVideo(true);
+            gag.setImageUrl(postContainer.findFirst("img.youtube-thumb").attribute("src"));
+        } else {
+            gag.setImageUrl(postContainer.findFirst("img.badge-item-img").attribute("src"));
         }
-
-        const QWebElement loved = element.findFirst("span.loved");
-        gag.setVotesCount(loved.attribute("votes").toInt());
-
-        const QWebElement commentSpan = element.findFirst("span.comment");
-        gag.setCommentsCount(commentSpan.toPlainText().toInt());
-
-        gag.setIsNSFW(!element.findFirst("span.nsfw-badge").isNull());
-        gag.setIsVideo(!element.findFirst("a.play").isNull());
 
         gagList.append(gag);
     }
 
     return gagList;
-}
-
-static QString getGagJPEG(const QWebElementCollection &imgs)
-{
-    foreach (const QWebElement &img, imgs) {
-        if (!img.styleProperty("max-width", QWebElement::InlineStyle).isEmpty()
-                || img.attribute("alt") == "NSFW") {
-            return img.attribute("src");
-        }
-    }
-
-    qWarning("NineGagRequest::getGagJPEG(): Unable to find JPEG");
-    return QString();
-}
-
-static QString getGagGIF(const QWebElementCollection &imgs)
-{
-    foreach (const QWebElement &img, imgs) {
-        const QString src = img.attribute("src");
-        if (src.endsWith(".gif"))
-            return src;
-    }
-
-    qWarning("NineGagRequest::getGagGIF(): Unable to find GIF");
-    return QString();
 }
