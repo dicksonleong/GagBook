@@ -1,3 +1,9 @@
+gagbook (0.7.1) stable; urgency=normal
+  * Update to new 9GAG (v6)
+  * Show a GIF icon for GIF image
+
+ -- Dickson <dicksonleong8@gmail.com>  Fri, 14 Jun 2013 17:26:19 +0800
+
 gagbook (0.7.0) stable; urgency=normal
   * Fix InfiniGAG source
   * Remove top section support
