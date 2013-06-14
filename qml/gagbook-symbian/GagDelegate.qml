@@ -59,8 +59,6 @@ Item {
                     t += " · " + (model.commentsCount == 1 ? "1 comment" : model.commentsCount + " comments");
                 if (model.isVideo)
                     t += " · Video";
-                if (model.isGIF)
-                    t += " · GIF";
                 return t;
             }
         }
@@ -97,6 +95,7 @@ Item {
                     switch (gagImage.status) {
                     case Image.Loading: return loadingRect;
                     case Image.Error: return errorText;
+                    case Image.Ready: if (model.isGIF) return gifPlayIcon;
                     default: return undefined;
                     }
                 }
@@ -152,6 +151,17 @@ Item {
                     id: loadingRect
 
                     Rectangle { color: constant.colorMid }
+                }
+
+                Component {
+                    id: gifPlayIcon
+
+                    Item {
+                        Image {
+                            anchors.centerIn: parent
+                            source: "Images/icon-gif-play.png"
+                        }
+                    }
                 }
             }
 
