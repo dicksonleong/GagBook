@@ -107,11 +107,13 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
         if (!postContainer.findFirst("div.nsfw-post").isNull()) {
             gag.setIsNSFW(true);
         } else if (!postContainer.findFirst("span.play").isNull()) {
-            gag.setIsGIF(true);
-            gag.setImageUrl(postContainer.findFirst("img.badge-item-animated-img").attribute("src"));
-        } else if (!postContainer.findFirst("div.video-post").isNull()) {
-            gag.setIsVideo(true);
-            gag.setImageUrl(postContainer.findFirst("img.youtube-thumb").attribute("src"));
+            if (!postContainer.findFirst("div.video-post").isNull()) {
+                gag.setIsVideo(true);
+                gag.setImageUrl(postContainer.findFirst("img.youtube-thumb").attribute("src"));
+            } else {
+                gag.setIsGIF(true);
+                gag.setImageUrl(postContainer.findFirst("img.badge-item-animated-img").attribute("src"));
+            }
         } else {
             gag.setImageUrl(postContainer.findFirst("img.badge-item-img").attribute("src"));
         }

@@ -57,8 +57,6 @@ Item {
                 var t = (model.votesCount == 1 ? "1 like" : model.votesCount + " likes");
                 if (model.commentsCount > 0)
                     t += " · " + (model.commentsCount == 1 ? "1 comment" : model.commentsCount + " comments");
-                if (model.isVideo)
-                    t += " · Video";
                 return t;
             }
         }
@@ -95,7 +93,10 @@ Item {
                     switch (gagImage.status) {
                     case Image.Loading: return loadingRect;
                     case Image.Error: return errorText;
-                    case Image.Ready: if (model.isGIF) return gifPlayIcon;
+                    case Image.Ready:
+                        if (model.isGIF) return gifPlayIcon;
+                        if (model.isVideo) return videoPlayIcon;
+                        // fallthrough
                     default: return undefined;
                     }
                 }
@@ -163,12 +164,27 @@ Item {
                         }
                     }
                 }
+
+                Component {
+                    id: videoPlayIcon
+
+                    Item {
+                        Image {
+                            anchors.centerIn: parent
+                            source: "Images/icon-video-play.png"
+                        }
+                    }
+                }
             }
 
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
                     if (model.isNSFW) return;
+                    if (model.isVideo) {
+                        Qt.openUrlExternally(model.url);
+                        return;
+                    }
                     pageStack.push(Qt.resolvedUrl("ImagePage.qml"), { imageUrl: model.imageUrl })
                 }
             }
