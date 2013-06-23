@@ -29,13 +29,14 @@
 
 #include <QtCore/QString>
 #include <QtCore/QUrl>
+#include <QtCore/QFile>
 
 class GagObjectData : public QSharedData
 {
 public:
     GagObjectData() : imageHeight(0), votesCount(0), commentsCount(0),
         isVideo(false), isNSFW(false), isGIF(false) {}
-    ~GagObjectData() {}
+    ~GagObjectData() { QFile::remove(imageUrl.toLocalFile()); }
 
     QString id;
     QUrl url;

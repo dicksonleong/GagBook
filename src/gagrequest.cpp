@@ -28,8 +28,6 @@
 #include "gagrequest.h"
 
 #include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QCoreApplication> // for qAddPostRoutine()
 #include <QtGui/QDesktopServices>
 #include <QtGui/QImageReader>
 #include <QtNetwork/QNetworkReply>
@@ -39,24 +37,12 @@
 static QString IMAGE_CACHE_PATH = QDesktopServices::storageLocation(QDesktopServices::CacheLocation)
          + "/gagbook";
 
-static void cacheCleanUp()
-{
-    QDir imageCacheDir(IMAGE_CACHE_PATH);
-    QStringList imageFiles = imageCacheDir.entryList(QDir::Files);
-    foreach (const QString &imageFile, imageFiles) {
-        QFile::remove(IMAGE_CACHE_PATH + "/" + imageFile);
-    }
-}
-
 void GagRequest::initializeCache()
 {
     // create the cache dir if not exists
     QDir imageCacheDir(IMAGE_CACHE_PATH);
     if (!imageCacheDir.exists())
         imageCacheDir.mkpath(".");
-
-    // clean up all the files in cache dir when app is exiting
-    qAddPostRoutine(cacheCleanUp);
 }
 
 GagRequest::GagRequest(Section section, QObject *parent) :
