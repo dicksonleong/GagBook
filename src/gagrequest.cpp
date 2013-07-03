@@ -61,7 +61,6 @@ GagRequest::~GagRequest()
 
 void GagRequest::setLastId(const QString &lastId)
 {
-    Q_ASSERT(m_section == Hot || m_section == Trending || m_section == Vote);
     m_lastId = lastId;
 }
 
@@ -152,6 +151,8 @@ QString GagRequest::getSectionText(Section section)
         return "trending";
     case Vote:
         return "vote";
+    case WTF:
+        return "wtf";
     default:
         qWarning("GagRequest::getSectionText(): Invalid section");
         return QString("");

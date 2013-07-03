@@ -42,7 +42,8 @@ public:
     enum Section {
         Hot = 0,
         Trending,
-        Vote
+        Vote,
+        WTF
     };
 
     static void initializeCache();
