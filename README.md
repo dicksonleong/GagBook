@@ -5,12 +5,8 @@ GagBook is a [9GAG](http://9gag.com) app for MeeGo Harmattan and Symbian^3, writ
 GagBook is not an official app of 9GAG.
 
 GagBook get data from 9GAG by scraping their website, or using [InfiniGAG](https://github.com/k3min/infinigag)
-API. This is unethical but I made this app because there is no official 9GAG app for MeeGo Harmattan
+API. This might be unethical but I made this app because there is no official 9GAG app for MeeGo Harmattan
 and Symbian^3.
-
-If 9GAG decide to use GagBook as their official app and/or let me access to their official API,
-I will happily adding reasonable amount of their ads to the app at their request. (But this is
-quite impossible)
 
 Please note that I get **NO PROFIT** by making this app.
 

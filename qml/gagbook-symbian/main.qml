@@ -56,9 +56,9 @@ PageStackWindow {
 
     ListModel {
         id: sectionModel
-        ListElement { text: "Hot" }
+        ListElement { text: "What's Hot" }
         ListElement { text: "Trending" }
-        ListElement { text: "Vote" }
+        ListElement { text: "Fresh" }
         ListElement { text: "WTF" }
     }
 

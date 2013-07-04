@@ -54,7 +54,7 @@ Item {
             color: constant.colorMid
             elide: Text.ElideRight
             text: {
-                var t = (model.votesCount == 1 ? "1 like" : model.votesCount + " likes");
+                var t = (model.votesCount == 1 ? "1 point" : model.votesCount + " points");
                 if (model.commentsCount > 0)
                     t += " · " + (model.commentsCount == 1 ? "1 comment" : model.commentsCount + " comments");
                 return t;
