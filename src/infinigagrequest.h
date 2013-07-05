@@ -39,7 +39,6 @@ public:
 protected:
     QNetworkReply *createRequest(Section section, const QString &lastId);
     QList<GagObject> parseResponse(const QByteArray &response);
-
 };
 
 #endif // INFINIGAGREQUEST_H

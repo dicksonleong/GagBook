@@ -19,7 +19,8 @@ HEADERS += \
     src/gagrequest.h \
     src/ninegagrequest.h \
     src/infinigagrequest.h \
-    src/networkmanager.h
+    src/networkmanager.h \
+    src/gagimagedownloader.h
 
 SOURCES += main.cpp \
     src/qmlutils.cpp \
@@ -30,7 +31,8 @@ SOURCES += main.cpp \
     src/gagrequest.cpp \
     src/ninegagrequest.cpp \
     src/infinigagrequest.cpp \
-    src/networkmanager.cpp
+    src/networkmanager.cpp \
+    src/gagimagedownloader.cpp
 
 # Simulator
 simulator{

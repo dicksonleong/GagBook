@@ -27,17 +27,16 @@
 
 #include "gagmanager.h"
 
-#include <QtNetwork/QNetworkAccessManager>
-
 #include "gagmodel.h"
 #include "ninegagrequest.h"
 #include "infinigagrequest.h"
+#include "gagimagedownloader.h"
 #include "settings.h"
 
 GagManager::GagManager(QObject *parent) :
-    QObject(parent), m_request(0), m_busy(false), m_model(0), m_page(1)
+    QObject(parent), m_request(0), m_busy(false), m_model(0)
 {
-    GagRequest::initializeCache();
+    GagImageDownloader::initializeCache();
 }
 
 void GagManager::refresh(RefreshType refreshType)
@@ -50,8 +49,11 @@ void GagManager::refresh(RefreshType refreshType)
         m_request = 0;
     }
 
-    if (m_model->isEmpty())
-        refreshType = RefreshAll;
+    if (m_imageDownloader != 0) {
+        m_imageDownloader->disconnect();
+        m_imageDownloader->deleteLater();
+        m_imageDownloader = 0;
+    }
 
     GagRequest::Section selectedSection = static_cast<GagRequest::Section>(Settings::instance()->selectedSection());
 
@@ -61,12 +63,10 @@ void GagManager::refresh(RefreshType refreshType)
     default: qCritical("GagManager::refresh(): Invalid source");
     }
 
-    if (refreshType == RefreshAll) {
+    if (refreshType == RefreshAll)
         m_model->clear();
-        m_page = 1;
-    } else if (refreshType == RefreshOlder) {
+    else if (refreshType == RefreshOlder && !m_model->isEmpty())
         m_request->setLastId(m_model->lastGagId());
-    }
 
     connect(m_request, SIGNAL(success(QList<GagObject>)), this, SLOT(onSuccess(QList<GagObject>)));
     connect(m_request, SIGNAL(failure(QString)), this, SLOT(onFailure(QString)));
@@ -104,10 +104,12 @@ void GagManager::setModel(GagModel *model)
 
 void GagManager::onSuccess(const QList<GagObject> &gagList)
 {
-    m_model->append(gagList);
+    m_imageDownloader = new GagImageDownloader(gagList, this);
+    connect(m_imageDownloader, SIGNAL(finished(QList<GagObject>)), SLOT(onDownloadFinished(QList<GagObject>)));
+    m_imageDownloader->start();
+
     m_request->deleteLater();
     m_request = 0;
-    setBusy(false);
 }
 
 void GagManager::onFailure(const QString &errorMessage)
@@ -115,5 +117,13 @@ void GagManager::onFailure(const QString &errorMessage)
     emit refreshFailure(errorMessage);
     m_request->deleteLater();
     m_request = 0;
+    setBusy(false);
+}
+
+void GagManager::onDownloadFinished(const QList<GagObject> &gagList)
+{
+    m_model->append(gagList);
+    m_imageDownloader->deleteLater();
+    m_imageDownloader = 0;
     setBusy(false);
 }

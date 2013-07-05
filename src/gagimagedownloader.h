@@ -25,53 +25,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef GAGREQUEST_H
-#define GAGREQUEST_H
+#ifndef GAGIMAGEDOWNLOADER_H
+#define GAGIMAGEDOWNLOADER_H
 
 #include <QtCore/QObject>
-#include <QtCore/QList>
+#include <QtCore/QHash>
 
 #include "gagobject.h"
 
 class QNetworkReply;
 
-class GagRequest : public QObject
+class GagImageDownloader : public QObject
 {
     Q_OBJECT
 public:
-    enum Section {
-        Hot = 0,
-        Trending,
-        Vote,
-        WTF
-    };
+    static void initializeCache();
 
-    explicit GagRequest(Section section, QObject *parent = 0);
+    explicit GagImageDownloader(const QList<GagObject> &gagList, QObject *parent = 0);
 
-    void setLastId(const QString &lastId);
-
-    void send();
+    void start();
 
 signals:
-    void success(const QList<GagObject> &gagList);
-    void failure(const QString &errorMessage);
-
-protected:
-    // must be override
-    virtual QNetworkReply *createRequest(Section section, const QString &lastId) = 0;
-    virtual QList<GagObject> parseResponse(const QByteArray &response) = 0;
-
-    static QString getSectionText(Section section);
+    void finished(const QList<GagObject> &gagList);
 
 private slots:
     void onFinished();
 
 private:
-    const Section m_section;
-    QString m_lastId;
-
-    QNetworkReply *m_reply;
-    QList<GagObject> m_gagList;
+    const QList<GagObject> m_gagList;
+    QHash<QNetworkReply*, GagObject> m_replyHash;
 };
 
-#endif // GAGREQUEST_H
+#endif // GAGIMAGEDOWNLOADER_H

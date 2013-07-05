@@ -34,6 +34,7 @@
 
 class GagRequest;
 class GagModel;
+class GagImageDownloader;
 
 class GagManager : public QObject
 {
@@ -66,13 +67,14 @@ signals:
 private slots:
     void onSuccess(const QList<GagObject> &gagList);
     void onFailure(const QString &errorMessage);
+    void onDownloadFinished(const QList<GagObject> &gagList);
 
 private:
     GagRequest *m_request;
+    GagImageDownloader *m_imageDownloader;
 
     bool m_busy;
     GagModel *m_model;
-    int m_page;
 };
 
 #endif // GAGMANAGER_H

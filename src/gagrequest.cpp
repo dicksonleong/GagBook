@@ -27,36 +27,13 @@
 
 #include "gagrequest.h"
 
-#include <QtCore/QDir>
-#include <QtGui/QDesktopServices>
-#include <QtGui/QImageReader>
 #include <QtNetwork/QNetworkReply>
 
 #include "networkmanager.h"
 
-static QString IMAGE_CACHE_PATH = QDesktopServices::storageLocation(QDesktopServices::CacheLocation)
-         + "/gagbook";
-
-void GagRequest::initializeCache()
-{
-    // create the cache dir if not exists
-    QDir imageCacheDir(IMAGE_CACHE_PATH);
-    if (!imageCacheDir.exists())
-        imageCacheDir.mkpath(".");
-}
-
 GagRequest::GagRequest(Section section, QObject *parent) :
     QObject(parent), m_section(section), m_reply(0)
 {
-}
-
-GagRequest::~GagRequest()
-{
-    if (m_reply != 0) {
-        m_reply->disconnect();
-        m_reply->deleteLater();
-        m_reply = 0;
-    }
 }
 
 void GagRequest::setLastId(const QString &lastId)
@@ -69,6 +46,8 @@ void GagRequest::send()
     Q_ASSERT(m_reply == 0);
 
     m_reply = createRequest(m_section, m_lastId);
+    // make sure the QNetworkReply will be destroy when this object is destroyed
+    m_reply->setParent(this);
     connect(m_reply, SIGNAL(finished()), this, SLOT(onFinished()));
 }
 
@@ -85,61 +64,11 @@ void GagRequest::onFinished()
     m_reply->deleteLater();
     m_reply = 0;
 
-    m_parsedGagList = parseResponse(response);
-    if (m_parsedGagList.isEmpty())
+    m_gagList = parseResponse(response);
+    if (m_gagList.isEmpty())
         emit failure("Unable to parse response");
     else
-        downloadImages();
-}
-
-void GagRequest::downloadImages()
-{
-    foreach (const GagObject &gag, m_parsedGagList) {
-        if (gag.imageUrl().isEmpty())
-            continue;
-
-        QNetworkReply *reply = NetworkManager::createGetRequest(gag.imageUrl(), NetworkManager::Image);
-        m_imageDownloadReplyHash.insert(reply, gag);
-        connect(reply, SIGNAL(finished()), SLOT(onImageDownloadFinished()));
-    }
-}
-
-void GagRequest::onImageDownloadFinished()
-{
-    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    Q_ASSERT_X(reply != 0, Q_FUNC_INFO, "Unable to cast sender() to QNetworkReply *");
-
-    const QString urlStr = reply->url().toString();
-    const QString fileName = IMAGE_CACHE_PATH + "/" + urlStr.mid(urlStr.lastIndexOf("/") + 1);
-    m_imageDownloadReplyHash[reply].setImageUrl(QUrl::fromLocalFile(fileName));
-
-    if (reply->error() == QNetworkReply::NoError) {
-        const QString contentType = reply->rawHeader("Content-Type");
-        if (!contentType.startsWith("image")) {
-            qDebug("GagRequest::onImageDownloadFinished(): Downloaded image doesn't has an image/* "
-                   "content type [%s], but still continue anyway", qPrintable(contentType));
-        }
-
-        QFile image(fileName);
-        bool opened = image.open(QIODevice::WriteOnly);
-        if (opened) {
-            image.write(reply->readAll());
-            image.close();
-            m_imageDownloadReplyHash[reply].setImageHeight(QImageReader(&image).size().height());
-        } else {
-            qDebug("GagRequest::onImageDownloadFinished(): Unable to open QFile [with fileName = %s] for writing: %s",
-                   qPrintable(fileName), qPrintable(image.errorString()));
-        }
-    } else {
-        qDebug("GagRequest::onImageDownloadFinished(): Network error for [%s]: %s",
-               qPrintable(reply->url().toString()), qPrintable(reply->errorString()));
-    }
-
-    m_imageDownloadReplyHash.remove(reply);
-    if (m_imageDownloadReplyHash.isEmpty())
-        emit success(m_parsedGagList);
-
-    reply->deleteLater();
+        emit success(m_gagList);
 }
 
 QString GagRequest::getSectionText(Section section)
