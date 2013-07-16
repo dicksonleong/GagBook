@@ -80,8 +80,6 @@ QString GagRequest::getSectionText(Section section)
         return "trending";
     case Vote:
         return "vote";
-    case WTF:
-        return "wtf";
     default:
         qWarning("GagRequest::getSectionText(): Invalid section");
         return QString("");
