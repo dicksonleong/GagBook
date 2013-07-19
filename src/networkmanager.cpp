@@ -31,16 +31,20 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 
-#include "qmlutils.h"
-
 static const QByteArray USER_AGENT = QByteArray("GagBook/") + APP_VERSION;
 
 QScopedPointer<NetworkManager> NetworkManager::m_instance(new NetworkManager);
 
 NetworkManager::NetworkManager(QObject *parent) :
-    QObject(parent), m_networkAccessManager(new QNetworkAccessManager(this))
+    QObject(parent), m_networkAccessManager(new QNetworkAccessManager(this)),
+    m_downloadCounter(0), m_downloadCounterStr("0.00")
 {
-    connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), SLOT(trackDownloadSize(QNetworkReply*)));
+    connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), SLOT(increaseDownloadCounter(QNetworkReply*)));
+}
+
+NetworkManager *NetworkManager::instance()
+{
+    return m_instance.data();
 }
 
 QNetworkReply *NetworkManager::createGetRequest(const QUrl &url, AcceptType acceptType)
@@ -60,7 +64,12 @@ QNetworkReply *NetworkManager::createGetRequest(const QUrl &url, AcceptType acce
     return m_instance->m_networkAccessManager->get(request);
 }
 
-void NetworkManager::trackDownloadSize(QNetworkReply *reply)
+void NetworkManager::increaseDownloadCounter(QNetworkReply *reply)
 {
-    QMLUtils::instance()->increaseDownloadCounter(reply->size());
+    m_downloadCounter += reply->size();
+    const QString downloadCounterStr = QString::number(qreal(m_downloadCounter) / 1024 / 1024, 'f', 2);
+    if (m_downloadCounterStr != downloadCounterStr) {
+        m_downloadCounterStr = downloadCounterStr;
+        emit downloadCounterChanged();
+    }
 }

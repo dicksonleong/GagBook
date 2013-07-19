@@ -38,6 +38,7 @@ class QUrl;
 class NetworkManager : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString downloadCounter READ downloadCounter NOTIFY downloadCounterChanged)
 public:
     enum AcceptType {
         None,
@@ -46,10 +47,16 @@ public:
         Image
     };
 
+    static NetworkManager *instance();
     static QNetworkReply *createGetRequest(const QUrl &url, AcceptType acceptType = None);
 
+    QString downloadCounter() const { return m_downloadCounterStr; }
+
+signals:
+    void downloadCounterChanged();
+
 private slots:
-    void trackDownloadSize(QNetworkReply *reply);
+    void increaseDownloadCounter(QNetworkReply *reply);
 
 private:
     static QScopedPointer<NetworkManager> m_instance;
@@ -58,6 +65,9 @@ private:
     Q_DISABLE_COPY(NetworkManager)
 
     QNetworkAccessManager *m_networkAccessManager;
+
+    qint64 m_downloadCounter; // in bytes
+    QString m_downloadCounterStr; // in MB
 };
 
 #endif // NETWORKMANAGER_H

@@ -71,7 +71,7 @@ QMLUtils *QMLUtils::instance()
 static const QString IMAGE_SAVING_FILE_PATH = QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
 
 QMLUtils::QMLUtils(QObject *parent) :
-    QObject(parent), m_downloadCounter(0), m_downloadCounterStr("0.00")
+    QObject(parent)
 {
 }
 
@@ -184,14 +184,4 @@ void QMLUtils::openDefaultBrowser(const QUrl &url)
     qWarning("QMLUtils::openDefaultBrowser(): This function only available on Symbian");
     Q_UNUSED(url)
 #endif
-}
-
-void QMLUtils::increaseDownloadCounter(qint64 bytes)
-{
-    m_downloadCounter += bytes;
-    const QString downloadCounterStr = QString::number(qreal(m_downloadCounter) / 1024 / 1024, 'f', 2);
-    if (m_downloadCounterStr != downloadCounterStr) {
-        m_downloadCounterStr = downloadCounterStr;
-        emit downloadCounterChanged();
-    }
 }
