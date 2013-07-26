@@ -59,6 +59,9 @@ PageStackWindow {
         ListElement { text: "What's Hot" }
         ListElement { text: "Trending" }
         ListElement { text: "Fresh" }
+        ListElement { text: "Cute" }
+        ListElement { text: "Geeky" }
+        ListElement { text: "Awesome" }
     }
 
     Component.onCompleted: gagManager.refresh(GagManager.RefreshAll)
