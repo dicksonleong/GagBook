@@ -39,26 +39,45 @@ Page {
         }
     }
 
-    Column {
-        id: settingsColumn
-        anchors { top: pageHeader.bottom; topMargin: constant.paddingMedium; left: parent.left; right: parent.right }
-        height: childrenRect.height
-        spacing: constant.paddingLarge
+    Flickable {
+        id: settingsFlickable
+        anchors { top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
+        contentHeight: settingsColumn.height + 2 * settingsColumn.anchors.margins
 
-        SettingButtonRow {
-            text: "Theme"
-            checkedButtonIndex: settings.whiteTheme ? 1 : 0
-            buttonsText: ["Dark", "White"]
-            onButtonClicked: settings.whiteTheme = index === 1
-        }
+        Column {
+            id: settingsColumn
+            anchors {
+                verticalCenter: parent.verticalCenter
+                left: parent.left; right: parent.right
+                margins: constant.paddingMedium
+            }
+            height: childrenRect.height
+            spacing: constant.paddingLarge
 
-        SettingButtonRow {
-            text: "Source"
-            checkedButtonIndex: settings.source
-            buttonsText: ["9GAG", "InfiniGAG"]
-            onButtonClicked: settings.source = index
+            SettingButtonRow {
+                text: "Theme"
+                checkedButtonIndex: settings.whiteTheme ? 1 : 0
+                buttonsText: ["Dark", "White"]
+                onButtonClicked: settings.whiteTheme = index === 1
+            }
+
+            SettingButtonRow {
+                text: "Source"
+                checkedButtonIndex: settings.source
+                buttonsText: ["9GAG", "InfiniGAG"]
+                onButtonClicked: settings.source = index
+            }
+
+            SettingButtonRow {
+                text: "Download GIFs automatically"
+                checkedButtonIndex: settings.autoDownloadGif
+                buttonsText: ["On", "Wi-Fi only", "Off"]
+                onButtonClicked: settings.autoDownloadGif = index
+            }
         }
     }
+
+    ScrollDecorator { platformInverted: settings.whiteTheme; flickableItem: settingsFlickable }
 
     PageHeader {
         id: pageHeader

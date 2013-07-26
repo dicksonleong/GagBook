@@ -43,6 +43,7 @@ class GagManager : public QObject
 
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
     Q_PROPERTY(GagModel* model READ model WRITE setModel NOTIFY modelChanged)
+    Q_PROPERTY(int downloadingImageIndex READ downloadingImageIndex NOTIFY downloadingImageIndexChanged)
 public:
     explicit GagManager(QObject *parent = 0);
 
@@ -52,6 +53,7 @@ public:
     };
 
     Q_INVOKABLE void refresh(RefreshType refreshType);
+    Q_INVOKABLE void downloadImage(int index);
 
     bool isBusy() const;
     void setBusy(bool busy);
@@ -59,22 +61,28 @@ public:
     GagModel *model() const;
     void setModel(GagModel *model);
 
+    int downloadingImageIndex() const;
+
 signals:
     void refreshFailure(const QString &errorMessage);
     void modelChanged();
     void busyChanged();
+    void downloadingImageIndexChanged();
 
 private slots:
     void onSuccess(const QList<GagObject> &gagList);
     void onFailure(const QString &errorMessage);
     void onDownloadFinished(const QList<GagObject> &gagList);
+    void onManualDownloadFinished(const QList<GagObject> &gagList);
 
 private:
     GagRequest *m_request;
     GagImageDownloader *m_imageDownloader;
+    GagImageDownloader *m_manualImageDownloader;
 
     bool m_busy;
     GagModel *m_model;
+    int m_downloadingImageIndex;
 };
 
 #endif // GAGMANAGER_H

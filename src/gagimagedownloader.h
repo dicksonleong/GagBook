@@ -41,7 +41,7 @@ class GagImageDownloader : public QObject
 public:
     static void initializeCache();
 
-    explicit GagImageDownloader(const QList<GagObject> &gagList, QObject *parent = 0);
+    explicit GagImageDownloader(const QList<GagObject> &gagList, bool downloadGIF, QObject *parent = 0);
 
     void start();
 
@@ -53,6 +53,7 @@ private slots:
 
 private:
     const QList<GagObject> m_gagList;
+    const bool m_downloadGIF;
     QHash<QNetworkReply*, GagObject> m_replyHash;
 };
 

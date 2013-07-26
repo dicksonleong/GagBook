@@ -50,6 +50,8 @@ public:
     static NetworkManager *instance();
     static QNetworkReply *createGetRequest(const QUrl &url, AcceptType acceptType = None);
 
+    static bool isMobileData();
+
     QString downloadCounter() const { return m_downloadCounterStr; }
 
 signals:

@@ -81,10 +81,25 @@ void Settings::setSource(int source)
     }
 }
 
+int Settings::autoDownloadGif() const
+{
+    return m_autoDownloadGif;
+}
+
+void Settings::setAutoDownloadGif(int autoDownloadGif)
+{
+    if (m_autoDownloadGif != autoDownloadGif) {
+        m_autoDownloadGif = autoDownloadGif;
+        m_settings->setValue("autoDownloadGif", m_autoDownloadGif);
+        emit autoDownloadGifChanged();
+    }
+}
+
 Settings::Settings(QObject *parent) :
     QObject(parent), m_settings(new QSettings(this))
 {
     m_selectedSection = m_settings->value("selectedSection", 0).toInt();
     m_whiteTheme = m_settings->value("whiteTheme", false).toBool();
     m_source = m_settings->value("source", 0).toInt();
+    m_autoDownloadGif = m_settings->value("autoDownloadGif", 0).toInt();
 }

@@ -30,6 +30,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkConfiguration>
 
 static const QByteArray USER_AGENT = QByteArray("GagBook/") + APP_VERSION;
 
@@ -62,6 +63,19 @@ QNetworkReply *NetworkManager::createGetRequest(const QUrl &url, AcceptType acce
     }
 
     return m_instance->m_networkAccessManager->get(request);
+}
+
+bool NetworkManager::isMobileData()
+{
+    switch (m_instance->m_networkAccessManager->configuration().bearerType()) {
+    case QNetworkConfiguration::Bearer2G:
+    case QNetworkConfiguration::BearerCDMA2000:
+    case QNetworkConfiguration::BearerWCDMA:
+    case QNetworkConfiguration::BearerHSPA:
+        return true;
+    default:
+        return false;
+    }
 }
 
 void NetworkManager::increaseDownloadCounter(QNetworkReply *reply)

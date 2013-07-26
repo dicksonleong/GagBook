@@ -31,10 +31,12 @@
 #include "ninegagrequest.h"
 #include "infinigagrequest.h"
 #include "gagimagedownloader.h"
+#include "networkmanager.h"
 #include "settings.h"
 
 GagManager::GagManager(QObject *parent) :
-    QObject(parent), m_request(0), m_busy(false), m_model(0)
+    QObject(parent), m_request(0), m_imageDownloader(0), m_manualImageDownloader(0),
+    m_busy(false), m_model(0), m_downloadingImageIndex(-1)
 {
     GagImageDownloader::initializeCache();
 }
@@ -65,8 +67,8 @@ void GagManager::refresh(RefreshType refreshType)
 
     if (refreshType == RefreshAll)
         m_model->clear();
-    else if (refreshType == RefreshOlder && !m_model->isEmpty())
-        m_request->setLastId(m_model->lastGagId());
+    else if (refreshType == RefreshOlder && !m_model->gagList().isEmpty())
+        m_request->setLastId(m_model->gagList().last().id());
 
     connect(m_request, SIGNAL(success(QList<GagObject>)), this, SLOT(onSuccess(QList<GagObject>)));
     connect(m_request, SIGNAL(failure(QString)), this, SLOT(onFailure(QString)));
@@ -74,6 +76,25 @@ void GagManager::refresh(RefreshType refreshType)
     m_request->send();
 
     setBusy(true);
+}
+
+void GagManager::downloadImage(int index)
+{
+    if (m_manualImageDownloader != 0) {
+        m_manualImageDownloader->disconnect();
+        m_manualImageDownloader->deleteLater();
+        m_manualImageDownloader = 0;
+    }
+
+    QList<GagObject> gags;
+    gags.append(m_model->gagList().at(index));
+    m_downloadingImageIndex = index;
+    emit downloadingImageIndexChanged();
+
+    m_manualImageDownloader = new GagImageDownloader(gags, true, this);
+    connect(m_manualImageDownloader, SIGNAL(finished(QList<GagObject>)),
+            SLOT(onManualDownloadFinished(QList<GagObject>)));
+    m_manualImageDownloader->start();
 }
 
 bool GagManager::isBusy() const
@@ -102,9 +123,29 @@ void GagManager::setModel(GagModel *model)
     }
 }
 
+int GagManager::downloadingImageIndex() const
+{
+    return m_downloadingImageIndex;
+}
+
+static bool downloadGIF()
+{
+    switch (Settings::instance()->autoDownloadGif()) {
+    case 0:
+        return true;
+    case 1:
+        if (NetworkManager::isMobileData()) return false;
+        return true;
+    case 2:
+        return false;
+    default:
+        return true;
+    }
+}
+
 void GagManager::onSuccess(const QList<GagObject> &gagList)
 {
-    m_imageDownloader = new GagImageDownloader(gagList, this);
+    m_imageDownloader = new GagImageDownloader(gagList, downloadGIF(), this);
     connect(m_imageDownloader, SIGNAL(finished(QList<GagObject>)), SLOT(onDownloadFinished(QList<GagObject>)));
     m_imageDownloader->start();
 
@@ -126,4 +167,16 @@ void GagManager::onDownloadFinished(const QList<GagObject> &gagList)
     m_imageDownloader->deleteLater();
     m_imageDownloader = 0;
     setBusy(false);
+}
+
+void GagManager::onManualDownloadFinished(const QList<GagObject> &gagList)
+{
+    Q_UNUSED(gagList);
+
+    m_model->emitDataChanged(m_downloadingImageIndex);
+    m_downloadingImageIndex = -1;
+    emit downloadingImageIndexChanged();
+
+    m_manualImageDownloader->deleteLater();
+    m_manualImageDownloader = 0;
 }

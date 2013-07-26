@@ -43,7 +43,7 @@ Item {
     Text {
         id: settingText
         anchors { left: parent.left; top: parent.top; leftMargin: constant.paddingMedium }
-        font.pixelSize: constant.fontSizeMedium
+        font.pixelSize: constant.fontSizeLarge
         color: constant.colorLight
         text: root.text
     }
@@ -54,25 +54,32 @@ Item {
             top: settingText.bottom
             left: parent.left
             right: parent.right
-            margins: constant.paddingMedium
+            margins: constant.paddingSmall
         }
-        checkedButton: checkedButtonIndex === 0 ? firstButton : secondButton
-        onVisibleChanged: checkedButtonIndex === 0 ? firstButton : secondButton
+    }
 
-        // Stupid ButtonRow in Symbian component doesn't support using repeater to dynamically create buttons
-        // So I have to create button statically
-        Button {
-            id: firstButton
-            platformInverted: settings.whiteTheme
-            text: root.buttonsText[0]
-            onClicked: root.buttonClicked(0)
-        }
+    Component {
+        id: buttonComponent
 
         Button {
-            id: secondButton
+            id: thisButton
             platformInverted: settings.whiteTheme
-            text: root.buttonsText[1]
-            onClicked: root.buttonClicked(1)
+            onClicked: {
+                for (var i=0; i<parent.children.length; ++i) {
+                    if (parent.children[i] == thisButton) {
+                        buttonClicked(i);
+                        break;
+                    }
+                }
+            }
         }
+    }
+
+    Component.onCompleted: {
+        for (var i=0; i<buttonsText.length; ++i) {
+            var button = buttonComponent.createObject(buttonRow, { text: buttonsText[i] });
+        }
+        if (buttonRow.children.length > 0)
+            buttonRow.checkedButton = buttonRow.children[checkedButtonIndex]
     }
 }

@@ -40,6 +40,7 @@ class Settings : public QObject
     Q_PROPERTY(int selectedSection READ selectedSection WRITE setSelectedSection NOTIFY selectedSectionChanged)
     Q_PROPERTY(bool whiteTheme READ isWhiteTheme WRITE setWhiteTheme NOTIFY whiteThemeChanged)
     Q_PROPERTY(int source READ source WRITE setSource NOTIFY sourceChanged)
+    Q_PROPERTY(int autoDownloadGif READ autoDownloadGif WRITE setAutoDownloadGif NOTIFY autoDownloadGifChanged)
 public:
     static Settings *instance();
 
@@ -52,10 +53,14 @@ public:
     int source() const;
     void setSource(int source);
 
+    int autoDownloadGif() const;
+    void setAutoDownloadGif(int autoDownloadGif);
+
 signals:
     void selectedSectionChanged();
     void whiteThemeChanged();
     void sourceChanged();
+    void autoDownloadGifChanged();
 
 private:
     static QScopedPointer<Settings> m_instance;
@@ -68,6 +73,7 @@ private:
     int m_selectedSection;
     bool m_whiteTheme;
     int m_source;
+    int m_autoDownloadGif;
 };
 
 #endif // SETTINGS_H

@@ -43,7 +43,7 @@ Item {
     Text {
         id: settingText
         anchors { left: parent.left; top: parent.top; leftMargin: constant.paddingMedium }
-        font.pixelSize: constant.fontSizeMedium
+        font.pixelSize: constant.fontSizeLarge
         color: constant.colorLight
         text: root.text
     }
@@ -54,10 +54,8 @@ Item {
             top: settingText.bottom
             left: parent.left
             right: parent.right
-            margins: constant.paddingMedium
+            margins: constant.paddingSmall
         }
-        checkedButton: buttonRepeater.itemAt(root.checkedButtonIndex)
-        onVisibleChanged: checkedButton = buttonRepeater.itemAt(root.checkedButtonIndex)
 
         Repeater {
             id: buttonRepeater
@@ -68,5 +66,10 @@ Item {
                 onClicked: root.buttonClicked(index)
             }
         }
+    }
+
+    Component.onCompleted: {
+        if (buttonRepeater.count > 0)
+            buttonRow.checkedButton = buttonRepeater.itemAt(root.checkedButtonIndex)
     }
 }

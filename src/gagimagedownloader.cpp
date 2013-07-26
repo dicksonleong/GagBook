@@ -45,15 +45,15 @@ void GagImageDownloader::initializeCache()
         imageCacheDir.mkpath(".");
 }
 
-GagImageDownloader::GagImageDownloader(const QList<GagObject> &gagList, QObject *parent) :
-    QObject(parent), m_gagList(gagList)
+GagImageDownloader::GagImageDownloader(const QList<GagObject> &gagList, bool downloadGIF, QObject *parent) :
+    QObject(parent), m_gagList(gagList), m_downloadGIF(downloadGIF)
 {
 }
 
 void GagImageDownloader::start()
 {
     foreach (const GagObject &gag, m_gagList) {
-        if (gag.imageUrl().isEmpty())
+        if (gag.imageUrl().isEmpty() || (!m_downloadGIF && gag.isGIF()))
             continue;
 
         QNetworkReply *reply = NetworkManager::createGetRequest(gag.imageUrl(), NetworkManager::Image);
@@ -71,7 +71,6 @@ void GagImageDownloader::onFinished()
 
     const QString urlStr = reply->url().toString();
     const QString fileName = IMAGE_CACHE_PATH + "/" + urlStr.mid(urlStr.lastIndexOf("/") + 1);
-    m_replyHash[reply].setImageUrl(QUrl::fromLocalFile(fileName));
 
     if (reply->error() == QNetworkReply::NoError) {
         QFile image(fileName);
@@ -79,6 +78,7 @@ void GagImageDownloader::onFinished()
         if (opened) {
             image.write(reply->readAll());
             image.close();
+            m_replyHash[reply].setImageUrl(QUrl::fromLocalFile(fileName));
             m_replyHash[reply].setImageHeight(QImageReader(&image).size().height());
         } else {
             qDebug("GagImageDownloader::onFinished(): Unable to open QFile [with fileName = %s] for writing: %s",

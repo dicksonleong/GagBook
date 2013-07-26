@@ -55,11 +55,12 @@ public:
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
 
-    bool isEmpty() const;
-    QString lastGagId() const;
+    QList<GagObject> gagList() const;
 
     void append(const QList<GagObject> &gagList);
     void clear();
+
+    void emitDataChanged(int i);
 
     // For QML
     Q_INVOKABLE QVariantMap get(int rowIndex) const;

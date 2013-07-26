@@ -63,6 +63,8 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
     case UrlRole:
         return gag.url();
     case ImageUrlRole:
+        // should use QUrl::isLocalFile() but it is introduced in Qt 4.8
+        if (gag.imageUrl().scheme() != "file") return QUrl();
         return gag.imageUrl();
     case ImageHeightRole:
         return gag.imageHeight();
@@ -82,15 +84,9 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
     }
 }
 
-bool GagModel::isEmpty() const
+QList<GagObject> GagModel::gagList() const
 {
-    return m_gagList.isEmpty();
-}
-
-QString GagModel::lastGagId() const
-{
-    Q_ASSERT(!m_gagList.isEmpty());
-    return m_gagList.last().id();
+    return m_gagList;
 }
 
 void GagModel::append(const QList<GagObject> &gagList)
@@ -109,6 +105,12 @@ void GagModel::clear()
     beginRemoveRows(QModelIndex(), 0, m_gagList.count() - 1);
     m_gagList.clear();
     endRemoveRows();
+}
+
+void GagModel::emitDataChanged(int i)
+{
+    const QModelIndex modelIndex = index(i);
+    emit dataChanged(modelIndex, modelIndex);
 }
 
 QVariantMap GagModel::get(int rowIndex) const

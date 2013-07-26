@@ -72,7 +72,7 @@ Item {
                 }
                 if (width > gagImage.width)
                    height *= gagImage.width / width;
-                return height || width;
+                return height || gagImage.width;
             }
 
             anchors { left: parent.left; right: parent.right }
@@ -89,6 +89,11 @@ Item {
                 anchors.fill: parent
                 sourceComponent: {
                     if (model.isNSFW) return nsfwText;
+                    if (!gagImage.source.toString()) {
+                        if (gagManager.downloadingImageIndex == index)
+                            return downloadingIndicator;
+                        return notDownloadedText;
+                    }
 
                     switch (gagImage.status) {
                     case Image.Loading: return loadingRect;
@@ -131,6 +136,52 @@ Item {
                                 wrapMode: Text.Wrap
                                 text: "Unfortunately, GagBook does not support viewing NSFW images yet"
                             }
+                        }
+                    }
+                }
+
+                Component {
+                    id: notDownloadedText
+
+                    Item {
+                        Column {
+                            anchors {
+                                left: parent.left; right: parent.right
+                                verticalCenter: parent.verticalCenter
+                            }
+                            height: childrenRect.height
+                            spacing: constant.paddingMedium
+
+                            Text {
+                                anchors { left: parent.left; right: parent.right }
+                                horizontalAlignment: Text.AlignHCenter
+                                font.pixelSize: constant.fontSizeLarge
+                                color: constant.colorLight
+                                font.bold: true
+                                wrapMode: Text.Wrap
+                                text: "Image not downloaded"
+                            }
+
+                            Text {
+                                anchors { left: parent.left; right: parent.right }
+                                horizontalAlignment: Text.AlignHCenter
+                                font.pixelSize: constant.fontSizeMedium
+                                color: constant.colorLight
+                                wrapMode: Text.Wrap
+                                text: "Click to download image"
+                            }
+                        }
+                    }
+                }
+
+                Component {
+                    id: downloadingIndicator
+
+                    Item {
+                        BusyIndicator {
+                            anchors.centerIn: parent
+                            running: true
+                            platformStyle: BusyIndicatorStyle { size: "large" }
                         }
                     }
                 }
@@ -183,6 +234,10 @@ Item {
                     if (model.isNSFW) return;
                     if (model.isVideo) {
                         Qt.openUrlExternally(model.url);
+                        return;
+                    }
+                    if (!gagImage.source.toString()) {
+                        gagManager.downloadImage(index);
                         return;
                     }
                     pageStack.push(Qt.resolvedUrl("ImagePage.qml"), { imageUrl: model.imageUrl })
