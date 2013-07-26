@@ -1,3 +1,11 @@
+gagbook (0.8.0) stable; urgency=normal
+  * Add a setting for disable download GIFs automatically
+  * Add new sections: Cute, Geeky and Awesome
+  * Fix missing image for video post
+  * Show a play icon for video post and click on it will open the link in browser
+
+ -- Dickson <dicksonleong8@gmail.com>  Fri, 26 Jul 2013 19:57:58 +0800
+
 gagbook (0.7.1) stable; urgency=normal
   * Update to new 9GAG (v6)
   * Show a GIF icon for GIF image
