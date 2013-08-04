@@ -83,36 +83,33 @@ Page {
         delegate: GagDelegate {}
         footer: Item {
             width: ListView.view.width
-            height: loadingIndicatorLoader.height + 2 * constant.paddingMedium
-            visible: ListView.view.count > 0 && gagManager.busy
+            height: ListView.view.count > 0 ? footerColumn.height + 2 * constant.paddingLarge
+                                            : ListView.view.height
+            visible: gagManager.busy
 
-            Loader {
-                id: loadingIndicatorLoader
-                anchors.centerIn: parent
-                sourceComponent: parent.visible ? loadingIndicator : undefined
-            }
+            Column {
+                id: footerColumn
+                anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter }
+                height: childrenRect.height
+                spacing: constant.paddingMedium
 
-            Component {
-                id: loadingIndicator
+                Text {
+                    anchors { left: parent.left; right: parent.right }
+                    horizontalAlignment: Text.AlignHCenter
+                    elide: Text.ElideRight
+                    font.pixelSize: constant.fontSizeMedium
+                    color: constant.colorLight
+                    text: "Downloading..."
+                }
 
-                Row {
-                    width: childrenRect.width
-                    height: footerBusyIndicator.height
-                    spacing: constant.paddingMedium
-
-                    BusyIndicator {
-                        id: footerBusyIndicator
-                        platformInverted: settings.whiteTheme
-                        running: true
-                    }
-
-                    Text {
-                        id: loadingText
-                        anchors.verticalCenter: parent.verticalCenter
-                        font.pixelSize: constant.fontSizeMedium
-                        color: constant.colorLight
-                        text: "Loading..."
-                    }
+                ProgressBar {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    platformInverted: settings.whiteTheme
+                    width: parent.width * 0.75
+                    value: gagManager.progress
+                    // when indeterminate change from true to false the indeterminate
+                    // graphic is still there (bug?)
+                    //indeterminate: gagManager.progress == 0
                 }
             }
         }

@@ -62,6 +62,8 @@ void GagImageDownloader::start()
         m_replyHash.insert(reply, gag);
         connect(reply, SIGNAL(finished()), SLOT(onFinished()));
     }
+    m_imagesTotal = m_replyHash.count();
+    emit downloadProgress(0, m_imagesTotal);
 }
 
 void GagImageDownloader::onFinished()
@@ -90,8 +92,9 @@ void GagImageDownloader::onFinished()
     }
 
     m_replyHash.remove(reply);
+    reply->deleteLater();
+
+    emit downloadProgress(m_imagesTotal - m_replyHash.count(), m_imagesTotal);
     if (m_replyHash.isEmpty())
         emit finished(m_gagList);
-
-    reply->deleteLater();
 }

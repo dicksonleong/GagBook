@@ -46,6 +46,7 @@ public:
     void start();
 
 signals:
+    void downloadProgress(int imagesDownloaded, int imagesTotal);
     void finished(const QList<GagObject> &gagList);
 
 private slots:
@@ -55,6 +56,7 @@ private:
     const QList<GagObject> m_gagList;
     const bool m_downloadGIF;
     QHash<QNetworkReply*, GagObject> m_replyHash;
+    int m_imagesTotal;
 };
 
 #endif // GAGIMAGEDOWNLOADER_H

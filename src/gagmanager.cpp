@@ -36,7 +36,7 @@
 
 GagManager::GagManager(QObject *parent) :
     QObject(parent), m_request(0), m_imageDownloader(0), m_manualImageDownloader(0),
-    m_busy(false), m_model(0), m_downloadingImageIndex(-1)
+    m_busy(false), m_progress(0), m_model(0), m_downloadingImageIndex(-1)
 {
     GagImageDownloader::initializeCache();
 }
@@ -75,7 +75,13 @@ void GagManager::refresh(RefreshType refreshType)
 
     m_request->send();
 
-    setBusy(true);
+    m_busy = true;
+    emit busyChanged();
+
+    if (m_progress != 0) {
+        m_progress = 0;
+        emit progressChanged();
+    }
 }
 
 void GagManager::downloadImage(int index)
@@ -102,12 +108,9 @@ bool GagManager::isBusy() const
     return m_busy;
 }
 
-void GagManager::setBusy(bool busy)
+qreal GagManager::progress() const
 {
-    if (m_busy != busy) {
-        m_busy = busy;
-        emit busyChanged();
-    }
+    return m_progress;
 }
 
 GagModel *GagManager::model() const
@@ -147,6 +150,7 @@ void GagManager::onSuccess(const QList<GagObject> &gagList)
 {
     m_imageDownloader = new GagImageDownloader(gagList, downloadGIF(), this);
     connect(m_imageDownloader, SIGNAL(finished(QList<GagObject>)), SLOT(onDownloadFinished(QList<GagObject>)));
+    connect(m_imageDownloader, SIGNAL(downloadProgress(int,int)), SLOT(onImageDownloadProgress(int,int)));
     m_imageDownloader->start();
 
     m_request->deleteLater();
@@ -158,7 +162,17 @@ void GagManager::onFailure(const QString &errorMessage)
     emit refreshFailure(errorMessage);
     m_request->deleteLater();
     m_request = 0;
-    setBusy(false);
+    m_busy = false;
+    emit busyChanged();
+}
+
+void GagManager::onImageDownloadProgress(int imagesDownloaded, int imagesTotal)
+{
+    qreal progress = qreal(imagesDownloaded) / qreal(imagesTotal);
+    if (m_progress != progress) {
+        m_progress = progress;
+        emit progressChanged();
+    }
 }
 
 void GagManager::onDownloadFinished(const QList<GagObject> &gagList)
@@ -166,7 +180,8 @@ void GagManager::onDownloadFinished(const QList<GagObject> &gagList)
     m_model->append(gagList);
     m_imageDownloader->deleteLater();
     m_imageDownloader = 0;
-    setBusy(false);
+    m_busy = false;
+    emit busyChanged();
 }
 
 void GagManager::onManualDownloadFinished(const QList<GagObject> &gagList)
