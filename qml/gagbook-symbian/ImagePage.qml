@@ -89,7 +89,7 @@ Page {
                 cache: false
                 fillMode: Image.PreserveAspectFit
                 // pause the animation when app is in background
-                paused: !symbian.foreground
+                paused: imagePage.status != PageStatus.Active || !symbian.foreground
 
                 onScaleChanged: {
                     if ((width * scale) > flickable.width) {
