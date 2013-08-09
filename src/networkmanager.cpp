@@ -67,7 +67,8 @@ QNetworkReply *NetworkManager::createGetRequest(const QUrl &url, AcceptType acce
 
 bool NetworkManager::isMobileData()
 {
-    switch (m_instance->m_networkAccessManager->configuration().bearerType()) {
+    const QNetworkConfiguration activeConfiguration = m_instance->m_networkAccessManager->activeConfiguration();
+    switch (activeConfiguration.bearerType()) {
     case QNetworkConfiguration::Bearer2G:
     case QNetworkConfiguration::BearerCDMA2000:
     case QNetworkConfiguration::BearerWCDMA:
