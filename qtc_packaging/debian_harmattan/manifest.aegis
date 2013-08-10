@@ -1,6 +1,1 @@
-<aegis>
-    <request context="INSTALL" >
-        <credential name="UID::user" />
-        <credential name="GID::users" />
-    </request>
-</aegis>
+AutoGenerateAegisFile

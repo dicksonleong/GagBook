@@ -1,4 +1,4 @@
-gagbook (0.8.0) stable; urgency=normal
+gagbook (0.8.0) unstable; urgency=medium
   * Add a setting for disable download GIFs automatically
   * Add new sections: Cute, Geeky and Awesome
   * Fix missing image for video post
@@ -6,33 +6,33 @@ gagbook (0.8.0) stable; urgency=normal
 
  -- Dickson <dicksonleong8@gmail.com>  Fri, 26 Jul 2013 19:57:58 +0800
 
-gagbook (0.7.1) stable; urgency=normal
+gagbook (0.7.1) unstable; urgency=critical
   * Update to new 9GAG (v6)
   * Show a GIF icon for GIF image
 
  -- Dickson <dicksonleong8@gmail.com>  Fri, 14 Jun 2013 17:26:19 +0800
 
-gagbook (0.7.0) stable; urgency=normal
+gagbook (0.7.0) unstable; urgency=medium
   * Fix InfiniGAG source
   * Remove top section support
   * Add support for animated GIF images
 
  -- Dickson <dicksonleong8@gmail.com>  Sun, 09 Jun 2013 00:00:43 +0800
 
-gagbook (0.6.0) stable; urgency=high
+gagbook (0.6.0) unstable; urgency=high
   * Add InfiniGAG API as a fallback API
   * Fix wrong/missing 9GAG links and broken comment section
 
  -- Dickson <dicksonleong8@gmail.com>  Tue, 30 Apr 2013 16:22:42 +0800
 
-gagbook (0.5.1) stable; urgency=high
+gagbook (0.5.1) unstable; urgency=high
   * Fix not working due to 9GAG website changes
   * Add fullscreen view for image with zooming
   * Show a text when the post is video and/or NSFW
 
  -- Dickson <dicksonleong8@gmail.com>  Fri, 19 Apr 2013 18:29:37 +0800
 
-gagbook (0.5.0) stable; urgency=high
+gagbook (0.5.0) unstable; urgency=high
   * Fix sudden not working due to changes in 9GAG's HTML
   * Redesign UI
   * Images caching
@@ -40,7 +40,7 @@ gagbook (0.5.0) stable; urgency=high
 
  -- Dickson <dicksonleong8@gmail.com>  Wed, 03 Apr 2013 23:04:38 +0800
 
-gagbook (0.4.0) stable; urgency=normal
+gagbook (0.4.0) unstable; urgency=medium
   * Add vote and top section
   * Add zoom slider
   * Show a text when the post is a video/NSFW
@@ -48,7 +48,7 @@ gagbook (0.4.0) stable; urgency=normal
 
  -- Dickson <dicksonleong8@gmail.com>  Sat, 23 Feb 2013 21:30:08 +0800
 
-gagbook (0.3.0) stable; urgency=high
+gagbook (0.3.0) unstable; urgency=high
   * Complete rewrite backend in C++
   * Posts are scarp directly from 9GAG website instead of using the unstable
   infiniGAG API
@@ -56,7 +56,7 @@ gagbook (0.3.0) stable; urgency=high
 
  -- Dickson <dicksonleong8@gmail.com>  Wed, 06 Feb 2013 14:37:11 +0800
 
-gagbook (0.2.3) stable; urgency=high
+gagbook (0.2.3) unstable; urgency=high
   * Change InfiniGAG API url
   * Remove vote section temporary
   * Use button row for dark/white theme in settings
@@ -64,17 +64,17 @@ gagbook (0.2.3) stable; urgency=high
 
  -- Dickson <dicksonleong8@gmail.com>  Thu, 27 Dec 2012 13:02:48 +0800
 
-gagbook (0.2.2) stable; urgency=high
+gagbook (0.2.2) unstable; urgency=high
   * Changed API url
 
  -- Dickson <dicksonleong8@gmail.com>  Thu, 25 Oct 2012 12:28:38 +0800
 
-gagbook (0.2.1) stable; urgency=low
+gagbook (0.2.1) unstable; urgency=low
   * Release publicly since QA doesn't accept for distribute in Nokia Store
 
  -- Dickson <dicksonleong8@gmail.com>  Sat, 13 Oct 2012 17:36:27 +0800
 
-gagbook (0.2.0) stable; urgency=low
+gagbook (0.2.0) unstable; urgency=low
   * Back button in toolbar can used to reset image zoom
   * Removed double click gesture for reset zoom to avoid conflict
 

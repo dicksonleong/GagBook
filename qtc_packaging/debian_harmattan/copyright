@@ -1,17 +1,8 @@
-Source:
-
-    https://github.com/dicksonleong/GagBook
-
-Upstream Author(s):
-
-    Dickson Leong
-
-Copyright:
-
-    Copyright (C) 2012 Dickson Leong
-
-License:
-
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: GagBook
+Source: https://github.com/dicksonleong/GagBook
+Copyright: Copyright (C) 2012-2013 Dickson Leong
+License: BSD-2-clause
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
 
