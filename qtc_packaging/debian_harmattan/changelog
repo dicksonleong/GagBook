@@ -1,3 +1,10 @@
+gagbook (0.8.1) unstable; urgency=medium
+  * Show a progress bar when downloading images
+  * Fix GIFs will still downloaded when using mobile data even when Wi-Fi only is selected
+  * Update app icon
+
+ -- Dickson <dicksonleong8@gmail.com>  Sun, 18 Aug 2013 13:41:33 +0800
+
 gagbook (0.8.0) unstable; urgency=medium
   * Add a setting for disable download GIFs automatically
   * Add new sections: Cute, Geeky and Awesome

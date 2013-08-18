@@ -44,8 +44,7 @@ public:
         Trending,
         Vote,
         Cute,
-        Geeky,
-        Awesome
+        Geeky
     };
 
     explicit GagRequest(Section section, QObject *parent = 0);

@@ -84,8 +84,6 @@ QString GagRequest::getSectionText(Section section)
         return "cute";
     case Geeky:
         return "geeky";
-    case Awesome:
-        return "awesome";
     default:
         qWarning("GagRequest::getSectionText(): Invalid section");
         return QString("");

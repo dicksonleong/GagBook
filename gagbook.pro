@@ -1,7 +1,7 @@
 TEMPLATE = app
 TARGET = gagbook
 
-VERSION = 0.8.0
+VERSION = 0.8.1
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 QT += network webkit
@@ -51,7 +51,7 @@ contains(MEEGO_EDITION,harmattan) {
     folder_01.target = qml
     DEPLOYMENTFOLDERS = folder_01
 
-    CONFIG += shareuiinterface-maemo-meegotouch share-ui-plugin share-ui-common mdatauri qdeclarative-boostable
+    CONFIG += shareuiinterface-maemo-meegotouch mdatauri qdeclarative-boostable
     DEFINES += Q_OS_HARMATTAN
 
     splash.files = splash/gagbook-splash-portrait.jpg splash/gagbook-splash-landscape.jpg
