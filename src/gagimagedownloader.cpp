@@ -64,6 +64,8 @@ void GagImageDownloader::start()
     }
     m_imagesTotal = m_replyHash.count();
     emit downloadProgress(0, m_imagesTotal);
+    if (m_imagesTotal == 0)
+        emit finished(m_gagList);
 }
 
 void GagImageDownloader::onFinished()

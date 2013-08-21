@@ -168,7 +168,12 @@ void GagManager::onFailure(const QString &errorMessage)
 
 void GagManager::onImageDownloadProgress(int imagesDownloaded, int imagesTotal)
 {
-    qreal progress = qreal(imagesDownloaded) / qreal(imagesTotal);
+    qreal progress;
+    if (imagesTotal > 0)
+        progress = qreal(imagesDownloaded) / qreal(imagesTotal);
+    else
+        progress = 1;
+
     if (m_progress != progress) {
         m_progress = progress;
         emit progressChanged();

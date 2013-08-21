@@ -62,11 +62,12 @@ PageStackWindow {
 
     ListModel {
         id: sectionModel
-        ListElement { text: "What's Hot" }
+        ListElement { text: "Hot" }
         ListElement { text: "Trending" }
         ListElement { text: "Fresh" }
         ListElement { text: "Cute" }
         ListElement { text: "Geeky" }
+        ListElement { text: "GIF" }
     }
 
     Component.onCompleted: gagManager.refresh(GagManager.RefreshAll)

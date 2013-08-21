@@ -78,12 +78,14 @@ QString GagRequest::getSectionText(Section section)
         return "hot";
     case Trending:
         return "trending";
-    case Vote:
-        return "vote";
+    case Fresh:
+        return "fresh";
     case Cute:
         return "cute";
     case Geeky:
         return "geeky";
+    case GIF:
+        return "gif";
     default:
         qWarning("GagRequest::getSectionText(): Invalid section");
         return QString("");

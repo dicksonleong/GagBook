@@ -42,9 +42,10 @@ public:
     enum Section {
         Hot = 0,
         Trending,
-        Vote,
+        Fresh,
         Cute,
-        Geeky
+        Geeky,
+        GIF
     };
 
     explicit GagRequest(Section section, QObject *parent = 0);
