@@ -68,15 +68,22 @@ void GagImageDownloader::start()
         emit finished(m_gagList);
 }
 
+void GagImageDownloader::stop()
+{
+    foreach (QNetworkReply *reply, m_replyHash.keys()) {
+        reply->abort();
+    }
+}
+
 void GagImageDownloader::onFinished()
 {
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
     Q_ASSERT_X(reply != 0, Q_FUNC_INFO, "Unable to cast sender() to QNetworkReply *");
 
-    const QString urlStr = reply->url().toString();
-    const QString fileName = IMAGE_CACHE_PATH + "/" + urlStr.mid(urlStr.lastIndexOf("/") + 1);
-
     if (reply->error() == QNetworkReply::NoError) {
+        const QString urlStr = reply->url().toString();
+        const QString fileName = IMAGE_CACHE_PATH + "/" + urlStr.mid(urlStr.lastIndexOf("/") + 1);
+
         QFile image(fileName);
         bool opened = image.open(QIODevice::WriteOnly);
         if (opened) {
@@ -85,12 +92,14 @@ void GagImageDownloader::onFinished()
             m_replyHash[reply].setImageUrl(QUrl::fromLocalFile(fileName));
             m_replyHash[reply].setImageHeight(QImageReader(&image).size().height());
         } else {
-            qDebug("GagImageDownloader::onFinished(): Unable to open QFile [with fileName = %s] for writing: %s",
+            qWarning("GagImageDownloader::onFinished(): Unable to open QFile [with fileName = %s] for writing: %s",
                    qPrintable(fileName), qPrintable(image.errorString()));
         }
     } else {
-        qDebug("GagImageDownloader::onFinished(): Network error for [%s]: %s",
-               qPrintable(reply->url().toString()), qPrintable(reply->errorString()));
+        if (reply->error() != QNetworkReply::OperationCanceledError) {
+            qWarning("GagImageDownloader::onFinished(): Network error for [%s]: %s",
+                   qPrintable(reply->url().toString()), qPrintable(reply->errorString()));
+        }
     }
 
     m_replyHash.remove(reply);

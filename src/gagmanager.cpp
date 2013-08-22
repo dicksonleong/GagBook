@@ -84,6 +84,22 @@ void GagManager::refresh(RefreshType refreshType)
     }
 }
 
+void GagManager::stopRefresh()
+{
+    if (m_request != 0) {
+        m_request->disconnect();
+        m_request->deleteLater();
+        m_request = 0;
+    }
+    if (m_imageDownloader != 0)
+        m_imageDownloader->stop();
+
+    if (m_busy != false) {
+        m_busy = false;
+        emit busyChanged();
+    }
+}
+
 void GagManager::downloadImage(int index)
 {
     if (m_manualImageDownloader != 0) {

@@ -44,6 +44,7 @@ public:
     explicit GagImageDownloader(const QList<GagObject> &gagList, bool downloadGIF, QObject *parent = 0);
 
     void start();
+    void stop();
 
 signals:
     void downloadProgress(int imagesDownloaded, int imagesTotal);

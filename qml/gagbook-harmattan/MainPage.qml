@@ -42,9 +42,13 @@ Page {
             onClicked: dialogManager.createSectionDialog()
         }
         ToolIcon {
-            platformIconId: "toolbar-refresh" + (enabled ? "" : "-dimmed")
-            enabled: !gagManager.busy
-            onClicked: gagManager.refresh(GagManager.RefreshAll)
+            platformIconId: gagManager.busy ? "toolbar-stop" : "toolbar-refresh"
+            onClicked: {
+                if (gagManager.busy)
+                    gagManager.stopRefresh();
+                else
+                    gagManager.refresh(GagManager.RefreshAll)
+            }
         }
         ToolIcon {
             platformIconId: "toolbar-view-menu"

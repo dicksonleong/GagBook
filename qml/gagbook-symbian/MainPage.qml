@@ -45,10 +45,14 @@ Page {
         }
         ToolButton {
             platformInverted: settings.whiteTheme
-            iconSource: "toolbar-refresh"
-            enabled: !gagManager.busy
-            opacity: enabled ? 1 : 0.25
-            onClicked: gagManager.refresh(GagManager.RefreshAll)
+            iconSource: gagManager.busy ? ("Images/close_stop" + (platformInverted ? "_inverted.svg" : ".svg"))
+                                        : "toolbar-refresh"
+            onClicked: {
+                if (gagManager.busy)
+                    gagManager.stopRefresh()
+                else
+                    gagManager.refresh(GagManager.RefreshAll)
+            }
         }
         ToolButton {
             platformInverted: settings.whiteTheme

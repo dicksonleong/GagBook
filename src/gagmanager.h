@@ -54,6 +54,7 @@ public:
     };
 
     Q_INVOKABLE void refresh(RefreshType refreshType);
+    Q_INVOKABLE void stopRefresh();
     Q_INVOKABLE void downloadImage(int index);
 
     bool isBusy() const;
