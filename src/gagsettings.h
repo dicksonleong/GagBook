@@ -25,15 +25,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef GAGSETTINGS_H
+#define GAGSETTINGS_H
 
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
 
 class QSettings;
 
-class Settings : public QObject
+class GagSettings : public QObject
 {
     Q_OBJECT
 
@@ -42,7 +42,7 @@ class Settings : public QObject
     Q_PROPERTY(int source READ source WRITE setSource NOTIFY sourceChanged)
     Q_PROPERTY(int autoDownloadGif READ autoDownloadGif WRITE setAutoDownloadGif NOTIFY autoDownloadGifChanged)
 public:
-    static Settings *instance();
+    static GagSettings *instance();
 
     int selectedSection() const;
     void setSelectedSection(int selectedSection);
@@ -63,10 +63,10 @@ signals:
     void autoDownloadGifChanged();
 
 private:
-    static QScopedPointer<Settings> m_instance;
+    static QScopedPointer<GagSettings> m_instance;
 
-    explicit Settings(QObject *parent = 0);
-    Q_DISABLE_COPY(Settings)
+    explicit GagSettings(QObject *parent = 0);
+    Q_DISABLE_COPY(GagSettings)
 
     QSettings *m_settings;
 
@@ -76,4 +76,4 @@ private:
     int m_autoDownloadGif;
 };
 
-#endif // SETTINGS_H
+#endif // GAGSETTINGS_H

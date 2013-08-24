@@ -32,7 +32,7 @@
 #include "infinigagrequest.h"
 #include "gagimagedownloader.h"
 #include "networkmanager.h"
-#include "settings.h"
+#include "gagsettings.h"
 
 GagManager::GagManager(QObject *parent) :
     QObject(parent), m_request(0), m_imageDownloader(0), m_manualImageDownloader(0),
@@ -57,9 +57,9 @@ void GagManager::refresh(RefreshType refreshType)
         m_imageDownloader = 0;
     }
 
-    GagRequest::Section selectedSection = static_cast<GagRequest::Section>(Settings::instance()->selectedSection());
+    GagRequest::Section selectedSection = static_cast<GagRequest::Section>(GagSettings::instance()->selectedSection());
 
-    switch (Settings::instance()->source()) {
+    switch (GagSettings::instance()->source()) {
     case 0: m_request = new NineGagRequest(selectedSection, this); break;
     case 1: m_request = new InfiniGagRequest(selectedSection, this); break;
     default: qCritical("GagManager::refresh(): Invalid source");
@@ -149,7 +149,7 @@ int GagManager::downloadingImageIndex() const
 
 static bool downloadGIF()
 {
-    switch (Settings::instance()->autoDownloadGif()) {
+    switch (GagSettings::instance()->autoDownloadGif()) {
     case 0:
         return true;
     case 1:

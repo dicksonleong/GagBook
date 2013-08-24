@@ -25,26 +25,26 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "settings.h"
+#include "gagsettings.h"
 
 #include <QtCore/QSettings>
 
-QScopedPointer<Settings> Settings::m_instance(0);
+QScopedPointer<GagSettings> GagSettings::m_instance(0);
 
-Settings *Settings::instance()
+GagSettings *GagSettings::instance()
 {
     if (m_instance.isNull())
-        m_instance.reset(new Settings);
+        m_instance.reset(new GagSettings);
 
     return m_instance.data();
 }
 
-int Settings::selectedSection() const
+int GagSettings::selectedSection() const
 {
     return m_selectedSection;
 }
 
-void Settings::setSelectedSection(int selectedSection)
+void GagSettings::setSelectedSection(int selectedSection)
 {
     if (m_selectedSection != selectedSection) {
         m_selectedSection = selectedSection;
@@ -53,12 +53,12 @@ void Settings::setSelectedSection(int selectedSection)
     }
 }
 
-bool Settings::isWhiteTheme() const
+bool GagSettings::isWhiteTheme() const
 {
     return m_whiteTheme;
 }
 
-void Settings::setWhiteTheme(bool whiteTheme)
+void GagSettings::setWhiteTheme(bool whiteTheme)
 {
     if (m_whiteTheme != whiteTheme) {
         m_whiteTheme = whiteTheme;
@@ -67,12 +67,12 @@ void Settings::setWhiteTheme(bool whiteTheme)
     }
 }
 
-int Settings::source() const
+int GagSettings::source() const
 {
     return m_source;
 }
 
-void Settings::setSource(int source)
+void GagSettings::setSource(int source)
 {
     if (m_source != source) {
         m_source = source;
@@ -81,12 +81,12 @@ void Settings::setSource(int source)
     }
 }
 
-int Settings::autoDownloadGif() const
+int GagSettings::autoDownloadGif() const
 {
     return m_autoDownloadGif;
 }
 
-void Settings::setAutoDownloadGif(int autoDownloadGif)
+void GagSettings::setAutoDownloadGif(int autoDownloadGif)
 {
     if (m_autoDownloadGif != autoDownloadGif) {
         m_autoDownloadGif = autoDownloadGif;
@@ -95,8 +95,8 @@ void Settings::setAutoDownloadGif(int autoDownloadGif)
     }
 }
 
-Settings::Settings(QObject *parent) :
-    QObject(parent), m_settings(new QSettings(this))
+GagSettings::GagSettings(QObject *parent) :
+    QObject(parent), m_settings(new QSettings("GagBook", "GagBook", this))
 {
     m_selectedSection = m_settings->value("selectedSection", 0).toInt();
     m_whiteTheme = m_settings->value("whiteTheme", false).toBool();
