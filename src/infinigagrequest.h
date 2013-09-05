@@ -34,10 +34,10 @@ class InfiniGagRequest : public GagRequest
 {
     Q_OBJECT
 public:
-    explicit InfiniGagRequest(Section section, QObject *parent = 0);
+    explicit InfiniGagRequest(GagSettings::Section section, QObject *parent = 0);
 
 protected:
-    QNetworkReply *createRequest(Section section, const QString &lastId);
+    QNetworkReply *createRequest(GagSettings::Section section, const QString &lastId);
     QList<GagObject> parseResponse(const QByteArray &response);
 };
 

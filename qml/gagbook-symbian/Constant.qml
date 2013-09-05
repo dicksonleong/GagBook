@@ -31,13 +31,13 @@ QtObject {
     id: constant
 
     property color colorHighlighted: colorLight
-    property color colorLight: settings.whiteTheme ? platformStyle.colorNormalLightInverted
+    property color colorLight: gagSettings.whiteTheme ? platformStyle.colorNormalLightInverted
                                                    : platformStyle.colorNormalLight
-    property color colorMid: settings.whiteTheme ? platformStyle.colorNormalMidInverted
+    property color colorMid: gagSettings.whiteTheme ? platformStyle.colorNormalMidInverted
                                                  : platformStyle.colorNormalMid
-    property color colorTextSelection: settings.whiteTheme ? platformStyle.colorTextSelectionInverted
+    property color colorTextSelection: gagSettings.whiteTheme ? platformStyle.colorTextSelectionInverted
                                                            : platformStyle.colorTextSelection
-    property color colorDisabled: settings.whiteTheme ? platformStyle.colorDisabledMidInverted
+    property color colorDisabled: gagSettings.whiteTheme ? platformStyle.colorDisabledMidInverted
                                                       : platformStyle.colorDisabledLight
 
     property int paddingSmall: platformStyle.paddingSmall

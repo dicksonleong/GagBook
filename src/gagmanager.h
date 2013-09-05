@@ -32,9 +32,10 @@
 
 #include "gagobject.h"
 
+class GagSettings;
 class GagRequest;
-class GagModel;
 class GagImageDownloader;
+class GagModel;
 
 class GagManager : public QObject
 {
@@ -43,8 +44,9 @@ class GagManager : public QObject
 
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
     Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
-    Q_PROPERTY(GagModel* model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(int downloadingImageIndex READ downloadingImageIndex NOTIFY downloadingImageIndexChanged)
+    Q_PROPERTY(GagSettings* settings READ settings WRITE setSettings NOTIFY settingsChanged)
+    Q_PROPERTY(GagModel* model READ model WRITE setModel NOTIFY modelChanged)
 public:
     explicit GagManager(QObject *parent = 0);
 
@@ -58,20 +60,22 @@ public:
     Q_INVOKABLE void downloadImage(int index);
 
     bool isBusy() const;
-
     qreal progress() const;
+    int downloadingImageIndex() const;
+
+    GagSettings *settings() const;
+    void setSettings(GagSettings *settings);
 
     GagModel *model() const;
     void setModel(GagModel *model);
-
-    int downloadingImageIndex() const;
 
 signals:
     void refreshFailure(const QString &errorMessage);
     void busyChanged();
     void progressChanged();
-    void modelChanged();
     void downloadingImageIndexChanged();
+    void settingsChanged();
+    void modelChanged();
 
 private slots:
     void onSuccess(const QList<GagObject> &gagList);
@@ -87,8 +91,9 @@ private:
 
     bool m_busy;
     qreal m_progress;
-    GagModel *m_model;
     int m_downloadingImageIndex;
+    GagSettings *m_settings;
+    GagModel *m_model;
 };
 
 #endif // GAGMANAGER_H

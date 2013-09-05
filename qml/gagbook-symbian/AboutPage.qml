@@ -33,7 +33,7 @@ Page {
 
     tools: ToolBarLayout {
         ToolButton {
-            platformInverted: settings.whiteTheme
+            platformInverted: gagSettings.whiteTheme
             iconSource: "toolbar-back"
             onClicked: pageStack.pop()
         }
@@ -87,7 +87,7 @@ and <a href=\"http://9gag.com/privacy\">Privacy Policy</a>.<br>"
 
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
-                platformInverted: settings.whiteTheme
+                platformInverted: gagSettings.whiteTheme
                 text: "Developer's Website"
                 width: parent.width * 0.75
                 onClicked: QMLUtils.openDefaultBrowser(QMLUtils.DEV_WEBSITE)
@@ -95,7 +95,7 @@ and <a href=\"http://9gag.com/privacy\">Privacy Policy</a>.<br>"
 
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
-                platformInverted: settings.whiteTheme
+                platformInverted: gagSettings.whiteTheme
                 text: "Source Repository"
                 width: parent.width * 0.75
                 onClicked: QMLUtils.openDefaultBrowser(QMLUtils.REPO_WEBSITE)
@@ -103,7 +103,7 @@ and <a href=\"http://9gag.com/privacy\">Privacy Policy</a>.<br>"
         }
     }
 
-    ScrollDecorator { flickableItem: aboutPageFlickable; platformInverted: settings.whiteTheme }
+    ScrollDecorator { flickableItem: aboutPageFlickable; platformInverted: gagSettings.whiteTheme }
 
     PageHeader {
         id: pageHeader

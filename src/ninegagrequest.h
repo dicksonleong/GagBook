@@ -34,10 +34,10 @@ class NineGagRequest : public GagRequest
 {
     Q_OBJECT
 public:
-    explicit NineGagRequest(Section section, QObject *parent = 0);
+    explicit NineGagRequest(GagSettings::Section section, QObject *parent = 0);
 
 protected:
-    QNetworkReply *createRequest(Section section, const QString &lastId);
+    QNetworkReply *createRequest(GagSettings::Section section, const QString &lastId);
     QList<GagObject> parseResponse(const QByteArray &response);
 };
 

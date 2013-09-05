@@ -27,13 +27,14 @@
 
 import QtQuick 1.1
 import com.nokia.symbian 1.1
+import GagBook 1.0
 
 Page {
     id: settingsPage
 
     tools: ToolBarLayout {
         ToolButton {
-            platformInverted: settings.whiteTheme
+            platformInverted: gagSettings.whiteTheme
             iconSource: "toolbar-back"
             onClicked: pageStack.pop()
         }
@@ -56,28 +57,50 @@ Page {
 
             SettingButtonRow {
                 text: "Theme"
-                checkedButtonIndex: settings.whiteTheme ? 1 : 0
+                checkedButtonIndex: gagSettings.whiteTheme ? 1 : 0
                 buttonsText: ["Dark", "White"]
-                onButtonClicked: settings.whiteTheme = index === 1
+                onButtonClicked: gagSettings.whiteTheme = index === 1
             }
 
             SettingButtonRow {
                 text: "Source"
-                checkedButtonIndex: settings.source
+                checkedButtonIndex: {
+                    switch (gagSettings.source) {
+                    case GagSettings.NineGagSource: return 0;
+                    case GagSettings.InfiniGagSource: return 1;
+                    }
+                }
                 buttonsText: ["9GAG", "InfiniGAG"]
-                onButtonClicked: settings.source = index
+                onButtonClicked: {
+                    switch (index) {
+                    case 0: gagSettings.source = GagSettings.NineGagSource; break;
+                    case 1: gagSettings.source = GagSettings.InfiniGagSource; break;
+                    }
+                }
             }
 
             SettingButtonRow {
                 text: "Download GIFs automatically"
-                checkedButtonIndex: settings.autoDownloadGif
                 buttonsText: ["On", "Wi-Fi only", "Off"]
-                onButtonClicked: settings.autoDownloadGif = index
+                checkedButtonIndex: {
+                    switch (gagSettings.gifDownloadMode) {
+                    case GagSettings.GifDownloadOn: return 0;
+                    case GagSettings.GifDownloadOnWiFiOnly: return 1;
+                    case GagSettings.GifDownloadOff: return 2;
+                    }
+                }
+                onButtonClicked: {
+                    switch (index) {
+                    case 0: gagSettings.gifDownloadMode = GagSettings.GifDownloadOn; break;
+                    case 1: gagSettings.gifDownloadMode = GagSettings.GifDownloadOnWiFiOnly; break;
+                    case 2: gagSettings.gifDownloadMode = GagSettings.GifDownloadOff; break;
+                    }
+                }
             }
         }
     }
 
-    ScrollDecorator { platformInverted: settings.whiteTheme; flickableItem: settingsFlickable }
+    ScrollDecorator { platformInverted: gagSettings.whiteTheme; flickableItem: settingsFlickable }
 
     PageHeader {
         id: pageHeader

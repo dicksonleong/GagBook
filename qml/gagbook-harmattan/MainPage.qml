@@ -113,7 +113,7 @@ Page {
     PageHeader {
         id: pageHeader
         anchors { top: parent.top; left: parent.left; right: parent.right }
-        text: sectionModel.get(settings.selectedSection).text
+        text: sectionModel.get(gagSettings.section).text
         busy: gagManager.busy
         onClicked: gagListView.positionViewAtBeginning()
     }
@@ -132,7 +132,7 @@ Page {
                 return
             }
             dialog.accepted.connect(function() {
-                settings.selectedSection = dialog.selectedIndex;
+                gagSettings.section = dialog.selectedIndex;
                 gagManager.refresh(GagManager.RefreshAll);
             })
         }

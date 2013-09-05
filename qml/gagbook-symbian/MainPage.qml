@@ -34,17 +34,17 @@ Page {
 
     tools: ToolBarLayout {
         ToolButton {
-            platformInverted: settings.whiteTheme
+            platformInverted: gagSettings.whiteTheme
             iconSource: "Images/close_stop" + (platformInverted ? "_inverted.svg" : ".svg")
             onClicked: Qt.quit()
         }
         ToolButton {
-            platformInverted: settings.whiteTheme
+            platformInverted: gagSettings.whiteTheme
             iconSource: "toolbar-list"
             onClicked: dialogManager.createSectionDialog()
         }
         ToolButton {
-            platformInverted: settings.whiteTheme
+            platformInverted: gagSettings.whiteTheme
             iconSource: gagManager.busy ? ("Images/close_stop" + (platformInverted ? "_inverted.svg" : ".svg"))
                                         : "toolbar-refresh"
             onClicked: {
@@ -55,7 +55,7 @@ Page {
             }
         }
         ToolButton {
-            platformInverted: settings.whiteTheme
+            platformInverted: gagSettings.whiteTheme
             iconSource: "toolbar-menu"
             onClicked: mainMenu.open()
         }
@@ -63,16 +63,16 @@ Page {
 
     Menu {
         id: mainMenu
-        platformInverted: settings.whiteTheme
+        platformInverted: gagSettings.whiteTheme
 
         MenuLayout {
             MenuItem {
-                platformInverted: settings.whiteTheme
+                platformInverted: gagSettings.whiteTheme
                 text: "Settings"
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }
             MenuItem {
-                platformInverted: settings.whiteTheme
+                platformInverted: gagSettings.whiteTheme
                 text: "About GagBook"
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
             }
@@ -108,7 +108,7 @@ Page {
 
                 ProgressBar {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    platformInverted: settings.whiteTheme
+                    platformInverted: gagSettings.whiteTheme
                     width: parent.width * 0.75
                     value: gagManager.progress
                     // when indeterminate change from true to false the indeterminate
@@ -124,7 +124,7 @@ Page {
     PageHeader {
         id: pageHeader
         anchors { top: parent.top; left: parent.left; right: parent.right }
-        text: sectionModel.get(settings.selectedSection).text
+        text: sectionModel.get(gagSettings.section).text
         busy: gagManager.busy
         onClicked: gagListView.positionViewAtBeginning()
     }
@@ -144,7 +144,7 @@ Page {
                 return
             }
             dialog.accepted.connect(function() {
-                settings.selectedSection = dialog.selectedIndex;
+                gagSettings.section = dialog.selectedIndex;
                 gagManager.refresh(GagManager.RefreshAll)
             })
         }

@@ -32,6 +32,7 @@
 #include <QtCore/QList>
 
 #include "gagobject.h"
+#include "gagsettings.h"
 
 class QNetworkReply;
 
@@ -39,16 +40,7 @@ class GagRequest : public QObject
 {
     Q_OBJECT
 public:
-    enum Section {
-        Hot = 0,
-        Trending,
-        Fresh,
-        Cute,
-        Geeky,
-        GIF
-    };
-
-    explicit GagRequest(Section section, QObject *parent = 0);
+    explicit GagRequest(GagSettings::Section section, QObject *parent = 0);
 
     void setLastId(const QString &lastId);
 
@@ -60,16 +52,16 @@ signals:
 
 protected:
     // must be override
-    virtual QNetworkReply *createRequest(Section section, const QString &lastId) = 0;
+    virtual QNetworkReply *createRequest(GagSettings::Section section, const QString &lastId) = 0;
     virtual QList<GagObject> parseResponse(const QByteArray &response) = 0;
 
-    static QString getSectionText(Section section);
+    static QString getSectionText(GagSettings::Section section);
 
 private slots:
     void onFinished();
 
 private:
-    const Section m_section;
+    const GagSettings::Section m_section;
     QString m_lastId;
 
     QNetworkReply *m_reply;

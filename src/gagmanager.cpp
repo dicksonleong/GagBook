@@ -36,7 +36,7 @@
 
 GagManager::GagManager(QObject *parent) :
     QObject(parent), m_request(0), m_imageDownloader(0), m_manualImageDownloader(0),
-    m_busy(false), m_progress(0), m_model(0), m_downloadingImageIndex(-1)
+    m_busy(false), m_progress(0), m_downloadingImageIndex(-1), m_settings(0), m_model(0)
 {
     GagImageDownloader::initializeCache();
 }
@@ -57,12 +57,12 @@ void GagManager::refresh(RefreshType refreshType)
         m_imageDownloader = 0;
     }
 
-    GagRequest::Section selectedSection = static_cast<GagRequest::Section>(GagSettings::instance()->selectedSection());
-
-    switch (GagSettings::instance()->source()) {
-    case 0: m_request = new NineGagRequest(selectedSection, this); break;
-    case 1: m_request = new InfiniGagRequest(selectedSection, this); break;
-    default: qCritical("GagManager::refresh(): Invalid source");
+    switch (m_settings->source()) {
+    default:
+        qWarning("GagManager::refresh(): Invalid source, default source will be used");
+        // fallthrough
+    case GagSettings::NineGagSource: m_request = new NineGagRequest(m_settings->section(), this); break;
+    case GagSettings::InfiniGagSource: m_request = new InfiniGagRequest(m_settings->section(), this); break;
     }
 
     if (refreshType == RefreshAll)
@@ -129,6 +129,24 @@ qreal GagManager::progress() const
     return m_progress;
 }
 
+int GagManager::downloadingImageIndex() const
+{
+    return m_downloadingImageIndex;
+}
+
+GagSettings *GagManager::settings() const
+{
+    return m_settings;
+}
+
+void GagManager::setSettings(GagSettings *settings)
+{
+    if (m_settings != settings) {
+        m_settings = settings;
+        emit settingsChanged();
+    }
+}
+
 GagModel *GagManager::model() const
 {
     return m_model;
@@ -142,29 +160,27 @@ void GagManager::setModel(GagModel *model)
     }
 }
 
-int GagManager::downloadingImageIndex() const
-{
-    return m_downloadingImageIndex;
-}
-
-static bool downloadGIF()
-{
-    switch (GagSettings::instance()->autoDownloadGif()) {
-    case 0:
-        return true;
-    case 1:
-        if (NetworkManager::isMobileData()) return false;
-        return true;
-    case 2:
-        return false;
-    default:
-        return true;
-    }
-}
-
 void GagManager::onSuccess(const QList<GagObject> &gagList)
 {
-    m_imageDownloader = new GagImageDownloader(gagList, downloadGIF(), this);
+    bool downloadGIF;
+    switch (m_settings->gifDownloadMode()) {
+    case GagSettings::GifDownloadOn:
+        downloadGIF = true;
+        break;
+    case GagSettings::GifDownloadOnWiFiOnly:
+        if (NetworkManager::isMobileData()) downloadGIF = false;
+        downloadGIF = true;
+        break;
+    case GagSettings::GifDownloadOff:
+        downloadGIF = false;
+        break;
+    default:
+        qWarning("GagManager::onSuccess(): Invalid gifDownloadMode, default mode will be used");
+        downloadGIF = true;
+        break;
+    }
+
+    m_imageDownloader = new GagImageDownloader(gagList, downloadGIF, this);
     connect(m_imageDownloader, SIGNAL(finished(QList<GagObject>)), SLOT(onDownloadFinished(QList<GagObject>)));
     connect(m_imageDownloader, SIGNAL(downloadProgress(int,int)), SLOT(onImageDownloadProgress(int,int)));
     m_imageDownloader->start();

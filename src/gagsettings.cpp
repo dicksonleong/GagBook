@@ -29,28 +29,13 @@
 
 #include <QtCore/QSettings>
 
-QScopedPointer<GagSettings> GagSettings::m_instance(0);
-
-GagSettings *GagSettings::instance()
+GagSettings::GagSettings(QObject *parent) :
+    QObject(parent), m_settings(new QSettings(this))
 {
-    if (m_instance.isNull())
-        m_instance.reset(new GagSettings);
-
-    return m_instance.data();
-}
-
-int GagSettings::selectedSection() const
-{
-    return m_selectedSection;
-}
-
-void GagSettings::setSelectedSection(int selectedSection)
-{
-    if (m_selectedSection != selectedSection) {
-        m_selectedSection = selectedSection;
-        m_settings->setValue("selectedSection", m_selectedSection);
-        emit selectedSectionChanged();
-    }
+    m_whiteTheme = m_settings->value("whiteTheme", false).toBool();
+    m_section = static_cast<Section>(m_settings->value("section", 0).toInt());
+    m_source = static_cast<Source>(m_settings->value("source", 0).toInt());
+    m_gifDownloadMode = static_cast<GifDownloadMode>(m_settings->value("gifDownloadMode", 0).toInt());
 }
 
 bool GagSettings::isWhiteTheme() const
@@ -67,39 +52,44 @@ void GagSettings::setWhiteTheme(bool whiteTheme)
     }
 }
 
-int GagSettings::source() const
+GagSettings::Section GagSettings::section() const
+{
+    return m_section;
+}
+
+void GagSettings::setSection(Section section)
+{
+    if (m_section != section) {
+        m_section = section;
+        m_settings->setValue("section", static_cast<int>(m_section));
+        emit sectionChanged();
+    }
+}
+
+GagSettings::Source GagSettings::source() const
 {
     return m_source;
 }
 
-void GagSettings::setSource(int source)
+void GagSettings::setSource(Source source)
 {
     if (m_source != source) {
         m_source = source;
-        m_settings->setValue("source", m_source);
+        m_settings->setValue("source", static_cast<int>(m_source));
         emit sourceChanged();
     }
 }
 
-int GagSettings::autoDownloadGif() const
+GagSettings::GifDownloadMode GagSettings::gifDownloadMode() const
 {
-    return m_autoDownloadGif;
+    return m_gifDownloadMode;
 }
 
-void GagSettings::setAutoDownloadGif(int autoDownloadGif)
+void GagSettings::setGifDownloadMode(GifDownloadMode mode)
 {
-    if (m_autoDownloadGif != autoDownloadGif) {
-        m_autoDownloadGif = autoDownloadGif;
-        m_settings->setValue("autoDownloadGif", m_autoDownloadGif);
-        emit autoDownloadGifChanged();
+    if (m_gifDownloadMode != mode) {
+        m_gifDownloadMode = mode;
+        m_settings->setValue("gifDownloadMode", static_cast<int>(m_gifDownloadMode));
+        emit gifDownloadModeChanged();
     }
-}
-
-GagSettings::GagSettings(QObject *parent) :
-    QObject(parent), m_settings(new QSettings("GagBook", "GagBook", this))
-{
-    m_selectedSection = m_settings->value("selectedSection", 0).toInt();
-    m_whiteTheme = m_settings->value("whiteTheme", false).toBool();
-    m_source = m_settings->value("source", 0).toInt();
-    m_autoDownloadGif = m_settings->value("autoDownloadGif", 0).toInt();
 }

@@ -34,12 +34,12 @@
 
 // For more information about InfiniGAG API, see <https://github.com/k3min/infinigag>
 
-InfiniGagRequest::InfiniGagRequest(Section section, QObject *parent) :
+InfiniGagRequest::InfiniGagRequest(GagSettings::Section section, QObject *parent) :
     GagRequest(section, parent)
 {
 }
 
-QNetworkReply *InfiniGagRequest::createRequest(Section section, const QString &lastId)
+QNetworkReply *InfiniGagRequest::createRequest(GagSettings::Section section, const QString &lastId)
 {
     QString requestUrl = QString("http://infinigag.eu01.aws.af.cm/%1/%2")
             .arg(getSectionText(section), (lastId.isEmpty() ? "0" : lastId));

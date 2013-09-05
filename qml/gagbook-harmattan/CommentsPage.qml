@@ -58,7 +58,7 @@ Page {
 
                 property string gagURL: commentsPage.gagURL
                 property int width: webViewFlickable.width * 0.75
-                property bool whiteTheme: settings.whiteTheme
+                property bool whiteTheme: gagSettings.whiteTheme
             }
 
             onLoadStarted: pageHeader.busy = true

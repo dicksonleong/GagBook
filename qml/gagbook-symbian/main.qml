@@ -33,14 +33,14 @@ import GagBook 1.0
 PageStackWindow {
     id: appWindow
 
-    platformInverted: settings.whiteTheme
+    platformInverted: gagSettings.whiteTheme
     initialPage: MainPage { id: mainPage }
 
     Constant { id: constant }
 
     InfoBanner {
         id: infoBanner
-        platformInverted: settings.whiteTheme
+        platformInverted: gagSettings.whiteTheme
 
         function alert(text) {
             infoBanner.text = text
@@ -50,6 +50,7 @@ PageStackWindow {
 
     GagManager {
         id: gagManager
+        settings: GagSettings { id: gagSettings }
         model: GagModel {}
         onRefreshFailure: infoBanner.alert("Error: " + errorMessage)
     }

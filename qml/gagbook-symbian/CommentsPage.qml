@@ -36,7 +36,7 @@ Page {
 
     tools: ToolBarLayout {
         ToolButton {
-            platformInverted: settings.whiteTheme
+            platformInverted: gagSettings.whiteTheme
             iconSource: "toolbar-back"
             onClicked: pageStack.pop()
         }
@@ -59,7 +59,7 @@ Page {
 
                 property string gagURL: commentsPage.gagURL
                 property int width: webViewFlickable.width * 0.75
-                property bool whiteTheme: settings.whiteTheme
+                property bool whiteTheme: gagSettings.whiteTheme
             }
 
             onLoadStarted: pageHeader.busy = true
@@ -70,7 +70,7 @@ Page {
         }
     }
 
-    ScrollDecorator { flickableItem: webViewFlickable; platformInverted: settings.whiteTheme }
+    ScrollDecorator { flickableItem: webViewFlickable; platformInverted: gagSettings.whiteTheme }
 
     PageHeader {
         id: pageHeader

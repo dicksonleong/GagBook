@@ -251,7 +251,7 @@ Item {
             exclusive: false
 
             Button {
-                iconSource: "image://theme/icon-m-toolbar-new-message" + (settings.whiteTheme ? "" : "-selected")
+                iconSource: "image://theme/icon-m-toolbar-new-message" + (gagSettings.whiteTheme ? "" : "-selected")
                 onClicked: pageStack.push(Qt.resolvedUrl("CommentsPage.qml"), { gagURL: model.url })
             }
             Button {
@@ -259,16 +259,16 @@ Item {
                 onClicked: dialogManager.createOpenLinkDialog(model.url)
             }
             Button {
-                iconSource: "image://theme/icon-m-toolbar-share" + (settings.whiteTheme ? "" : "-selected")
+                iconSource: "image://theme/icon-m-toolbar-share" + (gagSettings.whiteTheme ? "" : "-selected")
                 onClicked: QMLUtils.shareLink(model.url, model.title);
             }
             Button {
                 property string __savedFilePath: ""
                 iconSource: {
                     if (!__savedFilePath)
-                        return "image://theme/icon-s-transfer-download" + (settings.whiteTheme ? "" : "-inverse")
+                        return "image://theme/icon-s-transfer-download" + (gagSettings.whiteTheme ? "" : "-inverse")
                     else
-                        return "image://theme/icon-m-toolbar-gallery" + (settings.whiteTheme ? "" : "-selected")
+                        return "image://theme/icon-m-toolbar-gallery" + (gagSettings.whiteTheme ? "" : "-selected")
                 }
                 onClicked: {
                     if (!__savedFilePath) {

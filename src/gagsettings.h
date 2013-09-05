@@ -36,44 +36,64 @@ class QSettings;
 class GagSettings : public QObject
 {
     Q_OBJECT
+    Q_ENUMS(Section)
+    Q_ENUMS(Source)
+    Q_ENUMS(GifDownloadMode)
 
-    Q_PROPERTY(int selectedSection READ selectedSection WRITE setSelectedSection NOTIFY selectedSectionChanged)
     Q_PROPERTY(bool whiteTheme READ isWhiteTheme WRITE setWhiteTheme NOTIFY whiteThemeChanged)
-    Q_PROPERTY(int source READ source WRITE setSource NOTIFY sourceChanged)
-    Q_PROPERTY(int autoDownloadGif READ autoDownloadGif WRITE setAutoDownloadGif NOTIFY autoDownloadGifChanged)
+    Q_PROPERTY(Section section READ section WRITE setSection NOTIFY sectionChanged)
+    Q_PROPERTY(Source source READ source WRITE setSource NOTIFY sourceChanged)
+    Q_PROPERTY(GifDownloadMode gifDownloadMode READ gifDownloadMode WRITE setGifDownloadMode
+               NOTIFY gifDownloadModeChanged)
 public:
-    static GagSettings *instance();
+    enum Section {
+        HotSection,
+        TrendingSection,
+        FreshSection,
+        CuteSection,
+        GeekySection,
+        GIFSection
+    };
 
-    int selectedSection() const;
-    void setSelectedSection(int selectedSection);
+    enum Source {
+        NineGagSource,
+        InfiniGagSource
+    };
+
+    enum GifDownloadMode {
+        GifDownloadOn,
+        GifDownloadOnWiFiOnly,
+        GifDownloadOff
+    };
+
+    explicit GagSettings(QObject *parent = 0);
 
     bool isWhiteTheme() const;
     void setWhiteTheme(bool whiteTheme);
 
-    int source() const;
-    void setSource(int source);
+    Section section() const;
+    void setSection(Section section);
 
-    int autoDownloadGif() const;
-    void setAutoDownloadGif(int autoDownloadGif);
+    Source source() const;
+    void setSource(Source source);
+
+    GifDownloadMode gifDownloadMode() const;
+    void setGifDownloadMode(GifDownloadMode mode);
 
 signals:
-    void selectedSectionChanged();
     void whiteThemeChanged();
+    void sectionChanged();
     void sourceChanged();
-    void autoDownloadGifChanged();
+    void gifDownloadModeChanged();
 
 private:
-    static QScopedPointer<GagSettings> m_instance;
-
-    explicit GagSettings(QObject *parent = 0);
     Q_DISABLE_COPY(GagSettings)
 
     QSettings *m_settings;
-
-    int m_selectedSection;
     bool m_whiteTheme;
-    int m_source;
-    int m_autoDownloadGif;
+    Section m_section;
+    Source m_source;
+    GifDownloadMode m_gifDownloadMode;
 };
 
 #endif // GAGSETTINGS_H
