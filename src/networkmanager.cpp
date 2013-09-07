@@ -32,12 +32,15 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkConfiguration>
 
+#include "gagcookiejar.h"
+
 static const QByteArray USER_AGENT = QByteArray("GagBook/") + APP_VERSION;
 
 NetworkManager::NetworkManager(QObject *parent) :
     QObject(parent), m_networkAccessManager(new QNetworkAccessManager(this)),
     m_downloadCounter(0), m_downloadCounterStr("0.00")
 {
+    m_networkAccessManager->setCookieJar(new GagCookieJar);
     connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), SLOT(increaseDownloadCounter(QNetworkReply*)));
 }
 
