@@ -34,7 +34,7 @@ class NineGagRequest : public GagRequest
 {
     Q_OBJECT
 public:
-    explicit NineGagRequest(GagSettings::Section section, QObject *parent = 0);
+    explicit NineGagRequest(NetworkManager *networkManager, GagSettings::Section section, QObject *parent = 0);
 
 protected:
     QNetworkReply *createRequest(GagSettings::Section section, const QString &lastId);

@@ -32,6 +32,7 @@
 
 #include "gagobject.h"
 
+class NetworkManager;
 class GagSettings;
 class GagRequest;
 class GagImageDownloader;
@@ -45,6 +46,8 @@ class GagManager : public QObject
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
     Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(int downloadingImageIndex READ downloadingImageIndex NOTIFY downloadingImageIndexChanged)
+    Q_PROPERTY(QString downloadCounter READ downloadCounter NOTIFY downloadCounterChanged)
+
     Q_PROPERTY(GagSettings* settings READ settings WRITE setSettings NOTIFY settingsChanged)
     Q_PROPERTY(GagModel* model READ model WRITE setModel NOTIFY modelChanged)
 public:
@@ -62,6 +65,7 @@ public:
     bool isBusy() const;
     qreal progress() const;
     int downloadingImageIndex() const;
+    QString downloadCounter() const;
 
     GagSettings *settings() const;
     void setSettings(GagSettings *settings);
@@ -74,6 +78,7 @@ signals:
     void busyChanged();
     void progressChanged();
     void downloadingImageIndexChanged();
+    void downloadCounterChanged();
     void settingsChanged();
     void modelChanged();
 
@@ -85,6 +90,7 @@ private slots:
     void onManualDownloadFinished(const QList<GagObject> &gagList);
 
 private:
+    NetworkManager *m_networkManager;
     GagRequest *m_request;
     GagImageDownloader *m_imageDownloader;
     GagImageDownloader *m_manualImageDownloader;

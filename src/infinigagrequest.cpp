@@ -34,8 +34,8 @@
 
 // For more information about InfiniGAG API, see <https://github.com/k3min/infinigag>
 
-InfiniGagRequest::InfiniGagRequest(GagSettings::Section section, QObject *parent) :
-    GagRequest(section, parent)
+InfiniGagRequest::InfiniGagRequest(NetworkManager *networkManager, GagSettings::Section section, QObject *parent) :
+    GagRequest(networkManager, section, parent)
 {
 }
 
@@ -44,7 +44,7 @@ QNetworkReply *InfiniGagRequest::createRequest(GagSettings::Section section, con
     QString requestUrl = QString("http://infinigag.eu01.aws.af.cm/%1/%2")
             .arg(getSectionText(section), (lastId.isEmpty() ? "0" : lastId));
 
-    return NetworkManager::createGetRequest(QUrl(requestUrl), NetworkManager::JSON);
+    return networkManager()->createGetRequest(QUrl(requestUrl), NetworkManager::JSON);
 }
 
 QList<GagObject> InfiniGagRequest::parseResponse(const QByteArray &response)

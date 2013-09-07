@@ -31,8 +31,8 @@
 
 #include "networkmanager.h"
 
-GagRequest::GagRequest(GagSettings::Section section, QObject *parent) :
-    QObject(parent), m_section(section), m_reply(0)
+GagRequest::GagRequest(NetworkManager *networkManager, GagSettings::Section section, QObject *parent) :
+    QObject(parent), m_networkManager(networkManager), m_section(section), m_reply(0)
 {
 }
 
@@ -90,4 +90,9 @@ QString GagRequest::getSectionText(GagSettings::Section section)
     case GagSettings::GIFSection:
         return "gif";
     }
+}
+
+NetworkManager *GagRequest::networkManager() const
+{
+    return m_networkManager;
 }

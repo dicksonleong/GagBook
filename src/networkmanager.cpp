@@ -34,18 +34,11 @@
 
 static const QByteArray USER_AGENT = QByteArray("GagBook/") + APP_VERSION;
 
-QScopedPointer<NetworkManager> NetworkManager::m_instance(new NetworkManager);
-
 NetworkManager::NetworkManager(QObject *parent) :
     QObject(parent), m_networkAccessManager(new QNetworkAccessManager(this)),
     m_downloadCounter(0), m_downloadCounterStr("0.00")
 {
     connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), SLOT(increaseDownloadCounter(QNetworkReply*)));
-}
-
-NetworkManager *NetworkManager::instance()
-{
-    return m_instance.data();
 }
 
 QNetworkReply *NetworkManager::createGetRequest(const QUrl &url, AcceptType acceptType)
@@ -62,12 +55,12 @@ QNetworkReply *NetworkManager::createGetRequest(const QUrl &url, AcceptType acce
     default: qWarning("NetworkManager::createGetRequest(): Invalid acceptType"); break;
     }
 
-    return m_instance->m_networkAccessManager->get(request);
+    return m_networkAccessManager->get(request);
 }
 
 bool NetworkManager::isMobileData()
 {
-    const QNetworkConfiguration activeConfiguration = m_instance->m_networkAccessManager->activeConfiguration();
+    const QNetworkConfiguration activeConfiguration = m_networkAccessManager->activeConfiguration();
     switch (activeConfiguration.bearerType()) {
     case QNetworkConfiguration::Bearer2G:
     case QNetworkConfiguration::BearerCDMA2000:
@@ -77,6 +70,11 @@ bool NetworkManager::isMobileData()
     default:
         return false;
     }
+}
+
+QString NetworkManager::downloadCounter() const
+{
+    return m_downloadCounterStr;
 }
 
 void NetworkManager::increaseDownloadCounter(QNetworkReply *reply)

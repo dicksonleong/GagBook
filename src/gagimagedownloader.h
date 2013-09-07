@@ -33,6 +33,7 @@
 
 #include "gagobject.h"
 
+class NetworkManager;
 class QNetworkReply;
 
 class GagImageDownloader : public QObject
@@ -41,9 +42,9 @@ class GagImageDownloader : public QObject
 public:
     static void initializeCache();
 
-    explicit GagImageDownloader(const QList<GagObject> &gagList, bool downloadGIF, QObject *parent = 0);
+    explicit GagImageDownloader(NetworkManager *networkManager, QObject *parent = 0);
 
-    void start();
+    void start(const QList<GagObject> &gagList, bool downloadGIF);
     void stop();
 
 signals:
@@ -54,8 +55,8 @@ private slots:
     void onFinished();
 
 private:
-    const QList<GagObject> m_gagList;
-    const bool m_downloadGIF;
+    NetworkManager *m_networkManager;
+    QList<GagObject> m_gagList;
     QHash<QNetworkReply*, GagObject> m_replyHash;
     int m_imagesTotal;
 };

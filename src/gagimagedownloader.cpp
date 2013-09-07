@@ -45,18 +45,22 @@ void GagImageDownloader::initializeCache()
         imageCacheDir.mkpath(".");
 }
 
-GagImageDownloader::GagImageDownloader(const QList<GagObject> &gagList, bool downloadGIF, QObject *parent) :
-    QObject(parent), m_gagList(gagList), m_downloadGIF(downloadGIF)
+GagImageDownloader::GagImageDownloader(NetworkManager *networkManager, QObject *parent) :
+    QObject(parent), m_networkManager(networkManager)
 {
 }
 
-void GagImageDownloader::start()
+void GagImageDownloader::start(const QList<GagObject> &gagList, bool downloadGIF)
 {
+    // if there is still downloads ongoing when start() is called
+    // there will be big problem since m_gagList will be replaced
+    Q_ASSERT(m_replyHash.isEmpty());
+    m_gagList = gagList;
     foreach (const GagObject &gag, m_gagList) {
-        if (gag.imageUrl().isEmpty() || (!m_downloadGIF && gag.isGIF()))
+        if (gag.imageUrl().isEmpty() || (!downloadGIF && gag.isGIF()))
             continue;
 
-        QNetworkReply *reply = NetworkManager::createGetRequest(gag.imageUrl(), NetworkManager::Image);
+        QNetworkReply *reply = m_networkManager->createGetRequest(gag.imageUrl(), NetworkManager::Image);
         // make sure the QNetworkReply will be destroy when this object is destroyed
         reply->setParent(this);
         m_replyHash.insert(reply, gag);

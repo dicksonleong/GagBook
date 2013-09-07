@@ -35,8 +35,8 @@
 
 #include "networkmanager.h"
 
-NineGagRequest::NineGagRequest(GagSettings::Section section, QObject *parent) :
-    GagRequest(section, parent)
+NineGagRequest::NineGagRequest(NetworkManager *networkManager, GagSettings::Section section, QObject *parent) :
+    GagRequest(networkManager, section, parent)
 {
 }
 
@@ -46,7 +46,7 @@ QNetworkReply *NineGagRequest::createRequest(GagSettings::Section section, const
     if (!lastId.isEmpty())
         requestUrl.addQueryItem("id", lastId);
 
-    return NetworkManager::createGetRequest(requestUrl, NetworkManager::JSON);
+    return networkManager()->createGetRequest(requestUrl, NetworkManager::JSON);
 }
 
 static QWebElementCollection getEntryItemsFromHtml(const QString &html);

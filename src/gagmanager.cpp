@@ -35,10 +35,12 @@
 #include "gagsettings.h"
 
 GagManager::GagManager(QObject *parent) :
-    QObject(parent), m_request(0), m_imageDownloader(0), m_manualImageDownloader(0),
-    m_busy(false), m_progress(0), m_downloadingImageIndex(-1), m_settings(0), m_model(0)
+    QObject(parent), m_networkManager(new NetworkManager(this)), m_request(0), m_imageDownloader(0),
+    m_manualImageDownloader(0), m_busy(false), m_progress(0), m_downloadingImageIndex(-1), m_settings(0),
+    m_model(0)
 {
     GagImageDownloader::initializeCache();
+    connect(m_networkManager, SIGNAL(downloadCounterChanged()), SIGNAL(downloadCounterChanged()));
 }
 
 void GagManager::refresh(RefreshType refreshType)
@@ -61,8 +63,12 @@ void GagManager::refresh(RefreshType refreshType)
     default:
         qWarning("GagManager::refresh(): Invalid source, default source will be used");
         // fallthrough
-    case GagSettings::NineGagSource: m_request = new NineGagRequest(m_settings->section(), this); break;
-    case GagSettings::InfiniGagSource: m_request = new InfiniGagRequest(m_settings->section(), this); break;
+    case GagSettings::NineGagSource:
+        m_request = new NineGagRequest(m_networkManager, m_settings->section(), this);
+        break;
+    case GagSettings::InfiniGagSource:
+        m_request = new InfiniGagRequest(m_networkManager, m_settings->section(), this);
+        break;
     }
 
     if (refreshType == RefreshAll)
@@ -113,10 +119,10 @@ void GagManager::downloadImage(int index)
     m_downloadingImageIndex = index;
     emit downloadingImageIndexChanged();
 
-    m_manualImageDownloader = new GagImageDownloader(gags, true, this);
+    m_manualImageDownloader = new GagImageDownloader(m_networkManager, this);
     connect(m_manualImageDownloader, SIGNAL(finished(QList<GagObject>)),
             SLOT(onManualDownloadFinished(QList<GagObject>)));
-    m_manualImageDownloader->start();
+    m_manualImageDownloader->start(gags, true);
 }
 
 bool GagManager::isBusy() const
@@ -132,6 +138,11 @@ qreal GagManager::progress() const
 int GagManager::downloadingImageIndex() const
 {
     return m_downloadingImageIndex;
+}
+
+QString GagManager::downloadCounter() const
+{
+    return m_networkManager->downloadCounter();
 }
 
 GagSettings *GagManager::settings() const
@@ -168,7 +179,7 @@ void GagManager::onSuccess(const QList<GagObject> &gagList)
         downloadGIF = true;
         break;
     case GagSettings::GifDownloadOnWiFiOnly:
-        if (NetworkManager::isMobileData()) downloadGIF = false;
+        if (m_networkManager->isMobileData()) downloadGIF = false;
         downloadGIF = true;
         break;
     case GagSettings::GifDownloadOff:
@@ -180,10 +191,10 @@ void GagManager::onSuccess(const QList<GagObject> &gagList)
         break;
     }
 
-    m_imageDownloader = new GagImageDownloader(gagList, downloadGIF, this);
+    m_imageDownloader = new GagImageDownloader(m_networkManager, this);
     connect(m_imageDownloader, SIGNAL(finished(QList<GagObject>)), SLOT(onDownloadFinished(QList<GagObject>)));
     connect(m_imageDownloader, SIGNAL(downloadProgress(int,int)), SLOT(onImageDownloadProgress(int,int)));
-    m_imageDownloader->start();
+    m_imageDownloader->start(gagList, downloadGIF);
 
     m_request->deleteLater();
     m_request = 0;

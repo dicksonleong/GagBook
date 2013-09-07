@@ -34,13 +34,14 @@
 #include "gagobject.h"
 #include "gagsettings.h"
 
+class NetworkManager;
 class QNetworkReply;
 
 class GagRequest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GagRequest(GagSettings::Section section, QObject *parent = 0);
+    explicit GagRequest(NetworkManager *networkManager, GagSettings::Section section, QObject *parent = 0);
 
     void setLastId(const QString &lastId);
 
@@ -56,11 +57,13 @@ protected:
     virtual QList<GagObject> parseResponse(const QByteArray &response) = 0;
 
     static QString getSectionText(GagSettings::Section section);
+    NetworkManager *networkManager() const;
 
 private slots:
     void onFinished();
 
 private:
+    NetworkManager *m_networkManager;
     const GagSettings::Section m_section;
     QString m_lastId;
 
