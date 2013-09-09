@@ -41,6 +41,7 @@
 #include "src/qmlutils.h"
 #include "src/networkmanager.h"
 #include "src/gagsettings.h"
+#include "src/websitesettings.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -63,6 +64,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<GagManager>("GagBook", 1, 0, "GagManager");
     qmlRegisterType<GagSettings>("GagBook", 1, 0, "GagSettings");
     qmlRegisterType<GagModel>("GagBook", 1, 0, "GagModel");
+    qmlRegisterType<WebsiteSettings>("GagBook", 1, 0, "WebsiteSettings");
 
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 #if defined(Q_OS_HARMATTAN)

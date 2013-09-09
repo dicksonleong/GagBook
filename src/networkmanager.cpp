@@ -61,6 +61,14 @@ QNetworkReply *NetworkManager::createGetRequest(const QUrl &url, AcceptType acce
     return m_networkAccessManager->get(request);
 }
 
+QNetworkReply *NetworkManager::createPostRequest(const QUrl &url, const QByteArray &data)
+{
+    QNetworkRequest request;
+    request.setUrl(url);
+    request.setRawHeader("User-Agent", USER_AGENT);
+    return m_networkAccessManager->post(request, data);
+}
+
 bool NetworkManager::isMobileData()
 {
     const QNetworkConfiguration activeConfiguration = m_networkAccessManager->activeConfiguration();

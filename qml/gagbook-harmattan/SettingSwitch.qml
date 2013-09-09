@@ -25,46 +25,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef NETWORKMANAGER_H
-#define NETWORKMANAGER_H
+import QtQuick 1.1
+import com.nokia.meego 1.0
 
-#include <QtCore/QObject>
+Item {
+    id: root
 
-class QNetworkAccessManager;
-class QNetworkReply;
-class QUrl;
+    property string text: ""
+    property alias checked: switchItem.checked
 
-class NetworkManager : public QObject
-{
-    Q_OBJECT
-public:
-    explicit NetworkManager(QObject *parent = 0);
+    width: parent.width
+    height: switchItem.height + 2 *  constant.paddingMedium
 
-    enum AcceptType {
-        None,
-        JSON,
-        HTML,
-        Image
-    };
+    Text {
+        anchors {
+            left: parent.left
+            right: switchItem.left
+            rightMargin: constant.paddingMedium
+            verticalCenter: parent.verticalCenter
+        }
+        font.pixelSize: constant.fontSizeLarge
+        maximumLineCount: 2
+        color: constant.colorLight
+        wrapMode: Text.Wrap
+        elide: Text.ElideRight
+        text: root.text
+    }
 
-    QNetworkReply *createGetRequest(const QUrl &url, AcceptType acceptType = None);
-    QNetworkReply *createPostRequest(const QUrl &url, const QByteArray &data);
-    bool isMobileData();
-
-    QString downloadCounter() const;
-
-signals:
-    void downloadCounterChanged();
-
-private slots:
-    void increaseDownloadCounter(QNetworkReply *reply);
-
-private:
-    Q_DISABLE_COPY(NetworkManager)
-
-    QNetworkAccessManager *m_networkAccessManager;
-    qint64 m_downloadCounter; // in bytes
-    QString m_downloadCounterStr; // in MB
-};
-
-#endif // NETWORKMANAGER_H
+    Switch {
+        id: switchItem
+        anchors { right: parent.right; verticalCenter: parent.verticalCenter }
+    }
+}

@@ -68,6 +68,11 @@ Page {
         MenuLayout {
             MenuItem {
                 platformInverted: gagSettings.whiteTheme
+                text: "Website Settings"
+                onClicked: pageStack.push(Qt.resolvedUrl("WebsiteSettingsPage.qml"))
+            }
+            MenuItem {
+                platformInverted: gagSettings.whiteTheme
                 text: "Settings"
                 onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
             }

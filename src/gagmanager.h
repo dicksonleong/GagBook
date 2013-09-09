@@ -90,6 +90,8 @@ private slots:
     void onManualDownloadFinished(const QList<GagObject> &gagList);
 
 private:
+    friend class WebsiteSettings; // for allow access to m_networkManager
+
     NetworkManager *m_networkManager;
     GagRequest *m_request;
     GagImageDownloader *m_imageDownloader;
