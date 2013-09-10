@@ -31,7 +31,7 @@
 
 #include "networkmanager.h"
 
-GagRequest::GagRequest(NetworkManager *networkManager, GagSettings::Section section, QObject *parent) :
+GagRequest::GagRequest(NetworkManager *networkManager, AppSettings::Section section, QObject *parent) :
     QObject(parent), m_networkManager(networkManager), m_section(section), m_reply(0)
 {
 }
@@ -71,23 +71,23 @@ void GagRequest::onFinished()
         emit success(m_gagList);
 }
 
-QString GagRequest::getSectionText(GagSettings::Section section)
+QString GagRequest::getSectionText(AppSettings::Section section)
 {
     switch (section) {
     default:
         qWarning("GagRequest::getSectionText(): Invalid section, default section will be used");
         // fallthrough
-    case GagSettings::HotSection:
+    case AppSettings::HotSection:
         return "hot";
-    case GagSettings::TrendingSection:
+    case AppSettings::TrendingSection:
         return "trending";
-    case GagSettings::FreshSection:
+    case AppSettings::FreshSection:
         return "fresh";
-    case GagSettings::CuteSection:
+    case AppSettings::CuteSection:
         return "cute";
-    case GagSettings::GeekySection:
+    case AppSettings::GeekySection:
         return "geeky";
-    case GagSettings::GIFSection:
+    case AppSettings::GIFSection:
         return "gif";
     }
 }

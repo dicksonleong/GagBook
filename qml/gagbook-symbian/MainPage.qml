@@ -34,17 +34,17 @@ Page {
 
     tools: ToolBarLayout {
         ToolButton {
-            platformInverted: gagSettings.whiteTheme
+            platformInverted: appSettings.whiteTheme
             iconSource: "Images/close_stop" + (platformInverted ? "_inverted.svg" : ".svg")
             onClicked: Qt.quit()
         }
         ToolButton {
-            platformInverted: gagSettings.whiteTheme
+            platformInverted: appSettings.whiteTheme
             iconSource: "toolbar-list"
             onClicked: dialogManager.createSectionDialog()
         }
         ToolButton {
-            platformInverted: gagSettings.whiteTheme
+            platformInverted: appSettings.whiteTheme
             iconSource: gagManager.busy ? ("Images/close_stop" + (platformInverted ? "_inverted.svg" : ".svg"))
                                         : "toolbar-refresh"
             onClicked: {
@@ -55,7 +55,7 @@ Page {
             }
         }
         ToolButton {
-            platformInverted: gagSettings.whiteTheme
+            platformInverted: appSettings.whiteTheme
             iconSource: "toolbar-menu"
             onClicked: mainMenu.open()
         }
@@ -63,21 +63,21 @@ Page {
 
     Menu {
         id: mainMenu
-        platformInverted: gagSettings.whiteTheme
+        platformInverted: appSettings.whiteTheme
 
         MenuLayout {
             MenuItem {
-                platformInverted: gagSettings.whiteTheme
+                platformInverted: appSettings.whiteTheme
                 text: "Website Settings"
                 onClicked: pageStack.push(Qt.resolvedUrl("WebsiteSettingsPage.qml"))
             }
             MenuItem {
-                platformInverted: gagSettings.whiteTheme
-                text: "Settings"
-                onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
+                platformInverted: appSettings.whiteTheme
+                text: "App Settings"
+                onClicked: pageStack.push(Qt.resolvedUrl("AppSettingsPage.qml"))
             }
             MenuItem {
-                platformInverted: gagSettings.whiteTheme
+                platformInverted: appSettings.whiteTheme
                 text: "About GagBook"
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
             }
@@ -113,7 +113,7 @@ Page {
 
                 ProgressBar {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    platformInverted: gagSettings.whiteTheme
+                    platformInverted: appSettings.whiteTheme
                     width: parent.width * 0.75
                     value: gagManager.progress
                     // when indeterminate change from true to false the indeterminate
@@ -129,7 +129,7 @@ Page {
     PageHeader {
         id: pageHeader
         anchors { top: parent.top; left: parent.left; right: parent.right }
-        text: sectionModel.get(gagSettings.section).text
+        text: sectionModel.get(appSettings.section).text
         busy: gagManager.busy
         onClicked: gagListView.positionViewAtBeginning()
     }
@@ -149,7 +149,7 @@ Page {
                 return
             }
             dialog.accepted.connect(function() {
-                gagSettings.section = dialog.selectedIndex;
+                appSettings.section = dialog.selectedIndex;
                 gagManager.refresh(GagManager.RefreshAll)
             })
         }

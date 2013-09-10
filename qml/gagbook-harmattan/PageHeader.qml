@@ -43,7 +43,7 @@ Item {
         id: background
         anchors.fill: parent
         border { top: 15; left: 15; right: 15 }
-        source: "image://theme/meegotouch-view-header-fixed" + (gagSettings.whiteTheme ? "" : "-inverted")
+        source: "image://theme/meegotouch-view-header-fixed" + (appSettings.whiteTheme ? "" : "-inverted")
                 + (mouseArea.pressed ? "-pressed" : "")
     }
 

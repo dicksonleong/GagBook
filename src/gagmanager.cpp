@@ -32,7 +32,7 @@
 #include "infinigagrequest.h"
 #include "gagimagedownloader.h"
 #include "networkmanager.h"
-#include "gagsettings.h"
+#include "appsettings.h"
 
 GagManager::GagManager(QObject *parent) :
     QObject(parent), m_networkManager(new NetworkManager(this)), m_request(0), m_imageDownloader(0),
@@ -63,10 +63,10 @@ void GagManager::refresh(RefreshType refreshType)
     default:
         qWarning("GagManager::refresh(): Invalid source, default source will be used");
         // fallthrough
-    case GagSettings::NineGagSource:
+    case AppSettings::NineGagSource:
         m_request = new NineGagRequest(m_networkManager, m_settings->section(), this);
         break;
-    case GagSettings::InfiniGagSource:
+    case AppSettings::InfiniGagSource:
         m_request = new InfiniGagRequest(m_networkManager, m_settings->section(), this);
         break;
     }
@@ -145,12 +145,12 @@ QString GagManager::downloadCounter() const
     return m_networkManager->downloadCounter();
 }
 
-GagSettings *GagManager::settings() const
+AppSettings *GagManager::settings() const
 {
     return m_settings;
 }
 
-void GagManager::setSettings(GagSettings *settings)
+void GagManager::setSettings(AppSettings *settings)
 {
     if (m_settings != settings) {
         m_settings = settings;
@@ -175,14 +175,14 @@ void GagManager::onSuccess(const QList<GagObject> &gagList)
 {
     bool downloadGIF;
     switch (m_settings->gifDownloadMode()) {
-    case GagSettings::GifDownloadOn:
+    case AppSettings::GifDownloadOn:
         downloadGIF = true;
         break;
-    case GagSettings::GifDownloadOnWiFiOnly:
+    case AppSettings::GifDownloadOnWiFiOnly:
         if (m_networkManager->isMobileData()) downloadGIF = false;
         downloadGIF = true;
         break;
-    case GagSettings::GifDownloadOff:
+    case AppSettings::GifDownloadOff:
         downloadGIF = false;
         break;
     default:

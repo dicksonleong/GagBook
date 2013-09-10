@@ -41,7 +41,7 @@ PageStackWindow {
     Binding {
         target: theme
         property: "inverted"
-        value: !gagSettings.whiteTheme
+        value: !appSettings.whiteTheme
     }
 
     InfoBanner {
@@ -56,7 +56,7 @@ PageStackWindow {
 
     GagManager {
         id: gagManager
-        settings: GagSettings { id: gagSettings }
+        settings: AppSettings { id: appSettings }
         model: GagModel {}
         onRefreshFailure: infoBanner.alert("Error: " + errorMessage)
     }

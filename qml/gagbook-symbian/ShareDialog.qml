@@ -35,7 +35,7 @@ ContextMenu {
 
     property bool __isClosing: false
 
-    platformInverted: gagSettings.whiteTheme
+    platformInverted: appSettings.whiteTheme
 
     MenuLayout {
         MenuItem {

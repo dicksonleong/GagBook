@@ -25,15 +25,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef GAGSETTINGS_H
-#define GAGSETTINGS_H
+#ifndef APPSETTINGS_H
+#define APPSETTINGS_H
 
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
 
 class QSettings;
 
-class GagSettings : public QObject
+class AppSettings : public QObject
 {
     Q_OBJECT
     Q_ENUMS(Section)
@@ -66,7 +66,7 @@ public:
         GifDownloadOff
     };
 
-    explicit GagSettings(QObject *parent = 0);
+    explicit AppSettings(QObject *parent = 0);
 
     bool isWhiteTheme() const;
     void setWhiteTheme(bool whiteTheme);
@@ -87,7 +87,7 @@ signals:
     void gifDownloadModeChanged();
 
 private:
-    Q_DISABLE_COPY(GagSettings)
+    Q_DISABLE_COPY(AppSettings)
 
     QSettings *m_settings;
     bool m_whiteTheme;
@@ -96,4 +96,4 @@ private:
     GifDownloadMode m_gifDownloadMode;
 };
 
-#endif // GAGSETTINGS_H
+#endif // APPSETTINGS_H

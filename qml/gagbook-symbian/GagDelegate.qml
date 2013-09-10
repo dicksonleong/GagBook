@@ -252,23 +252,23 @@ Item {
             exclusive: false
 
             Button {
-                platformInverted: gagSettings.whiteTheme
+                platformInverted: appSettings.whiteTheme
                 iconSource: "Images/instant_messenger_chat" + (platformInverted ? "_inverted.svg" : ".svg")
                 onClicked: pageStack.push(Qt.resolvedUrl("CommentsPage.qml"), { gagURL: model.url })
             }
             Button {
-                platformInverted: gagSettings.whiteTheme
+                platformInverted: appSettings.whiteTheme
                 iconSource: "Images/internet" + (platformInverted ? "_inverted.svg" : ".svg")
                 onClicked: dialogManager.createOpenLinkDialog(model.url)
             }
             Button {
-                platformInverted: gagSettings.whiteTheme
+                platformInverted: appSettings.whiteTheme
                 iconSource: "image://theme/toolbar-share" + (platformInverted ? "_inverse" : "")
                 onClicked: dialogManager.createShareDialog(model.url)
             }
             Button {
                 property string __savedFilePath: ""
-                platformInverted: gagSettings.whiteTheme
+                platformInverted: appSettings.whiteTheme
                 iconSource: {
                     if (!__savedFilePath)
                         return "Images/download" + (platformInverted ? "_inverted.svg" : ".svg");

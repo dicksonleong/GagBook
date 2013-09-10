@@ -65,8 +65,8 @@ Page {
                 onClicked: pageStack.push(Qt.resolvedUrl("WebsiteSettingsPage.qml"))
             }
             MenuItem {
-                text: "Settings"
-                onClicked: pageStack.push(Qt.resolvedUrl("SettingsPage.qml"))
+                text: "App Settings"
+                onClicked: pageStack.push(Qt.resolvedUrl("AppSettingsPage.qml"))
             }
             MenuItem {
                 text: "About GagBook"
@@ -117,7 +117,7 @@ Page {
     PageHeader {
         id: pageHeader
         anchors { top: parent.top; left: parent.left; right: parent.right }
-        text: sectionModel.get(gagSettings.section).text
+        text: sectionModel.get(appSettings.section).text
         busy: gagManager.busy
         onClicked: gagListView.positionViewAtBeginning()
     }
@@ -136,7 +136,7 @@ Page {
                 return
             }
             dialog.accepted.connect(function() {
-                gagSettings.section = dialog.selectedIndex;
+                appSettings.section = dialog.selectedIndex;
                 gagManager.refresh(GagManager.RefreshAll);
             })
         }

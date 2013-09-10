@@ -35,12 +35,12 @@ Page {
 
     tools: ToolBarLayout {
         ToolButton {
-            platformInverted: gagSettings.whiteTheme
+            platformInverted: appSettings.whiteTheme
             iconSource: "toolbar-back"
             onClicked: pageStack.pop()
         }
         ToolButton {
-            platformInverted: gagSettings.whiteTheme
+            platformInverted: appSettings.whiteTheme
             iconSource: "Images/undo" + (platformInverted ? "_inverted.svg" : ".svg")
             opacity: enabled ? 1 : 0.25
             enabled: gagImage.scale != pinchArea.minScale
@@ -178,21 +178,21 @@ Page {
 
             BusyIndicator {
                 id: busyIndicator
-                platformInverted: !gagSettings.whiteTheme
+                platformInverted: !appSettings.whiteTheme
                 running: true
                 width: platformStyle.graphicSizeLarge; height: width
             }
         }
 
-        Component { id: failedLoading; Label { text: "Error loading image"; platformInverted: gagSettings.whiteTheme } }
+        Component { id: failedLoading; Label { text: "Error loading image"; platformInverted: appSettings.whiteTheme } }
     }
 
-    ScrollDecorator { id: scrollBar; flickableItem: flickable; platformInverted: gagSettings.whiteTheme }
+    ScrollDecorator { id: scrollBar; flickableItem: flickable; platformInverted: appSettings.whiteTheme }
 
     Slider {
         id: zoomSlider
         anchors { verticalCenter: parent.verticalCenter; right: parent.right; rightMargin: constant.paddingMedium }
-        platformInverted: gagSettings.whiteTheme
+        platformInverted: appSettings.whiteTheme
         enabled: gagImage.status == Image.Ready
         height: parent.height * 0.6
         opacity: pressed ? 1 : 0.6

@@ -25,11 +25,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "gagsettings.h"
+#include "appsettings.h"
 
 #include <QtCore/QSettings>
 
-GagSettings::GagSettings(QObject *parent) :
+AppSettings::AppSettings(QObject *parent) :
     QObject(parent), m_settings(new QSettings(this))
 {
     m_whiteTheme = m_settings->value("whiteTheme", false).toBool();
@@ -38,12 +38,12 @@ GagSettings::GagSettings(QObject *parent) :
     m_gifDownloadMode = static_cast<GifDownloadMode>(m_settings->value("gifDownloadMode", 0).toInt());
 }
 
-bool GagSettings::isWhiteTheme() const
+bool AppSettings::isWhiteTheme() const
 {
     return m_whiteTheme;
 }
 
-void GagSettings::setWhiteTheme(bool whiteTheme)
+void AppSettings::setWhiteTheme(bool whiteTheme)
 {
     if (m_whiteTheme != whiteTheme) {
         m_whiteTheme = whiteTheme;
@@ -52,12 +52,12 @@ void GagSettings::setWhiteTheme(bool whiteTheme)
     }
 }
 
-GagSettings::Section GagSettings::section() const
+AppSettings::Section AppSettings::section() const
 {
     return m_section;
 }
 
-void GagSettings::setSection(Section section)
+void AppSettings::setSection(Section section)
 {
     if (m_section != section) {
         m_section = section;
@@ -66,12 +66,12 @@ void GagSettings::setSection(Section section)
     }
 }
 
-GagSettings::Source GagSettings::source() const
+AppSettings::Source AppSettings::source() const
 {
     return m_source;
 }
 
-void GagSettings::setSource(Source source)
+void AppSettings::setSource(Source source)
 {
     if (m_source != source) {
         m_source = source;
@@ -80,12 +80,12 @@ void GagSettings::setSource(Source source)
     }
 }
 
-GagSettings::GifDownloadMode GagSettings::gifDownloadMode() const
+AppSettings::GifDownloadMode AppSettings::gifDownloadMode() const
 {
     return m_gifDownloadMode;
 }
 
-void GagSettings::setGifDownloadMode(GifDownloadMode mode)
+void AppSettings::setGifDownloadMode(GifDownloadMode mode)
 {
     if (m_gifDownloadMode != mode) {
         m_gifDownloadMode = mode;

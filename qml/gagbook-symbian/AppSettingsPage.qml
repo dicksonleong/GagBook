@@ -26,15 +26,16 @@
  */
 
 import QtQuick 1.1
-import com.nokia.meego 1.0
+import com.nokia.symbian 1.1
 import GagBook 1.0
 
 Page {
     id: settingsPage
 
     tools: ToolBarLayout {
-        ToolIcon {
-            platformIconId: "toolbar-back"
+        ToolButton {
+            platformInverted: appSettings.whiteTheme
+            iconSource: "toolbar-back"
             onClicked: pageStack.pop()
         }
     }
@@ -56,24 +57,24 @@ Page {
 
             SettingButtonRow {
                 text: "Theme"
-                checkedButtonIndex: gagSettings.whiteTheme ? 1 : 0
+                checkedButtonIndex: appSettings.whiteTheme ? 1 : 0
                 buttonsText: ["Dark", "White"]
-                onButtonClicked: gagSettings.whiteTheme = index === 1
+                onButtonClicked: appSettings.whiteTheme = index === 1
             }
 
             SettingButtonRow {
                 text: "Source"
-                buttonsText: ["9GAG", "InfiniGAG"]
                 checkedButtonIndex: {
-                    switch (gagSettings.source) {
-                    case GagSettings.NineGagSource: return 0;
-                    case GagSettings.InfiniGagSource: return 1;
+                    switch (appSettings.source) {
+                    case AppSettings.NineGagSource: return 0;
+                    case AppSettings.InfiniGagSource: return 1;
                     }
                 }
+                buttonsText: ["9GAG", "InfiniGAG"]
                 onButtonClicked: {
                     switch (index) {
-                    case 0: gagSettings.source = GagSettings.NineGagSource; break;
-                    case 1: gagSettings.source = GagSettings.InfiniGagSource; break;
+                    case 0: appSettings.source = AppSettings.NineGagSource; break;
+                    case 1: appSettings.source = AppSettings.InfiniGagSource; break;
                     }
                 }
             }
@@ -82,29 +83,29 @@ Page {
                 text: "Download GIFs automatically"
                 buttonsText: ["On", "Wi-Fi only", "Off"]
                 checkedButtonIndex: {
-                    switch (gagSettings.gifDownloadMode) {
-                    case GagSettings.GifDownloadOn: return 0;
-                    case GagSettings.GifDownloadOnWiFiOnly: return 1;
-                    case GagSettings.GifDownloadOff: return 2;
+                    switch (appSettings.gifDownloadMode) {
+                    case AppSettings.GifDownloadOn: return 0;
+                    case AppSettings.GifDownloadOnWiFiOnly: return 1;
+                    case AppSettings.GifDownloadOff: return 2;
                     }
                 }
                 onButtonClicked: {
                     switch (index) {
-                    case 0: gagSettings.gifDownloadMode = GagSettings.GifDownloadOn; break;
-                    case 1: gagSettings.gifDownloadMode = GagSettings.GifDownloadOnWiFiOnly; break;
-                    case 2: gagSettings.gifDownloadMode = GagSettings.GifDownloadOff; break;
+                    case 0: appSettings.gifDownloadMode = AppSettings.GifDownloadOn; break;
+                    case 1: appSettings.gifDownloadMode = AppSettings.GifDownloadOnWiFiOnly; break;
+                    case 2: appSettings.gifDownloadMode = AppSettings.GifDownloadOff; break;
                     }
                 }
             }
         }
     }
 
-    ScrollDecorator { flickableItem: settingsFlickable }
+    ScrollDecorator { platformInverted: appSettings.whiteTheme; flickableItem: settingsFlickable }
 
     PageHeader {
         id: pageHeader
         anchors { top: parent.top; left: parent.left; right: parent.right }
-        text: "Settings"
+        text: "App Settings"
         enabled: false
     }
 }

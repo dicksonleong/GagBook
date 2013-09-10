@@ -33,7 +33,7 @@
 #include "gagobject.h"
 
 class NetworkManager;
-class GagSettings;
+class AppSettings;
 class GagRequest;
 class GagImageDownloader;
 class GagModel;
@@ -48,7 +48,7 @@ class GagManager : public QObject
     Q_PROPERTY(int downloadingImageIndex READ downloadingImageIndex NOTIFY downloadingImageIndexChanged)
     Q_PROPERTY(QString downloadCounter READ downloadCounter NOTIFY downloadCounterChanged)
 
-    Q_PROPERTY(GagSettings* settings READ settings WRITE setSettings NOTIFY settingsChanged)
+    Q_PROPERTY(AppSettings* settings READ settings WRITE setSettings NOTIFY settingsChanged)
     Q_PROPERTY(GagModel* model READ model WRITE setModel NOTIFY modelChanged)
 public:
     explicit GagManager(QObject *parent = 0);
@@ -67,8 +67,8 @@ public:
     int downloadingImageIndex() const;
     QString downloadCounter() const;
 
-    GagSettings *settings() const;
-    void setSettings(GagSettings *settings);
+    AppSettings *settings() const;
+    void setSettings(AppSettings *settings);
 
     GagModel *model() const;
     void setModel(GagModel *model);
@@ -100,7 +100,7 @@ private:
     bool m_busy;
     qreal m_progress;
     int m_downloadingImageIndex;
-    GagSettings *m_settings;
+    AppSettings *m_settings;
     GagModel *m_model;
 };
 

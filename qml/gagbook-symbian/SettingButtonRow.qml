@@ -63,7 +63,7 @@ Item {
 
         Button {
             id: thisButton
-            platformInverted: gagSettings.whiteTheme
+            platformInverted: appSettings.whiteTheme
             onClicked: {
                 for (var i=0; i<parent.children.length; ++i) {
                     if (parent.children[i] == thisButton) {

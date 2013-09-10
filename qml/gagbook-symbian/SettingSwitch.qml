@@ -55,6 +55,6 @@ Item {
     Switch {
         id: switchItem
         anchors { right: parent.right; verticalCenter: parent.verticalCenter }
-        platformInverted: gagSettings.whiteTheme
+        platformInverted: appSettings.whiteTheme
     }
 }

@@ -12,7 +12,7 @@ SOURCES += qt-json/json.cpp
 
 HEADERS += \
     src/qmlutils.h \
-    src/gagsettings.h \
+    src/appsettings.h \
     src/gagmanager.h \
     src/gagmodel.h \
     src/gagobject.h \
@@ -26,7 +26,7 @@ HEADERS += \
 
 SOURCES += main.cpp \
     src/qmlutils.cpp \
-    src/gagsettings.cpp \
+    src/appsettings.cpp \
     src/gagmanager.cpp \
     src/gagmodel.cpp \
     src/gagobject.cpp \

@@ -34,7 +34,7 @@ Page {
 
     tools: ToolBarLayout {
         ToolButton {
-            platformInverted: gagSettings.whiteTheme
+            platformInverted: appSettings.whiteTheme
             iconSource: "toolbar-back"
             onClicked: pageStack.pop()
         }
@@ -87,7 +87,7 @@ Page {
 
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
-                platformInverted: gagSettings.whiteTheme
+                platformInverted: appSettings.whiteTheme
                 width: parent.width * 0.75
                 enabled: !pageHeader.busy
                 text: "Save"
@@ -103,7 +103,7 @@ Page {
 
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
-                platformInverted: gagSettings.whiteTheme
+                platformInverted: appSettings.whiteTheme
                 width: parent.width * 0.75
                 enabled: !pageHeader.busy
                 text: "Reset"
@@ -119,7 +119,7 @@ Page {
         }
     }
 
-    ScrollDecorator { flickableItem: flickable; platformInverted: gagSettings.whiteTheme }
+    ScrollDecorator { flickableItem: flickable; platformInverted: appSettings.whiteTheme }
 
     PageHeader {
         id: pageHeader

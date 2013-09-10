@@ -40,7 +40,7 @@
 #include "src/gagmodel.h"
 #include "src/qmlutils.h"
 #include "src/networkmanager.h"
-#include "src/gagsettings.h"
+#include "src/appsettings.h"
 #include "src/websitesettings.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
@@ -62,7 +62,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     viewer.rootContext()->setContextProperty("QMLUtils", QMLUtils::instance());
 
     qmlRegisterType<GagManager>("GagBook", 1, 0, "GagManager");
-    qmlRegisterType<GagSettings>("GagBook", 1, 0, "GagSettings");
+    qmlRegisterType<AppSettings>("GagBook", 1, 0, "AppSettings");
     qmlRegisterType<GagModel>("GagBook", 1, 0, "GagModel");
     qmlRegisterType<WebsiteSettings>("GagBook", 1, 0, "WebsiteSettings");
 
