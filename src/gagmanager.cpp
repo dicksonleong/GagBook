@@ -125,6 +125,11 @@ void GagManager::downloadImage(int index)
     m_manualImageDownloader->start(gags, true);
 }
 
+void GagManager::clearCookies()
+{
+    m_networkManager->clearCookies();
+}
+
 bool GagManager::isBusy() const
 {
     return m_busy;

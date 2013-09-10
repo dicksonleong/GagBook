@@ -36,6 +36,8 @@ class GagCookieJar : public QNetworkCookieJar
 public:
     explicit GagCookieJar(QObject *parent = 0);
     ~GagCookieJar();
+
+    void clear();
 };
 
 #endif // GAGCOOKIEJAR_H

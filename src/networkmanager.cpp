@@ -69,7 +69,7 @@ QNetworkReply *NetworkManager::createPostRequest(const QUrl &url, const QByteArr
     return m_networkAccessManager->post(request, data);
 }
 
-bool NetworkManager::isMobileData()
+bool NetworkManager::isMobileData() const
 {
     const QNetworkConfiguration activeConfiguration = m_networkAccessManager->activeConfiguration();
     switch (activeConfiguration.bearerType()) {
@@ -81,6 +81,13 @@ bool NetworkManager::isMobileData()
     default:
         return false;
     }
+}
+
+void NetworkManager::clearCookies()
+{
+    GagCookieJar *cookieJar = qobject_cast<GagCookieJar *>(m_networkAccessManager->cookieJar());
+    Q_ASSERT(cookieJar != 0);
+    cookieJar->clear();
 }
 
 QString NetworkManager::downloadCounter() const

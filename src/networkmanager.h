@@ -49,7 +49,10 @@ public:
 
     QNetworkReply *createGetRequest(const QUrl &url, AcceptType acceptType = None);
     QNetworkReply *createPostRequest(const QUrl &url, const QByteArray &data);
-    bool isMobileData();
+
+    bool isMobileData() const;
+
+    void clearCookies();
 
     QString downloadCounter() const;
 

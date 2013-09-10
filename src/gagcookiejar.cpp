@@ -55,3 +55,10 @@ GagCookieJar::~GagCookieJar()
     QSettings settings;
     settings.setValue("cookies", rawCookies);
 }
+
+void GagCookieJar::clear()
+{
+    setAllCookies(QList<QNetworkCookie>());
+    QSettings settings;
+    settings.remove("cookies");
+}
