@@ -1,3 +1,11 @@
+gagbook (0.8.2) unstable; urgency=medium
+  * Add website settings
+  * Fix Fresh section not working
+  * Add GIF section
+  * Add a stop button when downloading images
+
+ -- Dickson <dicksonleong8@gmail.com>  Wed, 11 Sep 2013 20:20:48 +0800
+
 gagbook (0.8.1) unstable; urgency=medium
   * Show a progress bar when downloading images
   * Fix GIFs will still downloaded when using mobile data even when Wi-Fi only is selected
