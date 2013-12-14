@@ -48,16 +48,30 @@ Item {
             text: model.title
         }
 
-        Text {
-            anchors { left: parent.left; right: parent.right; margins: constant.paddingMedium }
-            font.pixelSize: constant.fontSizeSmall
-            color: constant.colorMid
-            elide: Text.ElideRight
-            text: {
-                var t = (model.votesCount == 1 ? "1 point" : model.votesCount + " points");
-                if (model.commentsCount > 0)
-                    t += " · " + (model.commentsCount == 1 ? "1 comment" : model.commentsCount + " comments");
-                return t;
+        Row {
+            anchors { left: parent.left; right: parent.right; margins: constant.paddingMedium  }
+            spacing: constant.paddingMedium
+
+            CustomCountBubble {
+                value: model.votesCount
+            }
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                font.pixelSize: constant.fontSizeMedium
+                color: constant.colorLight
+                text: "points"
+            }
+
+            CustomCountBubble {
+                value: model.commentsCount
+            }
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                font.pixelSize: constant.fontSizeMedium
+                color: constant.colorLight
+                text: "comments"
             }
         }
 
