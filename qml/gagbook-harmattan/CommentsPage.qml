@@ -44,28 +44,16 @@ Page {
     Flickable {
         id: webViewFlickable
         anchors { top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
-        contentHeight: commentsWebView.height * commentsWebView.scale
+        contentHeight: commentsWebView.height
 
         WebView {
             id: commentsWebView
-            width: commentsBox.width + 20
-            scale: webViewFlickable.width / width
-            transformOrigin: Item.TopLeft
-
-            javaScriptWindowObjects: QtObject {
-                id: commentsBox
-                WebView.windowObjectName: "qml"
-
-                property string gagURL: commentsPage.gagURL
-                property int width: webViewFlickable.width * 0.75
-                property bool whiteTheme: appSettings.whiteTheme
-            }
+            preferredHeight: webViewFlickable.height
+            preferredWidth: webViewFlickable.width
 
             onLoadStarted: pageHeader.busy = true
             onLoadFailed: pageHeader.busy = false
             onLoadFinished: pageHeader.busy = false
-
-            Connections { target: appWindow; onInPortraitChanged: commentsWebView.reload.trigger() }
         }
     }
 
@@ -78,5 +66,9 @@ Page {
         onClicked: webViewFlickable.contentY = 0;
     }
 
-    Component.onCompleted: commentsWebView.url = "comments.html"
+    Component.onCompleted: {
+        var url = "http://comment.9gag.com/comment/list?url=%1" +
+                "&appId=a_dd8f2b7d304a10edaf6f29517ea0ca4100a43d1b&readOnly=1"
+        commentsWebView.url = url.arg(gagURL);
+    }
 }
