@@ -49,7 +49,8 @@ public:
         CommentsCountRole,
         IsVideoRole,
         IsNSFWRole,
-        IsGIFRole
+        IsGIFRole,
+        IsDownloadingRole
     };
 
     int rowCount(const QModelIndex &parent) const;
@@ -60,13 +61,15 @@ public:
     void append(const QList<GagObject> &gagList);
     void clear();
 
-    void emitDataChanged(int i);
+    void showDownload(int i);
+    void hideDownload();
 
     // For QML
     Q_INVOKABLE QVariantMap get(int rowIndex) const;
 
 private:
     QList<GagObject> m_gagList;
+    int m_downloadingIndex;
 };
 
 #endif // GAGMODEL_H

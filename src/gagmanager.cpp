@@ -36,7 +36,7 @@
 
 GagManager::GagManager(QObject *parent) :
     QObject(parent), m_networkManager(new NetworkManager(this)), m_request(0), m_imageDownloader(0),
-    m_manualImageDownloader(0), m_busy(false), m_progress(0), m_downloadingImageIndex(-1), m_settings(0),
+    m_manualImageDownloader(0), m_busy(false), m_progress(0), m_settings(0),
     m_model(0)
 {
     GagImageDownloader::initializeCache();
@@ -112,17 +112,18 @@ void GagManager::downloadImage(int index)
         m_manualImageDownloader->disconnect();
         m_manualImageDownloader->deleteLater();
         m_manualImageDownloader = 0;
+        m_model->hideDownload();
     }
 
     QList<GagObject> gags;
     gags.append(m_model->gagList().at(index));
-    m_downloadingImageIndex = index;
-    emit downloadingImageIndexChanged();
 
     m_manualImageDownloader = new GagImageDownloader(m_networkManager, this);
     connect(m_manualImageDownloader, SIGNAL(finished(QList<GagObject>)),
             SLOT(onManualDownloadFinished(QList<GagObject>)));
     m_manualImageDownloader->start(gags, true);
+
+    m_model->showDownload(index);
 }
 
 void GagManager::clearCookies()
@@ -138,11 +139,6 @@ bool GagManager::isBusy() const
 qreal GagManager::progress() const
 {
     return m_progress;
-}
-
-int GagManager::downloadingImageIndex() const
-{
-    return m_downloadingImageIndex;
 }
 
 QString GagManager::downloadCounter() const
@@ -241,10 +237,7 @@ void GagManager::onManualDownloadFinished(const QList<GagObject> &gagList)
 {
     Q_UNUSED(gagList);
 
-    m_model->emitDataChanged(m_downloadingImageIndex);
-    m_downloadingImageIndex = -1;
-    emit downloadingImageIndexChanged();
-
     m_manualImageDownloader->deleteLater();
     m_manualImageDownloader = 0;
+    m_model->hideDownload();
 }

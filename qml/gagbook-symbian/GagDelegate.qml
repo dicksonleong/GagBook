@@ -90,7 +90,7 @@ Item {
                 sourceComponent: {
                     if (model.isNSFW) return nsfwText;
                     if (!gagImage.source.toString()) {
-                        if (gagManager.downloadingImageIndex == index)
+                        if (model.isDownloading)
                             return downloadingIndicator;
                         return notDownloadedText;
                     }

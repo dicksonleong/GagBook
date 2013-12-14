@@ -30,7 +30,7 @@
 #include <QtCore/QUrl>
 
 GagModel::GagModel(QObject *parent) :
-    QAbstractListModel(parent)
+    QAbstractListModel(parent), m_downloadingIndex(-1)
 {
     QHash<int, QByteArray> roles;
     roles[TitleRole] = "title";
@@ -42,6 +42,7 @@ GagModel::GagModel(QObject *parent) :
     roles[IsVideoRole] = "isVideo";
     roles[IsNSFWRole] = "isNSFW";
     roles[IsGIFRole] = "isGIF";
+    roles[IsDownloadingRole] = "isDownloading";
     setRoleNames(roles);
 }
 
@@ -78,6 +79,8 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
         return gag.isNSFW();
     case IsGIFRole:
         return gag.isGIF();
+    case IsDownloadingRole:
+        return index.row() == m_downloadingIndex;
     default:
         qWarning("GagModel::data(): Invalid role");
         return QVariant();
@@ -107,9 +110,19 @@ void GagModel::clear()
     endRemoveRows();
 }
 
-void GagModel::emitDataChanged(int i)
+void GagModel::showDownload(int i)
 {
-    const QModelIndex modelIndex = index(i);
+    m_downloadingIndex = i;
+    emit dataChanged(index(i), index(i));
+}
+
+void GagModel::hideDownload()
+{
+    if (m_downloadingIndex == -1)
+        return;
+
+    QModelIndex modelIndex = index(m_downloadingIndex);
+    m_downloadingIndex = -1;
     emit dataChanged(modelIndex, modelIndex);
 }
 

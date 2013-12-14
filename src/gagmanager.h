@@ -45,7 +45,6 @@ class GagManager : public QObject
 
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
     Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
-    Q_PROPERTY(int downloadingImageIndex READ downloadingImageIndex NOTIFY downloadingImageIndexChanged)
     Q_PROPERTY(QString downloadCounter READ downloadCounter NOTIFY downloadCounterChanged)
 
     Q_PROPERTY(AppSettings* settings READ settings WRITE setSettings NOTIFY settingsChanged)
@@ -65,7 +64,6 @@ public:
 
     bool isBusy() const;
     qreal progress() const;
-    int downloadingImageIndex() const;
     QString downloadCounter() const;
 
     AppSettings *settings() const;
@@ -78,7 +76,6 @@ signals:
     void refreshFailure(const QString &errorMessage);
     void busyChanged();
     void progressChanged();
-    void downloadingImageIndexChanged();
     void downloadCounterChanged();
     void settingsChanged();
     void modelChanged();
@@ -100,7 +97,6 @@ private:
 
     bool m_busy;
     qreal m_progress;
-    int m_downloadingImageIndex;
     AppSettings *m_settings;
     GagModel *m_model;
 };
