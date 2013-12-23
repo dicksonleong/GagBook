@@ -31,7 +31,7 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 
-#include "gagmanager.h"
+#include "gagbookmanager.h"
 #include "networkmanager.h"
 
 WebsiteSettings::WebsiteSettings(QObject *parent) :
@@ -82,7 +82,7 @@ void WebsiteSettings::save()
     QUrl dummyUrl("http://dummy.com");
     dummyUrl.setQueryItems(dataList);
 
-    m_reply = m_manager->m_networkManager->createPostRequest(requestUrl, dummyUrl.encodedQuery());
+    m_reply = m_manager->networkManager()->createPostRequest(requestUrl, dummyUrl.encodedQuery());
     connect(m_reply, SIGNAL(finished()), SLOT(onFinished()));
 
     m_busy = true;
@@ -112,7 +112,7 @@ void WebsiteSettings::reset()
     emit settingsChanged();
 
     QUrl requestUrl("http://9gag.com/profile/setcustomize");
-    m_reply = m_manager->m_networkManager->createPostRequest(requestUrl, "customize_reset=1");
+    m_reply = m_manager->networkManager()->createPostRequest(requestUrl, "customize_reset=1");
     connect(m_reply, SIGNAL(finished()), SLOT(onFinished()));
 
     m_busy = true;
@@ -174,12 +174,12 @@ void WebsiteSettings::setShowNsfw(bool showNsfw)
     m_showNsfw = showNsfw;
 }
 
-GagManager *WebsiteSettings::manager() const
+GagBookManager *WebsiteSettings::manager() const
 {
     return m_manager;
 }
 
-void WebsiteSettings::setManager(GagManager *manager)
+void WebsiteSettings::setManager(GagBookManager *manager)
 {
     m_manager = manager;
 }

@@ -42,12 +42,12 @@ Page {
             onClicked: dialogManager.createSectionDialog()
         }
         ToolIcon {
-            platformIconId: gagManager.busy ? "toolbar-stop" : "toolbar-refresh"
+            platformIconId: gagModel.busy ? "toolbar-stop" : "toolbar-refresh"
             onClicked: {
-                if (gagManager.busy)
-                    gagManager.stopRefresh();
+                if (gagModel.busy)
+                    gagModel.stopRefresh();
                 else
-                    gagManager.refresh(GagManager.RefreshAll)
+                    gagModel.refresh(GagModel.RefreshAll)
             }
         }
         ToolIcon {
@@ -78,14 +78,14 @@ Page {
     ListView {
         id: gagListView
         anchors { top: pageHeader.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
-        model: gagManager.model
+        model: gagModel
         orientation: ListView.Vertical
         delegate: GagDelegate {}
         footer: Item {
             width: ListView.view.width
             height: ListView.view.count > 0 ? footerColumn.height + 2 * constant.paddingLarge
                                             : ListView.view.height
-            visible: gagManager.busy
+            visible: gagModel.busy
 
             Column {
                 id: footerColumn
@@ -105,21 +105,27 @@ Page {
                 ProgressBar {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: parent.width * 0.75
-                    value: gagManager.progress
-                    indeterminate: gagManager.progress == 0
+                    value: gagModel.progress
+                    indeterminate: gagModel.progress == 0
                 }
             }
         }
 
-        onAtYEndChanged: if (atYEnd && !gagManager.busy && count > 0) gagManager.refresh(GagManager.RefreshOlder)
+        onAtYEndChanged: if (atYEnd && !gagModel.busy && count > 0) gagModel.refresh(GagModel.RefreshOlder)
     }
 
     PageHeader {
         id: pageHeader
         anchors { top: parent.top; left: parent.left; right: parent.right }
-        text: sectionModel.get(appSettings.section).text
-        busy: gagManager.busy
+        text: sectionModel.get(gagModel.section).text
+        busy: gagModel.busy
         onClicked: gagListView.positionViewAtBeginning()
+    }
+
+    GagModel {
+        id: gagModel
+        manager: gagbookManager
+        onRefreshFailure: infoBanner.alert(errorMessage);
     }
 
     QtObject {
@@ -136,8 +142,8 @@ Page {
                 return
             }
             dialog.accepted.connect(function() {
-                appSettings.section = dialog.selectedIndex;
-                gagManager.refresh(GagManager.RefreshAll);
+                gagModel.section = dialog.selectedIndex;
+                gagModel.refresh(GagModel.RefreshAll);
             })
         }
 

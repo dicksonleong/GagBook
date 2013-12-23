@@ -32,7 +32,7 @@
 #include <QtCore/QList>
 
 #include "gagobject.h"
-#include "appsettings.h"
+#include "gagmodel.h"
 
 class NetworkManager;
 class QNetworkReply;
@@ -41,7 +41,7 @@ class GagRequest : public QObject
 {
     Q_OBJECT
 public:
-    explicit GagRequest(NetworkManager *networkManager, AppSettings::Section section, QObject *parent = 0);
+    explicit GagRequest(NetworkManager *networkManager, GagModel::Section section, QObject *parent = 0);
 
     void setLastId(const QString &lastId);
 
@@ -53,10 +53,10 @@ signals:
 
 protected:
     // must be override
-    virtual QNetworkReply *createRequest(AppSettings::Section section, const QString &lastId) = 0;
+    virtual QNetworkReply *createRequest(GagModel::Section section, const QString &lastId) = 0;
     virtual QList<GagObject> parseResponse(const QByteArray &response) = 0;
 
-    static QString getSectionText(AppSettings::Section section);
+    static QString getSectionText(GagModel::Section section);
     NetworkManager *networkManager() const;
 
 private slots:
@@ -64,7 +64,7 @@ private slots:
 
 private:
     NetworkManager *m_networkManager;
-    const AppSettings::Section m_section;
+    const GagModel::Section m_section;
     QString m_lastId;
 
     QNetworkReply *m_reply;

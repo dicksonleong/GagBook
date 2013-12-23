@@ -33,7 +33,6 @@ AppSettings::AppSettings(QObject *parent) :
     QObject(parent), m_settings(new QSettings(this))
 {
     m_whiteTheme = m_settings->value("whiteTheme", false).toBool();
-    m_section = static_cast<Section>(m_settings->value("section", 0).toInt());
     m_source = static_cast<Source>(m_settings->value("source", 0).toInt());
     m_gifDownloadMode = static_cast<GifDownloadMode>(m_settings->value("gifDownloadMode", 0).toInt());
 }
@@ -49,20 +48,6 @@ void AppSettings::setWhiteTheme(bool whiteTheme)
         m_whiteTheme = whiteTheme;
         m_settings->setValue("whiteTheme", m_whiteTheme);
         emit whiteThemeChanged();
-    }
-}
-
-AppSettings::Section AppSettings::section() const
-{
-    return m_section;
-}
-
-void AppSettings::setSection(Section section)
-{
-    if (m_section != section) {
-        m_section = section;
-        m_settings->setValue("section", static_cast<int>(m_section));
-        emit sectionChanged();
     }
 }
 

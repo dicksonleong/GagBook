@@ -35,12 +35,12 @@
 
 #include "networkmanager.h"
 
-NineGagRequest::NineGagRequest(NetworkManager *networkManager, AppSettings::Section section, QObject *parent) :
+NineGagRequest::NineGagRequest(NetworkManager *networkManager, GagModel::Section section, QObject *parent) :
     GagRequest(networkManager, section, parent)
 {
 }
 
-QNetworkReply *NineGagRequest::createRequest(AppSettings::Section section, const QString &lastId)
+QNetworkReply *NineGagRequest::createRequest(GagModel::Section section, const QString &lastId)
 {
     QUrl requestUrl("http://9gag.com/" + getSectionText(section));
     if (!lastId.isEmpty())

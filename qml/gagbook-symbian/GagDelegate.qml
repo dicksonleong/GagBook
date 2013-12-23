@@ -252,7 +252,7 @@ Item {
                         return;
                     }
                     if (!gagImage.source.toString()) {
-                        gagManager.downloadImage(index);
+                        gagModel.downloadImage(index);
                         return;
                     }
                     pageStack.push(Qt.resolvedUrl("ImagePage.qml"), { imageUrl: model.imageUrl })

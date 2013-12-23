@@ -82,7 +82,7 @@ and <a href=\"http://9gag.com/privacy\">Privacy Policy</a>.<br>"
                 color: constant.colorLight
                 wrapMode: Text.Wrap
                 textFormat: Text.PlainText
-                text: "~ " + gagManager.downloadCounter + " MB downloaded"
+                text: "~ " + gagbookManager.downloadCounter + " MB downloaded"
             }
 
             Button {

@@ -32,7 +32,7 @@
 
 class QSettings;
 class QNetworkReply;
-class GagManager;
+class GagBookManager;
 
 class WebsiteSettings : public QObject
 {
@@ -43,7 +43,7 @@ class WebsiteSettings : public QObject
     Q_PROPERTY(bool gif READ gif WRITE setGif NOTIFY settingsChanged)
     Q_PROPERTY(bool showHotInTrending READ showHotInTrending WRITE setShowHotInTrending NOTIFY settingsChanged)
     Q_PROPERTY(bool showNsfw READ showNsfw WRITE setShowNsfw NOTIFY settingsChanged)
-    Q_PROPERTY(GagManager* manager READ manager WRITE setManager) // for accessing NetworkManager
+    Q_PROPERTY(GagBookManager *manager READ manager WRITE setManager)
 public:
     explicit WebsiteSettings(QObject *parent = 0);
     ~WebsiteSettings();
@@ -68,8 +68,8 @@ public:
     bool showNsfw() const;
     void setShowNsfw(bool showNsfw);
 
-    GagManager *manager() const;
-    void setManager(GagManager *manager);
+    GagBookManager *manager() const;
+    void setManager(GagBookManager *manager);
 
 signals:
     void success();
@@ -91,7 +91,7 @@ private:
     bool m_gif;
     bool m_showHotInTrending;
     bool m_showNsfw;
-    GagManager *m_manager;
+    GagBookManager *m_manager;
 };
 
 #endif // WEBSITESETTINGS_H

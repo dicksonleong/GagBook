@@ -25,41 +25,34 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import QtQuick 1.1
-import com.nokia.symbian 1.1
-import com.nokia.extras 1.1
-import GagBook 1.0
+#include "gagbookmanager.h"
 
-PageStackWindow {
-    id: appWindow
+#include "networkmanager.h"
+#include "gagimagedownloader.h"
 
-    platformInverted: appSettings.whiteTheme
-    initialPage: MainPage { id: mainPage }
+GagBookManager::GagBookManager(QObject *parent) :
+    QObject(parent), m_settings(0), m_netManager(new NetworkManager(this))
+{
+    GagImageDownloader::initializeCache();
+    connect(m_netManager, SIGNAL(downloadCounterChanged()), SIGNAL(downloadCounterChanged()));
+}
 
-    Constant { id: constant }
+QString GagBookManager::downloadCounter() const
+{
+    return m_netManager->downloadCounter();
+}
 
-    InfoBanner {
-        id: infoBanner
-        platformInverted: appSettings.whiteTheme
+AppSettings *GagBookManager::settings() const
+{
+    return m_settings;
+}
 
-        function alert(text) {
-            infoBanner.text = text
-            infoBanner.open()
-        }
-    }
+void GagBookManager::setSettings(AppSettings *settings)
+{
+    m_settings = settings;
+}
 
-    GagBookManager {
-        id: gagbookManager
-        settings: AppSettings { id: appSettings }
-    }
-
-    ListModel {
-        id: sectionModel
-        ListElement { text: "Hot" }
-        ListElement { text: "Trending" }
-        ListElement { text: "Fresh" }
-        ListElement { text: "Cute" }
-        ListElement { text: "Geeky" }
-        ListElement { text: "GIF" }
-    }
+NetworkManager *GagBookManager::networkManager() const
+{
+    return m_netManager;
 }

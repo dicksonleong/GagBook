@@ -34,7 +34,7 @@ SelectionDialog {
     property bool __isClosing: false
 
     titleText: "Section"
-    selectedIndex: appSettings.section
+    selectedIndex: gagModel.section
     model: sectionModel
 
     Component.onCompleted: open()

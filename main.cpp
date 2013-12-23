@@ -36,7 +36,7 @@
 #include <QtGui/QPixmap>
 #endif
 
-#include "src/gagmanager.h"
+#include "src/gagbookmanager.h"
 #include "src/gagmodel.h"
 #include "src/qmlutils.h"
 #include "src/networkmanager.h"
@@ -61,9 +61,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     viewer.rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
     viewer.rootContext()->setContextProperty("QMLUtils", QMLUtils::instance());
 
-    qmlRegisterType<GagManager>("GagBook", 1, 0, "GagManager");
-    qmlRegisterType<AppSettings>("GagBook", 1, 0, "AppSettings");
+    qmlRegisterType<GagBookManager>("GagBook", 1, 0, "GagBookManager");
     qmlRegisterType<GagModel>("GagBook", 1, 0, "GagModel");
+    qmlRegisterType<AppSettings>("GagBook", 1, 0, "AppSettings");
     qmlRegisterType<WebsiteSettings>("GagBook", 1, 0, "WebsiteSettings");
 
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);

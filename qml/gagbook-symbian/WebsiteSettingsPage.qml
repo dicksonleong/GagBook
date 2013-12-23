@@ -131,7 +131,7 @@ Page {
 
     WebsiteSettings {
         id: websiteSettings
-        manager: gagManager
+        manager: gagbookManager
         onSuccess: infoBanner.alert("Settings saved successfully");
         onFailure: infoBanner.alert(message);
     }

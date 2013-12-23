@@ -41,20 +41,10 @@ class AppSettings : public QObject
     Q_ENUMS(GifDownloadMode)
 
     Q_PROPERTY(bool whiteTheme READ isWhiteTheme WRITE setWhiteTheme NOTIFY whiteThemeChanged)
-    Q_PROPERTY(Section section READ section WRITE setSection NOTIFY sectionChanged)
     Q_PROPERTY(Source source READ source WRITE setSource NOTIFY sourceChanged)
     Q_PROPERTY(GifDownloadMode gifDownloadMode READ gifDownloadMode WRITE setGifDownloadMode
                NOTIFY gifDownloadModeChanged)
 public:
-    enum Section {
-        HotSection,
-        TrendingSection,
-        FreshSection,
-        CuteSection,
-        GeekySection,
-        GIFSection
-    };
-
     enum Source {
         NineGagSource,
         InfiniGagSource
@@ -71,9 +61,6 @@ public:
     bool isWhiteTheme() const;
     void setWhiteTheme(bool whiteTheme);
 
-    Section section() const;
-    void setSection(Section section);
-
     Source source() const;
     void setSource(Source source);
 
@@ -82,7 +69,6 @@ public:
 
 signals:
     void whiteThemeChanged();
-    void sectionChanged();
     void sourceChanged();
     void gifDownloadModeChanged();
 
@@ -91,7 +77,6 @@ private:
 
     QSettings *m_settings;
     bool m_whiteTheme;
-    Section m_section;
     Source m_source;
     GifDownloadMode m_gifDownloadMode;
 };

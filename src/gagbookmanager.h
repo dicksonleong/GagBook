@@ -25,80 +25,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef GAGMANAGER_H
-#define GAGMANAGER_H
+#ifndef GAGBOOKMANAGER_H
+#define GAGBOOKMANAGER_H
 
 #include <QtCore/QObject>
 
-#include "gagobject.h"
-
 class NetworkManager;
 class AppSettings;
-class GagRequest;
-class GagImageDownloader;
-class GagModel;
 
-class GagManager : public QObject
+class GagBookManager : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(RefreshType)
-
-    Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
-    Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(QString downloadCounter READ downloadCounter NOTIFY downloadCounterChanged)
-
-    Q_PROPERTY(AppSettings* settings READ settings WRITE setSettings NOTIFY settingsChanged)
-    Q_PROPERTY(GagModel* model READ model WRITE setModel NOTIFY modelChanged)
+    Q_PROPERTY(AppSettings *settings READ settings WRITE setSettings)
 public:
-    explicit GagManager(QObject *parent = 0);
+    explicit GagBookManager(QObject *parent = 0);
 
-    enum RefreshType {
-        RefreshAll,
-        RefreshOlder
-    };
-
-    Q_INVOKABLE void refresh(RefreshType refreshType);
-    Q_INVOKABLE void stopRefresh();
-    Q_INVOKABLE void downloadImage(int index);
-    Q_INVOKABLE void clearCookies();
-
-    bool isBusy() const;
-    qreal progress() const;
     QString downloadCounter() const;
 
     AppSettings *settings() const;
     void setSettings(AppSettings *settings);
 
-    GagModel *model() const;
-    void setModel(GagModel *model);
+    NetworkManager *networkManager() const;
 
 signals:
-    void refreshFailure(const QString &errorMessage);
-    void busyChanged();
-    void progressChanged();
     void downloadCounterChanged();
-    void settingsChanged();
-    void modelChanged();
-
-private slots:
-    void onSuccess(const QList<GagObject> &gagList);
-    void onFailure(const QString &errorMessage);
-    void onImageDownloadProgress(int imagesDownloaded, int imagesTotal);
-    void onDownloadFinished(const QList<GagObject> &gagList);
-    void onManualDownloadFinished(const QList<GagObject> &gagList);
 
 private:
-    friend class WebsiteSettings; // for allow access to m_networkManager
-
-    NetworkManager *m_networkManager;
-    GagRequest *m_request;
-    GagImageDownloader *m_imageDownloader;
-    GagImageDownloader *m_manualImageDownloader;
-
-    bool m_busy;
-    qreal m_progress;
     AppSettings *m_settings;
-    GagModel *m_model;
+    NetworkManager *m_netManager;
 };
 
-#endif // GAGMANAGER_H
+#endif // GAGBOOKMANAGER_H

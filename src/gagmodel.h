@@ -29,17 +29,25 @@
 #define GAGMODEL_H
 
 #include <QtCore/QAbstractListModel>
+#include <QtDeclarative/QDeclarativeParserStatus>
 
 #include "gagobject.h"
 
-class QNetworkAccessManager;
+class GagBookManager;
+class GagRequest;
+class GagImageDownloader;
 
-class GagModel : public QAbstractListModel
+class GagModel : public QAbstractListModel, public QDeclarativeParserStatus
 {
     Q_OBJECT
+    Q_INTERFACES(QDeclarativeParserStatus)
+    Q_ENUMS(Section)
+    Q_ENUMS(RefreshType)
+    Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
+    Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
+    Q_PROPERTY(GagBookManager *manager READ manager WRITE setManager)
+    Q_PROPERTY(Section section READ section WRITE setSection NOTIFY sectionChanged)
 public:
-    explicit GagModel(QObject *parent = 0);
-
     enum Roles {
         TitleRole = Qt::UserRole,
         UrlRole,
@@ -53,22 +61,64 @@ public:
         IsDownloadingRole
     };
 
+    enum Section {
+        HotSection,
+        TrendingSection,
+        FreshSection,
+        CuteSection,
+        GeekySection,
+        GIFSection
+    };
+
+    enum RefreshType {
+        RefreshAll,
+        RefreshOlder
+    };
+
+    explicit GagModel(QObject *parent = 0);
+
+    void classBegin();
+    void componentComplete();
+
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
 
-    QList<GagObject> gagList() const;
+    bool isBusy() const;
+    qreal progress() const;
 
-    void append(const QList<GagObject> &gagList);
-    void clear();
+    GagBookManager *manager() const;
+    void setManager(GagBookManager *manager);
 
-    void showDownload(int i);
-    void hideDownload();
+    Section section() const;
+    void setSection(Section section);
 
-    // For QML
-    Q_INVOKABLE QVariantMap get(int rowIndex) const;
+    Q_INVOKABLE void refresh(RefreshType refreshType);
+    Q_INVOKABLE void stopRefresh();
+    Q_INVOKABLE void downloadImage(int i);
+
+signals:
+    void busyChanged();
+    void progressChanged();
+    void sectionChanged();
+    void refreshFailure(const QString &errorMessage);
+
+private slots:
+    void onSuccess(const QList<GagObject> &gagList);
+    void onFailure(const QString &errorMessage);
+    void onImageDownloadProgress(int imagesDownloaded, int imagesTotal);
+    void onDownloadFinished(const QList<GagObject> &gagList);
+    void onManualDownloadFinished(const QList<GagObject> &gagList);
 
 private:
+    bool m_busy;
+    qreal m_progress;
+    GagBookManager *m_manager;
+    Section m_section;
+
     QList<GagObject> m_gagList;
+    GagRequest *m_request;
+    GagImageDownloader *m_imageDownloader;
+    GagImageDownloader *m_manualImageDownloader;
     int m_downloadingIndex;
 };
 

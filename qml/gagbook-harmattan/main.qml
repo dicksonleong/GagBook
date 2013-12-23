@@ -54,11 +54,9 @@ PageStackWindow {
         }
     }
 
-    GagManager {
-        id: gagManager
+    GagBookManager {
+        id: gagbookManager
         settings: AppSettings { id: appSettings }
-        model: GagModel {}
-        onRefreshFailure: infoBanner.alert("Error: " + errorMessage)
     }
 
     ListModel {
@@ -70,6 +68,4 @@ PageStackWindow {
         ListElement { text: "Geeky" }
         ListElement { text: "GIF" }
     }
-
-    Component.onCompleted: gagManager.refresh(GagManager.RefreshAll)
 }

@@ -29,8 +29,16 @@
 
 #include <QtCore/QUrl>
 
+#include "gagbookmanager.h"
+#include "appsettings.h"
+#include "networkmanager.h"
+#include "ninegagrequest.h"
+#include "infinigagrequest.h"
+#include "gagimagedownloader.h"
+
 GagModel::GagModel(QObject *parent) :
-    QAbstractListModel(parent), m_downloadingIndex(-1)
+    QAbstractListModel(parent), m_busy(false), m_progress(0), m_manager(0), m_section(HotSection),
+    m_request(0), m_imageDownloader(0), m_manualImageDownloader(0), m_downloadingIndex(-1)
 {
     QHash<int, QByteArray> roles;
     roles[TitleRole] = "title";
@@ -44,6 +52,15 @@ GagModel::GagModel(QObject *parent) :
     roles[IsGIFRole] = "isGIF";
     roles[IsDownloadingRole] = "isDownloading";
     setRoleNames(roles);
+}
+
+void GagModel::classBegin()
+{
+}
+
+void GagModel::componentComplete()
+{
+    refresh(RefreshAll);
 }
 
 int GagModel::rowCount(const QModelIndex &parent) const
@@ -65,7 +82,8 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
         return gag.url();
     case ImageUrlRole:
         // should use QUrl::isLocalFile() but it is introduced in Qt 4.8
-        if (gag.imageUrl().scheme() != "file") return QUrl();
+        if (gag.imageUrl().scheme() != "file")
+            return QUrl();
         return gag.imageUrl();
     case ImageHeightRole:
         return gag.imageHeight();
@@ -87,47 +105,205 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
     }
 }
 
-QList<GagObject> GagModel::gagList() const
+bool GagModel::isBusy() const
 {
-    return m_gagList;
+    return m_busy;
 }
 
-void GagModel::append(const QList<GagObject> &gagList)
+qreal GagModel::progress() const
+{
+    return m_progress;
+}
+
+GagBookManager *GagModel::manager() const
+{
+    return m_manager;
+}
+
+void GagModel::setManager(GagBookManager *manager)
+{
+    m_manager = manager;
+}
+
+GagModel::Section GagModel::section() const
+{
+    return m_section;
+}
+
+void GagModel::setSection(GagModel::Section section)
+{
+    if (m_section != section) {
+        m_section = section;
+        emit sectionChanged();
+    }
+}
+
+void GagModel::refresh(RefreshType refreshType)
+{
+    if (m_request != 0) {
+        m_request->disconnect();
+        m_request->deleteLater();
+        m_request = 0;
+    }
+
+    if (m_imageDownloader != 0) {
+        m_imageDownloader->disconnect();
+        m_imageDownloader->deleteLater();
+        m_imageDownloader = 0;
+    }
+
+    switch (m_manager->settings()->source()) {
+    default:
+        qWarning("GagModel::refresh(): Invalid source, default source will be used");
+        // fallthrough
+    case AppSettings::NineGagSource:
+        m_request = new NineGagRequest(manager()->networkManager(), m_section, this);
+        break;
+    case AppSettings::InfiniGagSource:
+        m_request = new InfiniGagRequest(manager()->networkManager(), m_section, this);
+        break;
+    }
+
+    if (!m_gagList.isEmpty()) {
+        if (refreshType == RefreshAll) {
+            beginRemoveRows(QModelIndex(), 0, m_gagList.count() - 1);
+            m_gagList.clear();
+            endRemoveRows();
+        } else {
+            m_request->setLastId(m_gagList.last().id());
+        }
+    }
+    connect(m_request, SIGNAL(success(QList<GagObject>)), this, SLOT(onSuccess(QList<GagObject>)));
+    connect(m_request, SIGNAL(failure(QString)), this, SLOT(onFailure(QString)));
+
+    m_request->send();
+
+    m_busy = true;
+    emit busyChanged();
+
+    if (m_progress != 0) {
+        m_progress = 0;
+        emit progressChanged();
+    }
+}
+
+void GagModel::stopRefresh()
+{
+    if (m_request != 0) {
+        m_request->disconnect();
+        m_request->deleteLater();
+        m_request = 0;
+    }
+    if (m_imageDownloader != 0)
+        m_imageDownloader->stop();
+
+    if (m_busy != false) {
+        m_busy = false;
+        emit busyChanged();
+    }
+}
+
+void GagModel::downloadImage(int i)
+{
+    if (m_manualImageDownloader != 0) {
+        m_manualImageDownloader->disconnect();
+        m_manualImageDownloader->deleteLater();
+        m_manualImageDownloader = 0;
+
+        if (m_downloadingIndex != -1) {
+            QModelIndex modelIndex = index(m_downloadingIndex);
+            m_downloadingIndex = -1;
+            emit dataChanged(modelIndex, modelIndex);
+        }
+    }
+
+    QList<GagObject> gags;
+    gags.append(m_gagList.at(i));
+
+    m_manualImageDownloader = new GagImageDownloader(manager()->networkManager(), this);
+    connect(m_manualImageDownloader, SIGNAL(finished(QList<GagObject>)),
+            SLOT(onManualDownloadFinished(QList<GagObject>)));
+    m_manualImageDownloader->start(gags, true);
+
+    m_downloadingIndex = i;
+    emit dataChanged(index(i), index(i));
+}
+
+void GagModel::onSuccess(const QList<GagObject> &gagList)
+{
+    bool downloadGIF;
+    switch (m_manager->settings()->gifDownloadMode()) {
+    case AppSettings::GifDownloadOn:
+        downloadGIF = true;
+        break;
+    case AppSettings::GifDownloadOnWiFiOnly:
+        if (m_manager->networkManager()->isMobileData())
+            downloadGIF = false;
+        else
+            downloadGIF = true;
+        break;
+    case AppSettings::GifDownloadOff:
+        downloadGIF = false;
+        break;
+    default:
+        qWarning("GagModel::onSuccess(): Invalid gifDownloadMode, default mode will be used");
+        downloadGIF = true;
+        break;
+    }
+
+    m_imageDownloader = new GagImageDownloader(manager()->networkManager(), this);
+    connect(m_imageDownloader, SIGNAL(finished(QList<GagObject>)), SLOT(onDownloadFinished(QList<GagObject>)));
+    connect(m_imageDownloader, SIGNAL(downloadProgress(int,int)), SLOT(onImageDownloadProgress(int,int)));
+    m_imageDownloader->start(gagList, downloadGIF);
+
+    m_request->deleteLater();
+    m_request = 0;
+}
+
+void GagModel::onFailure(const QString &errorMessage)
+{
+    emit refreshFailure(errorMessage);
+    m_request->deleteLater();
+    m_request = 0;
+    m_busy = false;
+    emit busyChanged();
+}
+
+void GagModel::onImageDownloadProgress(int imagesDownloaded, int imagesTotal)
+{
+    qreal progress;
+    if (imagesTotal > 0)
+        progress = qreal(imagesDownloaded) / qreal(imagesTotal);
+    else
+        progress = 1;
+
+    if (m_progress != progress) {
+        m_progress = progress;
+        emit progressChanged();
+    }
+}
+
+void GagModel::onDownloadFinished(const QList<GagObject> &gagList)
 {
     beginInsertRows(QModelIndex(), m_gagList.count(), m_gagList.count() + gagList.count() - 1);
     m_gagList.reserve(m_gagList.count() + gagList.count());
     m_gagList.append(gagList);
     endInsertRows();
+
+    m_imageDownloader->deleteLater();
+    m_imageDownloader = 0;
+    m_busy = false;
+    emit busyChanged();
 }
 
-void GagModel::clear()
+void GagModel::onManualDownloadFinished(const QList<GagObject> &gagList)
 {
-    if (m_gagList.isEmpty())
-        return;
+    Q_UNUSED(gagList);
 
-    beginRemoveRows(QModelIndex(), 0, m_gagList.count() - 1);
-    m_gagList.clear();
-    endRemoveRows();
-}
-
-void GagModel::showDownload(int i)
-{
-    m_downloadingIndex = i;
-    emit dataChanged(index(i), index(i));
-}
-
-void GagModel::hideDownload()
-{
-    if (m_downloadingIndex == -1)
-        return;
+    m_manualImageDownloader->deleteLater();
+    m_manualImageDownloader = 0;
 
     QModelIndex modelIndex = index(m_downloadingIndex);
     m_downloadingIndex = -1;
     emit dataChanged(modelIndex, modelIndex);
-}
-
-QVariantMap GagModel::get(int rowIndex) const
-{
-    Q_ASSERT_X(rowIndex < m_gagList.count(), Q_FUNC_INFO, "rowIndex out of range");
-    return m_gagList.at(rowIndex).toVariantMap();
 }

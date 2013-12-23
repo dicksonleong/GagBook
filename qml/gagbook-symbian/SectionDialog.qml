@@ -35,7 +35,7 @@ SelectionDialog {
 
     platformInverted: appSettings.whiteTheme
     titleText: "Section"
-    selectedIndex: appSettings.section
+    selectedIndex: gagModel.section
     model: sectionModel
 
     Component.onCompleted: open()
