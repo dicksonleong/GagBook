@@ -91,6 +91,8 @@ static QWebElementCollection getEntryItemsFromJson(const QString &json)
     return getEntryItemsFromHtml(html);
 }
 
+static const QRegExp dataScriptImgSrcRegExp("<img.*src=\"(http[^\\s\"]+)\".*\\/>");
+
 static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
 {
     QList<GagObject> gagList;
@@ -112,7 +114,12 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
                 gag.setImageUrl(postContainer.findFirst("img.youtube-thumb").attribute("src"));
             } else {
                 gag.setIsGIF(true);
-                gag.setImageUrl(postContainer.findFirst("img.badge-item-animated-img").attribute("src"));
+                QString dataScript = postContainer.findFirst("div.badge-animated-container-static").attribute("data-script");
+                int pos = dataScriptImgSrcRegExp.indexIn(dataScript);
+                if (pos > -1)
+                    gag.setImageUrl(dataScriptImgSrcRegExp.cap(1));
+                else
+                    qDebug("NineGagRequest::parseGAG(): Can not find GIF src");
             }
         } else {
             gag.setImageUrl(postContainer.findFirst("img.badge-item-img").attribute("src"));
