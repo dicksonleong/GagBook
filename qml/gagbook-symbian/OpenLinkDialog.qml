@@ -29,11 +29,9 @@ import QtQuick 1.1
 import com.nokia.symbian 1.1
 
 ContextMenu {
-    id: root
+    id: openLinkDialog
 
     property string link
-
-    property bool __isClosing: false
 
     platformInverted: appSettings.whiteTheme
 
@@ -51,7 +49,7 @@ ContextMenu {
         }
         MenuItem {
             text: "Open link in web browser"
-            platformInverted: root.platformInverted
+            platformInverted: openLinkDialog.platformInverted
             onClicked: {
                 QMLUtils.openDefaultBrowser(link)
                 infoBanner.alert("Launching web browser...")
@@ -59,18 +57,11 @@ ContextMenu {
         }
         MenuItem {
             text: "Copy link"
-            platformInverted: root.platformInverted
+            platformInverted: openLinkDialog.platformInverted
             onClicked: {
                 QMLUtils.copyToClipboard(link)
                 infoBanner.alert("Link copied to clipboard")
             }
         }
-    }
-
-    Component.onCompleted: open()
-
-    onStatusChanged: {
-        if (status === DialogStatus.Closing) __isClosing = true
-        else if (status === DialogStatus.Closed && __isClosing) root.destroy(250)
     }
 }

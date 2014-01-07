@@ -29,11 +29,9 @@ import QtQuick 1.1
 import com.nokia.meego 1.0
 
 ContextMenu {
-    id: root
+    id: openLinkDialog
 
     property string link
-
-    property bool __isClosing: false
 
     platformTitle: Text {
         anchors { left: parent.left; right: parent.right }
@@ -62,12 +60,5 @@ ContextMenu {
                 infoBanner.alert("Link copied to clipboard")
             }
         }
-    }
-
-    Component.onCompleted: open()
-
-    onStatusChanged: {
-        if (status === DialogStatus.Closing) __isClosing = true
-        else if (status === DialogStatus.Closed && __isClosing) root.destroy(250)
     }
 }

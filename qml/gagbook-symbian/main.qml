@@ -52,14 +52,4 @@ PageStackWindow {
         id: gagbookManager
         settings: AppSettings { id: appSettings }
     }
-
-    ListModel {
-        id: sectionModel
-        ListElement { text: "Hot" }
-        ListElement { text: "Trending" }
-        ListElement { text: "Fresh" }
-        ListElement { text: "Cute" }
-        ListElement { text: "Geeky" }
-        ListElement { text: "GIF" }
-    }
 }

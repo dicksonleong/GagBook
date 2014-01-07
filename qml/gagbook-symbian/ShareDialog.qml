@@ -29,18 +29,16 @@ import QtQuick 1.1
 import com.nokia.symbian 1.1
 
 ContextMenu {
-    id: root
+    id: shareDialog
 
     property string link
-
-    property bool __isClosing: false
 
     platformInverted: appSettings.whiteTheme
 
     MenuLayout {
         MenuItem {
             text: "Share via Facebook"
-            platformInverted: root.platformInverted
+            platformInverted: shareDialog.platformInverted
             onClicked: {
                 QMLUtils.openDefaultBrowser("http://www.facebook.com/sharer.php?u=" + link)
                 infoBanner.alert("Launching web browser...")
@@ -48,7 +46,7 @@ ContextMenu {
         }
         MenuItem {
             text: "Share via Twitter"
-            platformInverted: root.platformInverted
+            platformInverted: shareDialog.platformInverted
             onClicked: {
                 QMLUtils.openDefaultBrowser("https://twitter.com/intent/tweet?url=" + link);
                 infoBanner.alert("Launching web browser...");
@@ -56,7 +54,7 @@ ContextMenu {
         }
         MenuItem {
             text: "Share via SMS"
-            platformInverted: root.platformInverted
+            platformInverted: shareDialog.platformInverted
             onClicked: {
                 Qt.openUrlExternally("sms:?body=" + link)
                 infoBanner.alert("Launching SMS...")
@@ -64,18 +62,11 @@ ContextMenu {
         }
         MenuItem {
             text: "Share via email"
-            platformInverted: root.platformInverted
+            platformInverted: shareDialog.platformInverted
             onClicked: {
                 Qt.openUrlExternally("mailto:?body=" + link)
                 infoBanner.alert("Launching email client...")
             }
         }
-    }
-
-    Component.onCompleted: open()
-
-    onStatusChanged: {
-        if (status === DialogStatus.Closing) __isClosing = true
-        else if (status === DialogStatus.Closed && __isClosing) root.destroy(250)
     }
 }

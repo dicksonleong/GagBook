@@ -140,36 +140,58 @@ Page {
         onRefreshFailure: infoBanner.alert(errorMessage);
     }
 
+    ListModel {
+        id: sectionModel
+        ListElement { text: "Hot" }
+        ListElement { text: "Trending" }
+        ListElement { text: "Fresh" }
+        ListElement { text: "Cute" }
+        ListElement { text: "Geeky" }
+        ListElement { text: "GIF" }
+    }
+
     QtObject {
         id: dialogManager
 
-        property Component __sectionDialogComponent: null
+        property Component __selectionDialogComponent: Component { SelectionDialog {} }
         property Component __openLinkDialogComponent: null
         property Component __shareDialogComponent: null
 
         function createSectionDialog() {
-            if (!__sectionDialogComponent) __sectionDialogComponent = Qt.createComponent("SectionDialog.qml")
-            var dialog = __sectionDialogComponent.createObject(mainPage)
-            if (!dialog) {
-                console.log("Error creating object: " + __sectionDialogComponent.errorString())
-                return
-            }
+            var p = { platformInverted: appSettings.whiteTheme, titleText: "Section",
+                model: sectionModel, selectedIndex: gagModel.section }
+            var dialog = __selectionDialogComponent.createObject(mainPage, p);
+            dialog.statusChanged.connect(function() {
+                if (dialog.status == DialogStatus.Closed)
+                    dialog.destroy(250);
+            });
             dialog.accepted.connect(function() {
                 gagModel.section = dialog.selectedIndex;
                 gagModel.refresh(GagModel.RefreshAll)
             })
+            dialog.open();
         }
 
         function createOpenLinkDialog(link) {
-            if (!__openLinkDialogComponent) __openLinkDialogComponent = Qt.createComponent("OpenLinkDialog.qml")
-            var dialog = __openLinkDialogComponent.createObject(mainPage, { link: link })
-            if (!dialog) console.log("Error creating object: " + __openLinkDialogComponent.errorString())
+            if (!__openLinkDialogComponent)
+                __openLinkDialogComponent = Qt.createComponent("OpenLinkDialog.qml");
+            var dialog = __openLinkDialogComponent.createObject(mainPage, { link: link });
+            dialog.statusChanged.connect(function() {
+                if (dialog.status == DialogStatus.Closed)
+                    dialog.destroy(250);
+            });
+            dialog.open();
         }
 
         function createShareDialog(link) {
-            if (!__shareDialogComponent) __shareDialogComponent = Qt.createComponent("ShareDialog.qml")
-            var dialog = __shareDialogComponent.createObject(mainPage, { link: link })
-            if (!dialog) console.log("Error creating object: " + __shareDialogComponent.errorString())
+            if (!__shareDialogComponent)
+                __shareDialogComponent = Qt.createComponent("ShareDialog.qml");
+            var dialog = __shareDialogComponent.createObject(mainPage, { link: link });
+            dialog.statusChanged.connect(function() {
+                if (dialog.status == DialogStatus.Closed)
+                    dialog.destroy(250);
+            });
+            dialog.open();
         }
     }
 }
