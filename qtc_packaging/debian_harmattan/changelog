@@ -1,3 +1,8 @@
+gagbook (0.8.4) unstable; urgency=medium
+  * Fix GIF URL parsing
+
+ -- Dickson <dicksonleong8@gmail.com>  Mon, 13 Jan 2014 23:22:27 +0800
+
 gagbook (0.8.3) unstable; urgency=medium
   * Fix unable to download GIFs
   * Use 9GAG comments system

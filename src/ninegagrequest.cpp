@@ -114,12 +114,7 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
                 gag.setImageUrl(postContainer.findFirst("img.youtube-thumb").attribute("src"));
             } else {
                 gag.setIsGIF(true);
-                QString dataScript = postContainer.findFirst("div.badge-animated-container-static").attribute("data-script");
-                int pos = dataScriptImgSrcRegExp.indexIn(dataScript);
-                if (pos > -1)
-                    gag.setImageUrl(dataScriptImgSrcRegExp.cap(1));
-                else
-                    qDebug("NineGagRequest::parseGAG(): Can not find GIF src");
+                gag.setImageUrl(postContainer.findFirst("div.badge-animated-container-animated").attribute("data-image"));
             }
         } else {
             gag.setImageUrl(postContainer.findFirst("img.badge-item-img").attribute("src"));
