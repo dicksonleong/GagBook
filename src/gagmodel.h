@@ -108,8 +108,8 @@ private slots:
     void onSuccess(const QList<GagObject> &gagList);
     void onFailure(const QString &errorMessage);
     void onImageDownloadProgress(int imagesDownloaded, int imagesTotal);
-    void onDownloadFinished(const QList<GagObject> &gagList);
-    void onManualDownloadFinished(const QList<GagObject> &gagList);
+    void onDownloadFinished();
+    void onManualDownloadFinished();
 
 private:
     bool m_busy;

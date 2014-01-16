@@ -44,12 +44,18 @@ public:
 
     explicit GagImageDownloader(NetworkManager *networkManager, QObject *parent = 0);
 
-    void start(const QList<GagObject> &gagList, bool downloadGIF);
+    QList<GagObject> gagList() const;
+    void setGagList(const QList<GagObject> &gagList);
+
+    bool downloadGIF() const;
+    void setDownloadGIF(bool downloadGIF);
+
+    void start();
     void stop();
 
 signals:
     void downloadProgress(int imagesDownloaded, int imagesTotal);
-    void finished(const QList<GagObject> &gagList);
+    void finished();
 
 private slots:
     void onFinished();
@@ -57,6 +63,8 @@ private slots:
 private:
     NetworkManager *m_networkManager;
     QList<GagObject> m_gagList;
+    bool m_downloadGIF;
+
     QHash<QNetworkReply*, GagObject> m_replyHash;
     int m_imagesTotal;
 };

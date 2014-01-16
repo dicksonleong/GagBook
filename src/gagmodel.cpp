@@ -217,16 +217,17 @@ void GagModel::downloadImage(int i)
         }
     }
 
+    m_downloadingIndex = i;
+    emit dataChanged(index(i), index(i));
+
     QList<GagObject> gags;
     gags.append(m_gagList.at(i));
 
     m_manualImageDownloader = new GagImageDownloader(manager()->networkManager(), this);
-    connect(m_manualImageDownloader, SIGNAL(finished(QList<GagObject>)),
-            SLOT(onManualDownloadFinished(QList<GagObject>)));
-    m_manualImageDownloader->start(gags, true);
-
-    m_downloadingIndex = i;
-    emit dataChanged(index(i), index(i));
+    m_manualImageDownloader->setGagList(gags);
+    m_manualImageDownloader->setDownloadGIF(true);
+    connect(m_manualImageDownloader, SIGNAL(finished()), SLOT(onManualDownloadFinished()));
+    m_manualImageDownloader->start();
 }
 
 void GagModel::onSuccess(const QList<GagObject> &gagList)
@@ -252,9 +253,11 @@ void GagModel::onSuccess(const QList<GagObject> &gagList)
     }
 
     m_imageDownloader = new GagImageDownloader(manager()->networkManager(), this);
-    connect(m_imageDownloader, SIGNAL(finished(QList<GagObject>)), SLOT(onDownloadFinished(QList<GagObject>)));
+    m_imageDownloader->setGagList(gagList);
+    m_imageDownloader->setDownloadGIF(downloadGIF);
     connect(m_imageDownloader, SIGNAL(downloadProgress(int,int)), SLOT(onImageDownloadProgress(int,int)));
-    m_imageDownloader->start(gagList, downloadGIF);
+    connect(m_imageDownloader, SIGNAL(finished()), SLOT(onDownloadFinished()));
+    m_imageDownloader->start();
 
     m_request->deleteLater();
     m_request = 0;
@@ -283,27 +286,27 @@ void GagModel::onImageDownloadProgress(int imagesDownloaded, int imagesTotal)
     }
 }
 
-void GagModel::onDownloadFinished(const QList<GagObject> &gagList)
+void GagModel::onDownloadFinished()
 {
+    const QList<GagObject> gagList = m_imageDownloader->gagList();
     beginInsertRows(QModelIndex(), m_gagList.count(), m_gagList.count() + gagList.count() - 1);
     m_gagList.reserve(m_gagList.count() + gagList.count());
     m_gagList.append(gagList);
     endInsertRows();
 
-    m_imageDownloader->deleteLater();
-    m_imageDownloader = 0;
     m_busy = false;
     emit busyChanged();
+
+    m_imageDownloader->deleteLater();
+    m_imageDownloader = 0;
 }
 
-void GagModel::onManualDownloadFinished(const QList<GagObject> &gagList)
+void GagModel::onManualDownloadFinished()
 {
-    Q_UNUSED(gagList);
-
-    m_manualImageDownloader->deleteLater();
-    m_manualImageDownloader = 0;
-
     QModelIndex modelIndex = index(m_downloadingIndex);
     m_downloadingIndex = -1;
     emit dataChanged(modelIndex, modelIndex);
+
+    m_manualImageDownloader->deleteLater();
+    m_manualImageDownloader = 0;
 }

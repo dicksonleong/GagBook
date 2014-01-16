@@ -46,18 +46,37 @@ void GagImageDownloader::initializeCache()
 }
 
 GagImageDownloader::GagImageDownloader(NetworkManager *networkManager, QObject *parent) :
-    QObject(parent), m_networkManager(networkManager)
+    QObject(parent), m_networkManager(networkManager), m_downloadGIF(false)
 {
 }
 
-void GagImageDownloader::start(const QList<GagObject> &gagList, bool downloadGIF)
+QList<GagObject> GagImageDownloader::gagList() const
+{
+    return m_gagList;
+}
+
+void GagImageDownloader::setGagList(const QList<GagObject> &gagList)
+{
+    m_gagList = gagList;
+}
+
+bool GagImageDownloader::downloadGIF() const
+{
+    return m_downloadGIF;
+}
+
+void GagImageDownloader::setDownloadGIF(bool downloadGIF)
+{
+    m_downloadGIF = downloadGIF;
+}
+
+void GagImageDownloader::start()
 {
     // if there is still downloads ongoing when start() is called
     // there will be big problem since m_gagList will be replaced
     Q_ASSERT(m_replyHash.isEmpty());
-    m_gagList = gagList;
     foreach (const GagObject &gag, m_gagList) {
-        if (gag.imageUrl().isEmpty() || (!downloadGIF && gag.isGIF()))
+        if (gag.imageUrl().isEmpty() || (!m_downloadGIF && gag.isGIF()))
             continue;
 
         QNetworkReply *reply = m_networkManager->createGetRequest(gag.imageUrl(), NetworkManager::Image);
@@ -69,7 +88,7 @@ void GagImageDownloader::start(const QList<GagObject> &gagList, bool downloadGIF
     m_imagesTotal = m_replyHash.count();
     emit downloadProgress(0, m_imagesTotal);
     if (m_imagesTotal == 0)
-        emit finished(m_gagList);
+        emit finished();
 }
 
 void GagImageDownloader::stop()
@@ -111,5 +130,5 @@ void GagImageDownloader::onFinished()
 
     emit downloadProgress(m_imagesTotal - m_replyHash.count(), m_imagesTotal);
     if (m_replyHash.isEmpty())
-        emit finished(m_gagList);
+        emit finished();
 }
