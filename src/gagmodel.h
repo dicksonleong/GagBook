@@ -65,9 +65,11 @@ public:
         HotSection,
         TrendingSection,
         FreshSection,
+        GIFSection,
         CuteSection,
         GeekySection,
-        GIFSection
+        CosplaySection,
+        MemeSection
     };
 
     enum RefreshType {

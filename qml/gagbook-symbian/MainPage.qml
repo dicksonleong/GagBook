@@ -140,9 +140,11 @@ Page {
         ListElement { text: "Hot" }
         ListElement { text: "Trending" }
         ListElement { text: "Fresh" }
+        ListElement { text: "GIF" }
         ListElement { text: "Cute" }
         ListElement { text: "Geeky" }
-        ListElement { text: "GIF" }
+        ListElement { text: "Cosplay" }
+        ListElement { text: "Meme" }
     }
 
     QtObject {

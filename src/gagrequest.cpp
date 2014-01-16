@@ -83,12 +83,16 @@ QString GagRequest::getSectionText(GagModel::Section section)
         return "trending";
     case GagModel::FreshSection:
         return "fresh";
+    case GagModel::GIFSection:
+        return "gif";
     case GagModel::CuteSection:
         return "cute";
     case GagModel::GeekySection:
         return "geeky";
-    case GagModel::GIFSection:
-        return "gif";
+    case GagModel::CosplaySection:
+        return "cosplay";
+    case GagModel::MemeSection:
+        return "meme";
     }
 }
 
