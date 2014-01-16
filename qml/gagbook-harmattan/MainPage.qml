@@ -61,10 +61,6 @@ Page {
 
         MenuLayout {
             MenuItem {
-                text: "Website Settings"
-                onClicked: pageStack.push(Qt.resolvedUrl("WebsiteSettingsPage.qml"))
-            }
-            MenuItem {
                 text: "App Settings"
                 onClicked: pageStack.push(Qt.resolvedUrl("AppSettingsPage.qml"))
             }

@@ -68,11 +68,6 @@ Page {
         MenuLayout {
             MenuItem {
                 platformInverted: appSettings.whiteTheme
-                text: "Website Settings"
-                onClicked: pageStack.push(Qt.resolvedUrl("WebsiteSettingsPage.qml"))
-            }
-            MenuItem {
-                platformInverted: appSettings.whiteTheme
                 text: "App Settings"
                 onClicked: pageStack.push(Qt.resolvedUrl("AppSettingsPage.qml"))
             }

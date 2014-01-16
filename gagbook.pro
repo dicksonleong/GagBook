@@ -21,8 +21,7 @@ HEADERS += \
     src/infinigagrequest.h \
     src/networkmanager.h \
     src/gagimagedownloader.h \
-    src/gagcookiejar.h \
-    src/websitesettings.h
+    src/gagcookiejar.h
 
 SOURCES += main.cpp \
     src/qmlutils.cpp \
@@ -35,8 +34,7 @@ SOURCES += main.cpp \
     src/infinigagrequest.cpp \
     src/networkmanager.cpp \
     src/gagimagedownloader.cpp \
-    src/gagcookiejar.cpp \
-    src/websitesettings.cpp
+    src/gagcookiejar.cpp
 
 # Simulator
 simulator{
