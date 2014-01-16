@@ -36,24 +36,14 @@ class QSettings;
 class AppSettings : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(Section)
     Q_ENUMS(Source)
-    Q_ENUMS(GifDownloadMode)
 
     Q_PROPERTY(bool whiteTheme READ isWhiteTheme WRITE setWhiteTheme NOTIFY whiteThemeChanged)
     Q_PROPERTY(Source source READ source WRITE setSource NOTIFY sourceChanged)
-    Q_PROPERTY(GifDownloadMode gifDownloadMode READ gifDownloadMode WRITE setGifDownloadMode
-               NOTIFY gifDownloadModeChanged)
 public:
     enum Source {
         NineGagSource,
         InfiniGagSource
-    };
-
-    enum GifDownloadMode {
-        GifDownloadOn,
-        GifDownloadOnWiFiOnly,
-        GifDownloadOff
     };
 
     explicit AppSettings(QObject *parent = 0);
@@ -64,13 +54,9 @@ public:
     Source source() const;
     void setSource(Source source);
 
-    GifDownloadMode gifDownloadMode() const;
-    void setGifDownloadMode(GifDownloadMode mode);
-
 signals:
     void whiteThemeChanged();
     void sourceChanged();
-    void gifDownloadModeChanged();
 
 private:
     Q_DISABLE_COPY(AppSettings)
@@ -78,7 +64,6 @@ private:
     QSettings *m_settings;
     bool m_whiteTheme;
     Source m_source;
-    GifDownloadMode m_gifDownloadMode;
 };
 
 #endif // APPSETTINGS_H

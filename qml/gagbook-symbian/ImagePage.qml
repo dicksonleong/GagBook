@@ -31,7 +31,7 @@ import com.nokia.symbian 1.1
 Page {
     id: imagePage
 
-    property alias imageUrl: gagImage.source
+    property variant gag
 
     tools: ToolBarLayout {
         ToolButton {
@@ -89,7 +89,8 @@ Page {
                 cache: false
                 fillMode: Image.PreserveAspectFit
                 // pause the animation when app is in background
-                paused: imagePage.status != PageStatus.Active || !symbian.foreground
+                paused: imagePage.status != PageStatus.Active || !Qt.application.active
+                source: gag.isGIF ? gag.gifImageUrl : gag.imageUrl
 
                 onScaleChanged: {
                     if ((width * scale) > flickable.width) {
@@ -163,6 +164,9 @@ Page {
     Loader {
         anchors.centerIn: parent
         sourceComponent: {
+            if (gag.isDownloading)
+                return loadingIndicator;
+
             switch (gagImage.status) {
             case Image.Loading:
                 return loadingIndicator

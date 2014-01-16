@@ -77,25 +77,6 @@ Page {
                     }
                 }
             }
-
-            SettingButtonRow {
-                text: "Download GIFs automatically"
-                buttonsText: ["On", "Wi-Fi only", "Off"]
-                checkedButtonIndex: {
-                    switch (appSettings.gifDownloadMode) {
-                    case AppSettings.GifDownloadOn: return 0;
-                    case AppSettings.GifDownloadOnWiFiOnly: return 1;
-                    case AppSettings.GifDownloadOff: return 2;
-                    }
-                }
-                onButtonClicked: {
-                    switch (index) {
-                    case 0: appSettings.gifDownloadMode = AppSettings.GifDownloadOn; break;
-                    case 1: appSettings.gifDownloadMode = AppSettings.GifDownloadOnWiFiOnly; break;
-                    case 2: appSettings.gifDownloadMode = AppSettings.GifDownloadOff; break;
-                    }
-                }
-            }
         }
     }
 

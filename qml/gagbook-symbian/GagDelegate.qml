@@ -255,7 +255,9 @@ Item {
                         gagModel.downloadImage(index);
                         return;
                     }
-                    pageStack.push(Qt.resolvedUrl("ImagePage.qml"), { imageUrl: model.imageUrl })
+                    if (model.isGIF && !model.gifImageUrl.toString())
+                        gagModel.downloadImage(index);
+                    pageStack.push(Qt.resolvedUrl("ImagePage.qml"), { gag: model })
                 }
             }
         }

@@ -52,6 +52,7 @@ public:
         TitleRole = Qt::UserRole,
         UrlRole,
         ImageUrlRole,
+        GifImageUrlRole,
         ImageHeightRole,
         VotesCountRole,
         CommentsCountRole,

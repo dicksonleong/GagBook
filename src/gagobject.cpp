@@ -36,12 +36,18 @@ class GagObjectData : public QSharedData
 public:
     GagObjectData() : imageHeight(0), votesCount(0), commentsCount(0),
         isVideo(false), isNSFW(false), isGIF(false) {}
-    ~GagObjectData() { QFile::remove(imageUrl.toLocalFile()); }
+    ~GagObjectData() {
+        if (imageUrl.scheme() == "file")
+            QFile::remove(imageUrl.toLocalFile());
+        if (gifImageUrl.scheme() == "file")
+            QFile::remove(gifImageUrl.toLocalFile());
+    }
 
     QString id;
     QUrl url;
     QString title;
     QUrl imageUrl;
+    QUrl gifImageUrl;
     int imageHeight;
     int votesCount;
     int commentsCount;
@@ -111,6 +117,16 @@ QUrl GagObject::imageUrl() const
 void GagObject::setImageUrl(const QUrl &imageUrl)
 {
     d->imageUrl = imageUrl;
+}
+
+QUrl GagObject::gifImageUrl() const
+{
+    return d->gifImageUrl;
+}
+
+void GagObject::setGifImageUrl(const QUrl &imageUrl)
+{
+    d->gifImageUrl = imageUrl;
 }
 
 int GagObject::imageHeight() const

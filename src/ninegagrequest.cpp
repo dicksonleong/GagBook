@@ -114,7 +114,8 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
                 gag.setImageUrl(postContainer.findFirst("img.youtube-thumb").attribute("src"));
             } else {
                 gag.setIsGIF(true);
-                gag.setImageUrl(postContainer.findFirst("div.badge-animated-container-animated").attribute("data-image"));
+                gag.setImageUrl(postContainer.findFirst("img.badge-item-img").attribute("src"));
+                gag.setGifImageUrl(postContainer.findFirst("div.badge-animated-container-animated").attribute("data-image"));
             }
         } else {
             gag.setImageUrl(postContainer.findFirst("img.badge-item-img").attribute("src"));

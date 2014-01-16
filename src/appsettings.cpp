@@ -34,7 +34,6 @@ AppSettings::AppSettings(QObject *parent) :
 {
     m_whiteTheme = m_settings->value("whiteTheme", false).toBool();
     m_source = static_cast<Source>(m_settings->value("source", 0).toInt());
-    m_gifDownloadMode = static_cast<GifDownloadMode>(m_settings->value("gifDownloadMode", 0).toInt());
 }
 
 bool AppSettings::isWhiteTheme() const
@@ -62,19 +61,5 @@ void AppSettings::setSource(Source source)
         m_source = source;
         m_settings->setValue("source", static_cast<int>(m_source));
         emit sourceChanged();
-    }
-}
-
-AppSettings::GifDownloadMode AppSettings::gifDownloadMode() const
-{
-    return m_gifDownloadMode;
-}
-
-void AppSettings::setGifDownloadMode(GifDownloadMode mode)
-{
-    if (m_gifDownloadMode != mode) {
-        m_gifDownloadMode = mode;
-        m_settings->setValue("gifDownloadMode", static_cast<int>(m_gifDownloadMode));
-        emit gifDownloadModeChanged();
     }
 }

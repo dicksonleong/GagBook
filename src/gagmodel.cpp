@@ -44,6 +44,7 @@ GagModel::GagModel(QObject *parent) :
     roles[TitleRole] = "title";
     roles[UrlRole] = "url";
     roles[ImageUrlRole] = "imageUrl";
+    roles[GifImageUrlRole] = "gifImageUrl";
     roles[ImageHeightRole] = "imageHeight";
     roles[VotesCountRole] = "votesCount";
     roles[CommentsCountRole] = "commentsCount";
@@ -85,6 +86,10 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
         if (gag.imageUrl().scheme() != "file")
             return QUrl();
         return gag.imageUrl();
+    case GifImageUrlRole:
+        if (gag.gifImageUrl().scheme() != "file")
+            return QUrl();
+        return gag.gifImageUrl();
     case ImageHeightRole:
         return gag.imageHeight();
     case VotesCountRole:
@@ -225,36 +230,16 @@ void GagModel::downloadImage(int i)
 
     m_manualImageDownloader = new GagImageDownloader(manager()->networkManager(), this);
     m_manualImageDownloader->setGagList(gags);
-    m_manualImageDownloader->setDownloadGIF(true);
+    m_manualImageDownloader->setDownloadGIF(gags.first().isGIF());
     connect(m_manualImageDownloader, SIGNAL(finished()), SLOT(onManualDownloadFinished()));
     m_manualImageDownloader->start();
 }
 
 void GagModel::onSuccess(const QList<GagObject> &gagList)
 {
-    bool downloadGIF;
-    switch (m_manager->settings()->gifDownloadMode()) {
-    case AppSettings::GifDownloadOn:
-        downloadGIF = true;
-        break;
-    case AppSettings::GifDownloadOnWiFiOnly:
-        if (m_manager->networkManager()->isMobileData())
-            downloadGIF = false;
-        else
-            downloadGIF = true;
-        break;
-    case AppSettings::GifDownloadOff:
-        downloadGIF = false;
-        break;
-    default:
-        qWarning("GagModel::onSuccess(): Invalid gifDownloadMode, default mode will be used");
-        downloadGIF = true;
-        break;
-    }
-
     m_imageDownloader = new GagImageDownloader(manager()->networkManager(), this);
     m_imageDownloader->setGagList(gagList);
-    m_imageDownloader->setDownloadGIF(downloadGIF);
+    m_imageDownloader->setDownloadGIF(false);
     connect(m_imageDownloader, SIGNAL(downloadProgress(int,int)), SLOT(onImageDownloadProgress(int,int)));
     connect(m_imageDownloader, SIGNAL(finished()), SLOT(onDownloadFinished()));
     m_imageDownloader->start();

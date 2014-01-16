@@ -76,10 +76,15 @@ void GagImageDownloader::start()
     // there will be big problem since m_gagList will be replaced
     Q_ASSERT(m_replyHash.isEmpty());
     foreach (const GagObject &gag, m_gagList) {
-        if (gag.imageUrl().isEmpty() || (!m_downloadGIF && gag.isGIF()))
+        if (gag.imageUrl().isEmpty() && gag.gifImageUrl().isEmpty())
             continue;
 
-        QNetworkReply *reply = m_networkManager->createGetRequest(gag.imageUrl(), NetworkManager::Image);
+        if (m_downloadGIF && !gag.isGIF()) {
+            qWarning("GagImageDownloader::start(): Not GIF, skip");
+            continue;
+        }
+        const QUrl downloadImageUrl = m_downloadGIF ? gag.gifImageUrl() : gag.imageUrl();
+        QNetworkReply *reply = m_networkManager->createGetRequest(downloadImageUrl, NetworkManager::Image);
         // make sure the QNetworkReply will be destroy when this object is destroyed
         reply->setParent(this);
         m_replyHash.insert(reply, gag);
@@ -112,8 +117,16 @@ void GagImageDownloader::onFinished()
         if (opened) {
             image.write(reply->readAll());
             image.close();
-            m_replyHash[reply].setImageUrl(QUrl::fromLocalFile(fileName));
-            m_replyHash[reply].setImageHeight(QImageReader(&image).size().height());
+
+            GagObject gag = m_replyHash.value(reply);
+            if (m_downloadGIF) {
+                if (gag.imageUrl().isEmpty())
+                    gag.setImageUrl(QUrl::fromLocalFile(fileName));
+                gag.setGifImageUrl(QUrl::fromLocalFile(fileName));
+            } else {
+                gag.setImageUrl(QUrl::fromLocalFile(fileName));
+            }
+            gag.setImageHeight(QImageReader(&image).size().height());
         } else {
             qWarning("GagImageDownloader::onFinished(): Unable to open QFile [with fileName = %s] for writing: %s",
                    qPrintable(fileName), qPrintable(image.errorString()));

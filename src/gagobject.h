@@ -53,6 +53,9 @@ public:
     QUrl imageUrl() const;
     void setImageUrl(const QUrl &imageUrl);
 
+    QUrl gifImageUrl() const;
+    void setGifImageUrl(const QUrl &imageUrl);
+
     int imageHeight() const;
     void setImageHeight(int imageHeight);
 
