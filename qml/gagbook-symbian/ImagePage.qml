@@ -54,10 +54,9 @@ Page {
 
     // to make the image outside of the page not visible during page transitions
     clip: true
-
     states: State {
-        name: "hidden"
-        AnchorChanges { target: zoomSlider; anchors.right: undefined; anchors.left: root.right }
+        name: "SilderVisible"
+        AnchorChanges { target: zoomSlider; anchors.left: undefined; anchors.right: imagePage.right }
     }
     transitions: Transition { AnchorAnimation { duration: 250; easing.type: Easing.InOutQuad } }
 
@@ -108,6 +107,7 @@ Page {
                     if (status == Image.Ready) {
                         fitToScreen()
                         loadedAnimation.start()
+                        imagePage.state = "SilderVisible";
                     }
                 }
 
@@ -157,7 +157,7 @@ Page {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: imagePage.state = (imagePage.state ? "" : "hidden")
+            onClicked: imagePage.state = (imagePage.state ? "" : "SilderVisible")
         }
     }
 
@@ -195,7 +195,7 @@ Page {
 
     Slider {
         id: zoomSlider
-        anchors { verticalCenter: parent.verticalCenter; right: parent.right; rightMargin: constant.paddingMedium }
+        anchors { verticalCenter: parent.verticalCenter; left: parent.right; margins: constant.paddingMedium }
         platformInverted: appSettings.whiteTheme
         enabled: gagImage.status == Image.Ready
         height: parent.height * 0.6
