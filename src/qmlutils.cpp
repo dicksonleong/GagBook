@@ -28,6 +28,7 @@
 #include "qmlutils.h"
 
 #include <QtCore/QFile>
+#include <QtCore/QDir>
 #include <QtGui/QApplication>
 #include <QtGui/QClipboard>
 #include <QtDeclarative/QDeclarativeItem>
@@ -68,8 +69,6 @@ QMLUtils *QMLUtils::instance()
     return m_instance.data();
 }
 
-static const QString IMAGE_SAVING_FILE_PATH = QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
-
 QMLUtils::QMLUtils(QObject *parent) :
     QObject(parent)
 {
@@ -87,17 +86,21 @@ void QMLUtils::copyToClipboard(const QString &text)
 
 QString QMLUtils::saveImage(const QUrl &imageUrl)
 {
+    // if the url is not local file, return
     if (imageUrl.scheme() != "file")
         return QString("");
 
-    const QString imagePath = imageUrl.toLocalFile();
-    const QString copyFilePath = IMAGE_SAVING_FILE_PATH + "/" + imagePath.mid(imagePath.lastIndexOf("/") + 1);
-    bool success = QFile::copy(imagePath, copyFilePath);
+    // create the image saving directory if does not exist
+    QDir imageSavingDir(QDesktopServices::storageLocation(QDesktopServices::PicturesLocation));
+    if (!imageSavingDir.exists())
+        imageSavingDir.mkpath(".");
 
-    if (success)
-        return QUrl::fromLocalFile(copyFilePath).toString(); // use QUrl to get the "file://" scheme
-    else
-        return QString("");
+    const QString imagePath = imageUrl.toLocalFile();
+    const QString copyPath = imageSavingDir.absoluteFilePath(imagePath.mid(imagePath.lastIndexOf("/") + 1));
+    bool success = QFile::copy(imagePath, copyPath);
+
+    // use QUrl to get the file:// scheme so that it can be open using Qt.openUrlExternally() in QML
+    return (success ? QUrl::fromLocalFile(copyPath).toString() : QString(""));
 }
 
 void QMLUtils::shareLink(const QString &link, const QString &title)
