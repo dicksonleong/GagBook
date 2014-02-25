@@ -293,11 +293,19 @@ Item {
                 }
                 onClicked: {
                     if (!__savedFilePath) {
-                        __savedFilePath = QMLUtils.saveImage(model.imageUrl);
-                        if (__savedFilePath)
-                            infoBanner.alert("Image saved to " + __savedFilePath);
-                        else
+                        if (model.isGIF && !model.gifImageUrl.toString()) {
+                            infoBanner.alert("You have to download the GIF first by clicking on the image");
+                            return;
+                        }
+                        __savedFilePath = QMLUtils.saveImage(model.isGIF ? model.gifImageUrl : model.imageUrl);
+                        if (__savedFilePath) {
+                            var displayPath = __savedFilePath;
+                            if (displayPath.indexOf("file://") == 0)
+                                displayPath = displayPath.substring(7);
+                            infoBanner.alert("Image saved to " + displayPath);
+                        } else {
                             infoBanner.alert("Unable to save image");
+                        }
                     } else {
                         Qt.openUrlExternally(__savedFilePath);
                         __savedFilePath = "";
