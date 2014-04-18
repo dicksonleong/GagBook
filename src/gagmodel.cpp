@@ -37,7 +37,7 @@
 #include "gagimagedownloader.h"
 
 GagModel::GagModel(QObject *parent) :
-    QAbstractListModel(parent), m_busy(false), m_progress(0), m_manager(0), m_section(HotSection),
+    QAbstractListModel(parent), m_busy(false), m_progress(0), m_manager(0), m_selectedSection(0),
     m_request(0), m_imageDownloader(0), m_manualImageDownloader(0), m_downloadingIndex(-1)
 {
     QHash<int, QByteArray> roles;
@@ -130,16 +130,16 @@ void GagModel::setManager(GagBookManager *manager)
     m_manager = manager;
 }
 
-GagModel::Section GagModel::section() const
+int GagModel::selectedSection() const
 {
-    return m_section;
+    return m_selectedSection;
 }
 
-void GagModel::setSection(GagModel::Section section)
+void GagModel::setSelectedSection(int selectedSection)
 {
-    if (m_section != section) {
-        m_section = section;
-        emit sectionChanged();
+    if (m_selectedSection != selectedSection) {
+        m_selectedSection = selectedSection;
+        emit selectedSectionChanged();
     }
 }
 
@@ -157,15 +157,17 @@ void GagModel::refresh(RefreshType refreshType)
         m_imageDownloader = 0;
     }
 
+    const QString section = m_manager->settings()->sections().at(m_selectedSection);
+
     switch (m_manager->settings()->source()) {
     default:
         qWarning("GagModel::refresh(): Invalid source, default source will be used");
         // fallthrough
     case AppSettings::NineGagSource:
-        m_request = new NineGagRequest(manager()->networkManager(), m_section, this);
+        m_request = new NineGagRequest(manager()->networkManager(), section, this);
         break;
     case AppSettings::InfiniGagSource:
-        m_request = new InfiniGagRequest(manager()->networkManager(), m_section, this);
+        m_request = new InfiniGagRequest(manager()->networkManager(), section, this);
         break;
     }
 

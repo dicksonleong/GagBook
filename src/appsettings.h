@@ -30,6 +30,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
+#include <QtCore/QStringList>
 
 class QSettings;
 
@@ -40,6 +41,7 @@ class AppSettings : public QObject
 
     Q_PROPERTY(bool whiteTheme READ isWhiteTheme WRITE setWhiteTheme NOTIFY whiteThemeChanged)
     Q_PROPERTY(Source source READ source WRITE setSource NOTIFY sourceChanged)
+    Q_PROPERTY(QStringList sections READ sections WRITE setSections NOTIFY sectionsChanged)
 public:
     enum Source {
         NineGagSource,
@@ -54,9 +56,13 @@ public:
     Source source() const;
     void setSource(Source source);
 
+    QStringList sections() const;
+    void setSections(const QStringList &sections);
+
 signals:
     void whiteThemeChanged();
     void sourceChanged();
+    void sectionsChanged();
 
 private:
     Q_DISABLE_COPY(AppSettings)
@@ -64,6 +70,7 @@ private:
     QSettings *m_settings;
     bool m_whiteTheme;
     Source m_source;
+    QStringList m_sections;
 };
 
 #endif // APPSETTINGS_H

@@ -41,12 +41,11 @@ class GagModel : public QAbstractListModel, public QDeclarativeParserStatus
 {
     Q_OBJECT
     Q_INTERFACES(QDeclarativeParserStatus)
-    Q_ENUMS(Section)
     Q_ENUMS(RefreshType)
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
     Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(GagBookManager *manager READ manager WRITE setManager)
-    Q_PROPERTY(Section section READ section WRITE setSection NOTIFY sectionChanged)
+    Q_PROPERTY(int selectedSection READ selectedSection WRITE setSelectedSection NOTIFY selectedSectionChanged)
 public:
     enum Roles {
         TitleRole = Qt::UserRole,
@@ -60,17 +59,6 @@ public:
         IsNSFWRole,
         IsGIFRole,
         IsDownloadingRole
-    };
-
-    enum Section {
-        HotSection,
-        TrendingSection,
-        FreshSection,
-        GIFSection,
-        CuteSection,
-        GeekySection,
-        CosplaySection,
-        MemeSection
     };
 
     enum RefreshType {
@@ -92,8 +80,8 @@ public:
     GagBookManager *manager() const;
     void setManager(GagBookManager *manager);
 
-    Section section() const;
-    void setSection(Section section);
+    int selectedSection() const;
+    void setSelectedSection(int selectedSection);
 
     Q_INVOKABLE void refresh(RefreshType refreshType);
     Q_INVOKABLE void stopRefresh();
@@ -102,7 +90,7 @@ public:
 signals:
     void busyChanged();
     void progressChanged();
-    void sectionChanged();
+    void selectedSectionChanged();
     void refreshFailure(const QString &errorMessage);
 
 private slots:
@@ -116,7 +104,7 @@ private:
     bool m_busy;
     qreal m_progress;
     GagBookManager *m_manager;
-    Section m_section;
+    int m_selectedSection;
 
     QList<GagObject> m_gagList;
     GagRequest *m_request;

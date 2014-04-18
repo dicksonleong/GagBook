@@ -31,7 +31,7 @@
 
 #include "networkmanager.h"
 
-GagRequest::GagRequest(NetworkManager *networkManager, GagModel::Section section, QObject *parent) :
+GagRequest::GagRequest(NetworkManager *networkManager, const QString &section, QObject *parent) :
     QObject(parent), m_networkManager(networkManager), m_section(section), m_reply(0)
 {
 }
@@ -69,31 +69,6 @@ void GagRequest::onFinished()
         emit failure("Unable to parse response");
     else
         emit success(m_gagList);
-}
-
-QString GagRequest::getSectionText(GagModel::Section section)
-{
-    switch (section) {
-    default:
-        qWarning("GagRequest::getSectionText(): Invalid section, default section will be used");
-        // fallthrough
-    case GagModel::HotSection:
-        return "hot";
-    case GagModel::TrendingSection:
-        return "trending";
-    case GagModel::FreshSection:
-        return "fresh";
-    case GagModel::GIFSection:
-        return "gif";
-    case GagModel::CuteSection:
-        return "cute";
-    case GagModel::GeekySection:
-        return "geeky";
-    case GagModel::CosplaySection:
-        return "cosplay";
-    case GagModel::MemeSection:
-        return "meme";
-    }
 }
 
 NetworkManager *GagRequest::networkManager() const

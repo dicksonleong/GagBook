@@ -113,7 +113,7 @@ Page {
     PageHeader {
         id: pageHeader
         anchors { top: parent.top; left: parent.left; right: parent.right }
-        text: sectionModel.get(gagModel.section).text
+        text: "/" + appSettings.sections[gagModel.selectedSection]
         busy: gagModel.busy
         onClicked: gagListView.positionViewAtBeginning()
     }
@@ -124,33 +124,28 @@ Page {
         onRefreshFailure: infoBanner.alert(errorMessage);
     }
 
-    ListModel {
-        id: sectionModel
-        ListElement { text: "Hot" }
-        ListElement { text: "Trending" }
-        ListElement { text: "Fresh" }
-        ListElement { text: "GIF" }
-        ListElement { text: "Cute" }
-        ListElement { text: "Geeky" }
-        ListElement { text: "Cosplay" }
-        ListElement { text: "Meme" }
-    }
-
     QtObject {
         id: dialogManager
 
+        property Component __listModelComponent: Component { ListModel {} }
         property Component __selectionDialogComponent: Component { SelectionDialog {} }
         property Component __openLinkDialogComponent: null
 
         function createSectionDialog() {
-            var p = { titleText: "Section", model: sectionModel, selectedIndex: gagModel.section }
+            // convert array (appSettings.sections) to ListModel because SelectionDialog can not accept array
+            var listModel = __listModelComponent.createObject(null);
+            appSettings.sections.forEach(function(s) { listModel.append({ "text": s }) });
+
+            var p = { titleText: "Section", model: listModel, selectedIndex: gagModel.selectedSection }
             var dialog = __selectionDialogComponent.createObject(mainPage, p);
             dialog.statusChanged.connect(function() {
-                if (dialog.status == DialogStatus.Closed)
+                if (dialog.status == DialogStatus.Closed) {
                     dialog.destroy(250);
+                    listModel.destroy();
+                }
             });
             dialog.accepted.connect(function() {
-                gagModel.section = dialog.selectedIndex;
+                gagModel.selectedSection = dialog.selectedIndex;
                 gagModel.refresh(GagModel.RefreshAll);
             });
             dialog.open();

@@ -29,11 +29,34 @@
 
 #include <QtCore/QSettings>
 
+static QStringList defaultSections()
+{
+    QStringList sections;
+    sections.append("hot");
+    sections.append("trending");
+    sections.append("fresh");
+    sections.append("gif");
+    sections.append("cute");
+    sections.append("geeky");
+    sections.append("cosplay");
+    sections.append("meme");
+    sections.append("timely");
+    sections.append("girl");
+    sections.append("food");
+    sections.append("wtf");
+    sections.append("comic");
+    return sections;
+}
+
 AppSettings::AppSettings(QObject *parent) :
     QObject(parent), m_settings(new QSettings(this))
 {
     m_whiteTheme = m_settings->value("whiteTheme", false).toBool();
     m_source = static_cast<Source>(m_settings->value("source", 0).toInt());
+    m_sections = m_settings->value("sections").toStringList();
+
+    if (m_sections.isEmpty())
+        setSections(defaultSections());
 }
 
 bool AppSettings::isWhiteTheme() const
@@ -61,5 +84,19 @@ void AppSettings::setSource(Source source)
         m_source = source;
         m_settings->setValue("source", static_cast<int>(m_source));
         emit sourceChanged();
+    }
+}
+
+QStringList AppSettings::sections() const
+{
+    return m_sections;
+}
+
+void AppSettings::setSections(const QStringList &sections)
+{
+    if (m_sections != sections) {
+        m_sections = sections;
+        m_settings->setValue("sections", m_sections);
+        emit sectionsChanged();
     }
 }

@@ -124,7 +124,7 @@ Page {
     PageHeader {
         id: pageHeader
         anchors { top: parent.top; left: parent.left; right: parent.right }
-        text: sectionModel.get(gagModel.section).text
+        text: "/" + appSettings.sections[gagModel.selectedSection]
         busy: gagModel.busy
         onClicked: gagListView.positionViewAtBeginning()
     }
@@ -133,18 +133,6 @@ Page {
         id: gagModel
         manager: gagbookManager
         onRefreshFailure: infoBanner.alert(errorMessage);
-    }
-
-    ListModel {
-        id: sectionModel
-        ListElement { text: "Hot" }
-        ListElement { text: "Trending" }
-        ListElement { text: "Fresh" }
-        ListElement { text: "GIF" }
-        ListElement { text: "Cute" }
-        ListElement { text: "Geeky" }
-        ListElement { text: "Cosplay" }
-        ListElement { text: "Meme" }
     }
 
     QtObject {
@@ -156,14 +144,14 @@ Page {
 
         function createSectionDialog() {
             var p = { platformInverted: appSettings.whiteTheme, titleText: "Section",
-                model: sectionModel, selectedIndex: gagModel.section }
+                model: appSettings.sections, selectedIndex: gagModel.selectedSection }
             var dialog = __selectionDialogComponent.createObject(mainPage, p);
             dialog.statusChanged.connect(function() {
                 if (dialog.status == DialogStatus.Closed)
                     dialog.destroy(250);
             });
             dialog.accepted.connect(function() {
-                gagModel.section = dialog.selectedIndex;
+                gagModel.selectedSection = dialog.selectedIndex;
                 gagModel.refresh(GagModel.RefreshAll)
             })
             dialog.open();
