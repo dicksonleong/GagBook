@@ -1,3 +1,12 @@
+gagbook (0.9.0) unstable; urgency=medium
+  * Remove website settings
+  * Remove auto download GIFs setting
+  * Still image (JPG) is downloaded for GIF post for preview
+  * The actual GIF is only downloaded when clicked
+  * Allow user to manually update 9GAG section via config file
+
+ -- Dickson <dicksonleong8@gmail.com>  Sat, 19 Apr 2014 13:09:15 +0800
+
 gagbook (0.8.4) unstable; urgency=medium
   * Fix GIF URL parsing
 
