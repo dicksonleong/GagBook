@@ -155,6 +155,7 @@ Page {
 
         MouseArea {
             anchors.fill: parent
+            enabled: gagImage.status == Image.Ready
             onClicked: imagePage.state = (imagePage.state ? "" : "SilderVisible")
         }
     }
@@ -192,21 +193,14 @@ Page {
         anchors { verticalCenter: parent.verticalCenter; left: parent.right; margins: constant.paddingMedium }
         enabled: gagImage.status == Image.Ready
         height: parent.height * 0.6
-        opacity: pressed ? 1 : 0.6
+        opacity: pressed ? 1 : 0.5
         minimumValue: pinchArea.minScale
         maximumValue: pinchArea.maxScale
         stepSize: (maximumValue - minimumValue) / 20
         orientation: Qt.Vertical
+        value: gagImage.scale
 
         Behavior on opacity { NumberAnimation { duration: 150 } }
-
-        // When not pressed, bind slider value to image scale
-        Binding {
-            target: zoomSlider
-            property: "value"
-            value: gagImage.scale
-            when: !zoomSlider.presseds
-        }
 
         // When pressed, bind image scale to slider value
         Binding {
