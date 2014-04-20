@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013 Dickson Leong.
+ * Copyright (c) 2014 Dickson Leong.
  * All rights reserved.
  *
  * This file is part of GagBook.

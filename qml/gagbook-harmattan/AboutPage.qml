@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013 Dickson Leong.
+ * Copyright (c) 2014 Dickson Leong.
  * All rights reserved.
  *
  * This file is part of GagBook.
@@ -66,7 +66,7 @@ Page {
                 wrapMode: Text.Wrap
                 textFormat: Text.RichText
                 text: "v" + APP_VERSION + "<br>\
-Copyright © 2012-2013 Dickson Leong<br><br>\
+Copyright (c) 2014 Dickson Leong<br><br>\
 GagBook is an unofficial mobile app for 9GAG website that allows you to view posts from \
 9GAG easily with a simple, smooth and native user interface.<br><br>\
 By using this app you agree to 9GAG's <a href=\"http://9gag.com/tos\">Terms of Service</a> \
