@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>splash/gagbook-splash-symbian.jpg</file>
+        <file>gagbook-splash-symbian.jpg</file>
     </qresource>
 </RCC>

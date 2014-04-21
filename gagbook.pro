@@ -44,7 +44,7 @@ simulator{
     folder_02.target = qml
     DEPLOYMENTFOLDERS = folder_01 folder_02
 
-    RESOURCES += resource.qrc
+    RESOURCES += splash/resource.qrc
 }
 
 # MeeGo Harmattan
@@ -73,7 +73,7 @@ symbian{
     CONFIG += qt-components
     TARGET.CAPABILITY += NetworkServices
     ICON = gagbook-symbian.svg
-    RESOURCES += resource.qrc
+    RESOURCES += splash/resource.qrc
 
     vendorinfo += "%{\"Dickson\"}" ":\"Dickson\""
     my_deployment.pkg_prerules = vendorinfo

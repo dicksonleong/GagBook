@@ -51,7 +51,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app->setApplicationVersion(APP_VERSION);
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
-    QSplashScreen *splash = new QSplashScreen(QPixmap(":/splash/gagbook-splash-symbian.jpg"));
+    QSplashScreen *splash = new QSplashScreen(QPixmap(":/gagbook-splash-symbian.jpg"));
     splash->show();
     splash->showMessage("Loading...", Qt::AlignHCenter | Qt::AlignBottom, Qt::white);
 #endif
