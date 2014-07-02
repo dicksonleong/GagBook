@@ -36,11 +36,11 @@
 #include <QtGui/QPixmap>
 #endif
 
-#include "src/gagbookmanager.h"
-#include "src/gagmodel.h"
-#include "src/qmlutils.h"
-#include "src/networkmanager.h"
-#include "src/appsettings.h"
+#include "../src/gagbookmanager.h"
+#include "../src/gagmodel.h"
+#include "../src/qmlutils.h"
+#include "../src/networkmanager.h"
+#include "../src/appsettings.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {

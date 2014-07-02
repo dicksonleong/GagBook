@@ -28,31 +28,36 @@
 #include "gagmodel.h"
 
 #include <QtCore/QUrl>
+#include <QDebug>
 
 #include "gagbookmanager.h"
 #include "appsettings.h"
 #include "networkmanager.h"
-#include "ninegagrequest.h"
 #include "infinigagrequest.h"
+#include "ninegagrequest.h"
 #include "gagimagedownloader.h"
 
 GagModel::GagModel(QObject *parent) :
     QAbstractListModel(parent), m_busy(false), m_progress(0), m_manager(0), m_selectedSection(0),
     m_request(0), m_imageDownloader(0), m_manualImageDownloader(0), m_downloadingIndex(-1)
 {
-    QHash<int, QByteArray> roles;
-    roles[TitleRole] = "title";
-    roles[UrlRole] = "url";
-    roles[ImageUrlRole] = "imageUrl";
-    roles[GifImageUrlRole] = "gifImageUrl";
-    roles[ImageHeightRole] = "imageHeight";
-    roles[VotesCountRole] = "votesCount";
-    roles[CommentsCountRole] = "commentsCount";
-    roles[IsVideoRole] = "isVideo";
-    roles[IsNSFWRole] = "isNSFW";
-    roles[IsGIFRole] = "isGIF";
-    roles[IsDownloadingRole] = "isDownloading";
-    setRoleNames(roles);
+    _roles[TitleRole] = "title";
+    _roles[UrlRole] = "url";
+    _roles[ImageUrlRole] = "imageUrl";
+    _roles[FullImageUrlRole] = "fullImageUrl";
+    _roles[GifImageUrlRole] = "gifImageUrl";
+    _roles[ImageHeightRole] = "imageHeight";
+    _roles[VotesCountRole] = "votesCount";
+    _roles[CommentsCountRole] = "commentsCount";
+    _roles[IsVideoRole] = "isVideo";
+    _roles[IsNSFWRole] = "isNSFW";
+    _roles[IsGIFRole] = "isGIF";
+    _roles[IsPartialImageRole] = "isPartialImage";
+    _roles[IsDownloadingRole] = "isDownloading";
+}
+
+QHash<int, QByteArray> GagModel::roleNames() const {
+  return _roles;
 }
 
 void GagModel::classBegin()
@@ -86,6 +91,8 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
         if (gag.imageUrl().scheme() != "file")
             return QUrl();
         return gag.imageUrl();
+    case FullImageUrlRole:
+        return gag.fullImageUrl();
     case GifImageUrlRole:
         if (gag.gifImageUrl().scheme() != "file")
             return QUrl();
@@ -102,6 +109,8 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
         return gag.isNSFW();
     case IsGIFRole:
         return gag.isGIF();
+    case IsPartialImageRole:
+        return gag.isPartialImage();
     case IsDownloadingRole:
         return index.row() == m_downloadingIndex;
     default:
@@ -118,6 +127,11 @@ bool GagModel::isBusy() const
 qreal GagModel::progress() const
 {
     return m_progress;
+}
+
+int GagModel::gagCount() const
+{
+    return m_gagList.count();
 }
 
 GagBookManager *GagModel::manager() const
@@ -164,11 +178,13 @@ void GagModel::refresh(RefreshType refreshType)
         qWarning("GagModel::refresh(): Invalid source, default source will be used");
         // fallthrough
     case AppSettings::NineGagSource:
+    case AppSettings::InfiniGagSource:
         m_request = new NineGagRequest(manager()->networkManager(), section, this);
         break;
-    case AppSettings::InfiniGagSource:
+    /*case AppSettings::InfiniGagSource:
+        qDebug() << "Using InfiniGagSource";
         m_request = new InfiniGagRequest(manager()->networkManager(), section, this);
-        break;
+        break;*/
     }
 
     if (!m_gagList.isEmpty()) {
@@ -283,6 +299,7 @@ void GagModel::onDownloadFinished()
 
     m_busy = false;
     emit busyChanged();
+    emit countChanged();
 
     m_imageDownloader->deleteLater();
     m_imageDownloader = 0;

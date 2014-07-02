@@ -29,7 +29,11 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QDir>
-#include <QtGui/QApplication>
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+#include <QtGui/QDesktopServices>
+#else
+#include <QtCore/QStandardPaths>
+#endif
 #include <QtGui/QClipboard>
 #include <QtDeclarative/QDeclarativeItem>
 #include <QtGui/QDesktopServices>
@@ -76,12 +80,14 @@ QMLUtils::QMLUtils(QObject *parent) :
 
 void QMLUtils::copyToClipboard(const QString &text)
 {
+    /* TODO: sailfish
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(text, QClipboard::Clipboard);
     clipboard->setText(text, QClipboard::Selection);
 #ifdef Q_WS_SIMULATOR
     qDebug("Copied to clipboard: %s", qPrintable(text));
 #endif
+*/
 }
 
 QString QMLUtils::saveImage(const QUrl &imageUrl)
@@ -91,7 +97,11 @@ QString QMLUtils::saveImage(const QUrl &imageUrl)
         return QString("");
 
     // create the image saving directory if does not exist
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     QDir imageSavingDir(QDesktopServices::storageLocation(QDesktopServices::PicturesLocation));
+#else
+    QDir imageSavingDir(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation));
+#endif
     if (!imageSavingDir.exists())
         imageSavingDir.mkpath(".");
 

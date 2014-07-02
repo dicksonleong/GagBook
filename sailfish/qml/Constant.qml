@@ -25,55 +25,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "gagrequest.h"
+import QtQuick 2.0
 
-#include <QtNetwork/QNetworkReply>
+QtObject {
+    id: constant
 
-#include "networkmanager.h"
+    property color colorHighlighted: colorLight
+    property color colorLight: theme.inverted ? "#ffffff" : "#191919"
+    property color colorMid: theme.inverted ? "#8c8c8c" : "#666666"
+    property color colorTextSelection: "#4591ff"
+    property color colorDisabled: theme.inverted ? "#444444" : "#b2b2b4"
 
-GagRequest::GagRequest(NetworkManager *networkManager, const QString &section, QObject *parent) :
-    QObject(parent), m_networkManager(networkManager), m_section(section), m_reply(0)
-{
-}
+    property int paddingSmall: 4
+    property int paddingMedium: 8
+    property int paddingLarge: 12
+    property int paddingXLarge: 16
 
-void GagRequest::setLastId(const QString &lastId)
-{
-    m_lastId = lastId;
-}
+    property int fontSizeXSmall: 20
+    property int fontSizeSmall: 22
+    property int fontSizeMedium: 24
+    property int fontSizeLarge: 26
+    property int fontSizeXLarge: 28
+    property int fontSizeXXLarge: 32
 
-void GagRequest::send()
-{
-    Q_ASSERT(m_reply == 0);
-
-    m_reply = createRequest(m_section, m_lastId);
-    // make sure the QNetworkReply will be destroy when this object is destroyed
-    m_reply->setParent(this);
-    connect(m_reply, SIGNAL(finished()), this, SLOT(onFinished()));
-}
-
-void GagRequest::onFinished()
-{
-    if (m_reply->error()) {
-        qDebug("response error");
-
-        emit failure(m_reply->errorString());
-        m_reply->deleteLater();
-        m_reply = 0;
-        return;
-    }
-
-    QByteArray response = m_reply->readAll();
-    m_reply->deleteLater();
-    m_reply = 0;
-
-    m_gagList = parseResponse(response);
-    if (m_gagList.isEmpty())
-        emit failure("Unable to parse response");
-    else
-        emit success(m_gagList);
-}
-
-NetworkManager *GagRequest::networkManager() const
-{
-    return m_networkManager;
+    property int headerHeight: inPortrait ? 72 : 56
 }

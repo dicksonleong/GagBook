@@ -53,6 +53,9 @@ public:
     QUrl imageUrl() const;
     void setImageUrl(const QUrl &imageUrl);
 
+    QUrl fullImageUrl() const;
+    void setFullImageUrl(const QUrl &fullImageUrl);
+
     QUrl gifImageUrl() const;
     void setGifImageUrl(const QUrl &imageUrl);
 
@@ -73,6 +76,9 @@ public:
 
     bool isGIF() const;
     void setIsGIF(bool isGIF);
+
+    bool isPartialImage() const;
+    void setIsPartialImage(bool isPartialImage);
 
     QVariantMap toVariantMap() const;
     

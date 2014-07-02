@@ -29,7 +29,12 @@
 #define GAGMODEL_H
 
 #include <QtCore/QAbstractListModel>
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QtDeclarative/QDeclarativeParserStatus>
+#else
+#include <QQmlParserStatus>
+#endif
 
 #include "gagobject.h"
 
@@ -37,11 +42,16 @@ class GagBookManager;
 class GagRequest;
 class GagImageDownloader;
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 class GagModel : public QAbstractListModel, public QDeclarativeParserStatus
+#else
+class GagModel : public QAbstractListModel, public QQmlParserStatus
+#endif
 {
     Q_OBJECT
-    Q_INTERFACES(QDeclarativeParserStatus)
+    Q_INTERFACES(QQmlParserStatus)
     Q_ENUMS(RefreshType)
+    Q_PROPERTY(int count READ gagCount NOTIFY countChanged)
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
     Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(GagBookManager *manager READ manager WRITE setManager)
@@ -51,6 +61,7 @@ public:
         TitleRole = Qt::UserRole,
         UrlRole,
         ImageUrlRole,
+        FullImageUrlRole,
         GifImageUrlRole,
         ImageHeightRole,
         VotesCountRole,
@@ -58,6 +69,7 @@ public:
         IsVideoRole,
         IsNSFWRole,
         IsGIFRole,
+        IsPartialImageRole,
         IsDownloadingRole
     };
 
@@ -73,9 +85,11 @@ public:
 
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
+    QHash<int, QByteArray> roleNames() const;
 
     bool isBusy() const;
     qreal progress() const;
+    int gagCount() const;
 
     GagBookManager *manager() const;
     void setManager(GagBookManager *manager);
@@ -88,6 +102,7 @@ public:
     Q_INVOKABLE void downloadImage(int i);
 
 signals:
+    void countChanged();
     void busyChanged();
     void progressChanged();
     void selectedSectionChanged();
@@ -105,6 +120,7 @@ private:
     qreal m_progress;
     GagBookManager *m_manager;
     int m_selectedSection;
+    QHash<int, QByteArray> _roles;
 
     QList<GagObject> m_gagList;
     GagRequest *m_request;

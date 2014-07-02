@@ -28,7 +28,7 @@
 #include "infinigagrequest.h"
 
 #include <QtCore/QUrl>
-#include <qt-json/json.h>
+#include <../qt-json/json.h>
 
 #include "networkmanager.h"
 

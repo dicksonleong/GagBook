@@ -25,55 +25,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "gagrequest.h"
+import QtQuick 2.0
+import Sailfish.Silica 1.0
 
-#include <QtNetwork/QNetworkReply>
+Page {
+    id: commentsPage
 
-#include "networkmanager.h"
+    property string gagURL
+    property string rootUrl: "http://comment.9gag.com/comment/list?url=%1" +
+                             "&appId=a_dd8f2b7d304a10edaf6f29517ea0ca4100a43d1b&readOnly=1"
 
-GagRequest::GagRequest(NetworkManager *networkManager, const QString &section, QObject *parent) :
-    QObject(parent), m_networkManager(networkManager), m_section(section), m_reply(0)
-{
-}
-
-void GagRequest::setLastId(const QString &lastId)
-{
-    m_lastId = lastId;
-}
-
-void GagRequest::send()
-{
-    Q_ASSERT(m_reply == 0);
-
-    m_reply = createRequest(m_section, m_lastId);
-    // make sure the QNetworkReply will be destroy when this object is destroyed
-    m_reply->setParent(this);
-    connect(m_reply, SIGNAL(finished()), this, SLOT(onFinished()));
-}
-
-void GagRequest::onFinished()
-{
-    if (m_reply->error()) {
-        qDebug("response error");
-
-        emit failure(m_reply->errorString());
-        m_reply->deleteLater();
-        m_reply = 0;
-        return;
+    PageHeader {
+        id: pageHeader
+        title: "Comments"
     }
+    SilicaFlickable {
+        anchors {top: pageHeader.bottom; left: parent.left; right: parent.right; bottom: parent.bottom}
+        contentHeight: childrenRect.height
 
-    QByteArray response = m_reply->readAll();
-    m_reply->deleteLater();
-    m_reply = 0;
+        ScrollDecorator{}
 
-    m_gagList = parseResponse(response);
-    if (m_gagList.isEmpty())
-        emit failure("Unable to parse response");
-    else
-        emit success(m_gagList);
-}
+        SilicaWebView {
+            id: commentsWebView
+            anchors.fill: parent
+            //height: childrenRect.height
+            url: rootUrl.arg(gagURL)
+            onLoadingChanged: console.log("page load status: " + loadRequest.status)
 
-NetworkManager *GagRequest::networkManager() const
-{
-    return m_networkManager;
+        }
+    }
 }

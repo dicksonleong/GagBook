@@ -25,55 +25,57 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "gagrequest.h"
+import QtQuick 2.0
+import Sailfish.Silica 1.0
 
-#include <QtNetwork/QNetworkReply>
+Item {
+    id: root
 
-#include "networkmanager.h"
+    property string text
+    property bool busy: false
 
-GagRequest::GagRequest(NetworkManager *networkManager, const QString &section, QObject *parent) :
-    QObject(parent), m_networkManager(networkManager), m_section(section), m_reply(0)
-{
-}
+    signal clicked
 
-void GagRequest::setLastId(const QString &lastId)
-{
-    m_lastId = lastId;
-}
+    height: constant.headerHeight
+    implicitWidth: parent.width
 
-void GagRequest::send()
-{
-    Q_ASSERT(m_reply == 0);
-
-    m_reply = createRequest(m_section, m_lastId);
-    // make sure the QNetworkReply will be destroy when this object is destroyed
-    m_reply->setParent(this);
-    connect(m_reply, SIGNAL(finished()), this, SLOT(onFinished()));
-}
-
-void GagRequest::onFinished()
-{
-    if (m_reply->error()) {
-        qDebug("response error");
-
-        emit failure(m_reply->errorString());
-        m_reply->deleteLater();
-        m_reply = 0;
-        return;
+    BorderImage {
+        id: background
+        anchors.fill: parent
+        border { top: 15; left: 15; right: 15 }
+        source: "image://theme/meegotouch-view-header-fixed" + (appSettings.whiteTheme ? "" : "-inverted")
+                + (mouseArea.pressed ? "-pressed" : "")
     }
 
-    QByteArray response = m_reply->readAll();
-    m_reply->deleteLater();
-    m_reply = 0;
+    Text {
+        id: mainText
+        anchors {
+            verticalCenter: parent.verticalCenter
+            left: parent.left
+            right: busyLoader.left
+            margins: constant.paddingLarge
+        }
+        font.pixelSize: constant.fontSizeXLarge
+        color: constant.colorLight
+        elide: Text.ElideRight
+        text: root.text
+    }
 
-    m_gagList = parseResponse(response);
-    if (m_gagList.isEmpty())
-        emit failure("Unable to parse response");
-    else
-        emit success(m_gagList);
-}
+    Loader {
+        id: busyLoader
+        anchors {
+            verticalCenter: parent.verticalCenter
+            right: parent.right; rightMargin: constant.paddingLarge
+        }
+        sourceComponent: busy ? updatingIndicator : undefined
 
-NetworkManager *GagRequest::networkManager() const
-{
-    return m_networkManager;
+        Component { id: updatingIndicator; BusyIndicator { running: true } }
+    }
+
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+        enabled: root.enabled
+        onClicked: root.clicked()
+    }
 }

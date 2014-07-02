@@ -30,6 +30,7 @@
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QFile>
+#include <QDebug>
 
 class GagObjectData : public QSharedData
 {
@@ -47,6 +48,7 @@ public:
     QUrl url;
     QString title;
     QUrl imageUrl;
+    QUrl fullImageUrl;
     QUrl gifImageUrl;
     int imageHeight;
     int votesCount;
@@ -54,6 +56,7 @@ public:
     bool isVideo;
     bool isNSFW;
     bool isGIF;
+    bool isPartialImage;
 
 private:
     Q_DISABLE_COPY(GagObjectData) // Disable copy for the data
@@ -117,6 +120,16 @@ QUrl GagObject::imageUrl() const
 void GagObject::setImageUrl(const QUrl &imageUrl)
 {
     d->imageUrl = imageUrl;
+}
+
+QUrl GagObject::fullImageUrl() const
+{
+    return d->fullImageUrl;
+}
+
+void GagObject::setFullImageUrl(const QUrl &fullImageUrl)
+{
+    d->fullImageUrl = fullImageUrl;
 }
 
 QUrl GagObject::gifImageUrl() const
@@ -189,6 +202,16 @@ void GagObject::setIsGIF(bool isGIF)
     d->isGIF = isGIF;
 }
 
+bool GagObject::isPartialImage() const
+{
+    return d->isPartialImage;
+}
+
+void GagObject::setIsPartialImage(bool isPartialImage)
+{
+    d->isPartialImage = isPartialImage;
+}
+
 QVariantMap GagObject::toVariantMap() const
 {
     QVariantMap gagMap;
@@ -196,11 +219,13 @@ QVariantMap GagObject::toVariantMap() const
     gagMap["url"] = d->url;
     gagMap["title"] = d->title;
     gagMap["imageUrl"] = d->imageUrl;
+    gagMap["fullImageUrl"] = d->fullImageUrl;
     gagMap["imageHeight"] = d->imageHeight;
     gagMap["votesCount"] = d->votesCount;
     gagMap["commentsCount"] = d->commentsCount;
     gagMap["isVideo"] = d->isVideo;
     gagMap["isNSFW"] = d->isNSFW;
     gagMap["isGIF"] = d->isGIF;
+    gagMap["isPartialImage"] = d->isPartialImage;
     return gagMap;
 }

@@ -28,12 +28,20 @@
 #include "ninegagrequest.h"
 
 #include <QtCore/QRegExp>
-#include <QtWebKit/QWebPage>
-#include <QtWebKit/QWebFrame>
-#include <QtWebKit/QWebElement>
-#include <QtWebKit/QWebElementCollection>
+#include <QWebPage>
+#include <QWebFrame>
+#include <QWebElement>
+#include <QWebElementCollection>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QUrlQuery>
+#endif
+
+#include <QUrl>
+#include <QDebug>
 
 #include "networkmanager.h"
+#include "qmlutils.h"
 
 NineGagRequest::NineGagRequest(NetworkManager *networkManager, const QString &section, QObject *parent) :
     GagRequest(networkManager, section, parent)
@@ -43,19 +51,30 @@ NineGagRequest::NineGagRequest(NetworkManager *networkManager, const QString &se
 QNetworkReply *NineGagRequest::createRequest(const QString &section, const QString &lastId)
 {
     QUrl requestUrl("http://9gag.com/" + section);
-    if (!lastId.isEmpty())
-        requestUrl.addQueryItem("id", lastId);
 
-    return networkManager()->createGetRequest(requestUrl, NetworkManager::JSON);
+    if (!lastId.isEmpty()) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+        requestUrl.addQueryItem("id", lastId);
+#else
+        QUrlQuery q;
+        q.addQueryItem("id", lastId);
+        requestUrl.setQuery(q.query());
+#endif
+    }
+
+    qDebug() << "getting url: " << requestUrl;
+
+    return networkManager()->createGetRequest(requestUrl, NetworkManager::HTML);
 }
 
 static QWebElementCollection getEntryItemsFromHtml(const QString &html);
-static QWebElementCollection getEntryItemsFromJson(const QString &json);
 static QList<GagObject> parseGAG(const QWebElementCollection &entryItems);
 
 QList<GagObject> NineGagRequest::parseResponse(const QByteArray &response)
 {
-    return parseGAG(getEntryItemsFromJson(QString::fromUtf8(response)));
+    qDebug() << "ineGagRequest::parseResponse: got response with length: " << response.length();
+
+    return parseGAG(getEntryItemsFromHtml(QString::fromUtf8(response)));
 }
 
 static QWebElementCollection getEntryItemsFromHtml(const QString &html)
@@ -72,25 +91,6 @@ static QWebElementCollection getEntryItemsFromHtml(const QString &html)
     return webPage.mainFrame()->findAllElements("article");
 }
 
-// can not use Qt-Json to parse this JSON because it will cause the order
-// of entry-item to be sorted when parsed into a QVariantMap
-static QWebElementCollection getEntryItemsFromJson(const QString &json)
-{
-    QString html = "<html>";
-
-    QRegExp entryItemsRx("<article.+<\\\\/article>");
-    entryItemsRx.setMinimal(true);
-    int pos = 0;
-    while ((pos = entryItemsRx.indexIn(json, pos)) != -1) {
-        html += entryItemsRx.cap().remove('\\');
-        pos += entryItemsRx.matchedLength();
-    }
-
-    html += "</html>";
-
-    return getEntryItemsFromHtml(html);
-}
-
 static const QRegExp dataScriptImgSrcRegExp("<img.*src=\"(http[^\\s\"]+)\".*\\/>");
 
 static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
@@ -104,8 +104,10 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
         gag.setVotesCount(element.attribute("data-entry-votes").toInt());
         gag.setCommentsCount(element.attribute("data-entry-comments").toInt());
         gag.setTitle(element.findFirst("a").toPlainText().trimmed());
+        gag.setIsPartialImage(false);
 
         const QWebElement postContainer = element.findFirst("div.post-container");
+
         if (!postContainer.findFirst("div.nsfw-post").isNull()) {
             gag.setIsNSFW(true);
         } else if (!postContainer.findFirst("span.play").isNull()) {
@@ -114,10 +116,25 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
                 gag.setImageUrl(postContainer.findFirst("img.youtube-thumb").attribute("src"));
             } else {
                 gag.setIsGIF(true);
-                gag.setImageUrl(postContainer.findFirst("img.badge-item-img").attribute("src"));
+                gag.setImageUrl(postContainer.findFirst("div.badge-animated-container-animated").attribute("data-image"));
                 gag.setGifImageUrl(postContainer.findFirst("div.badge-animated-container-animated").attribute("data-image"));
             }
-        } else {
+        } else if(!element.findFirst("div.post-container.with-button").isNull()) {
+            //not full pic, we'll need to go deeper for the full lenght image
+            const QUrl regularImgUrl = QString(postContainer.findFirst("img.badge-item-img").attribute("src"));
+            const QUrl imgUrl = QString("%1/photo/%2_700b.jpg").arg(regularImgUrl.toString(QUrl::RemovePath)).arg(gag.id());
+
+            Q_ASSERT(imgUrl.isValid());
+
+            qDebug() << "regularImgUrl: " << regularImgUrl;
+            qDebug() << "imgUrl: " << imgUrl;
+
+            gag.setFullImageUrl(imgUrl);
+            gag.setImageUrl(regularImgUrl);
+            gag.setIsPartialImage(true);
+        }
+
+        else {
             gag.setImageUrl(postContainer.findFirst("img.badge-item-img").attribute("src"));
         }
 

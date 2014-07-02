@@ -1,0 +1,34 @@
+Name: harbour-gagbook
+Summary: An unofficial app for 9GAG website
+Version: 0.9.0
+Release: 1
+Group: Applications/Internet
+License: LICENSE
+Sources:
+- '%{name}-%{version}.tar.bz2'
+Description: |
+  GagBook is an unofficial mobile app for 9GAG website that allows you to view posts from 9GAG easily with a simple, smooth and native user interface.
+Configure: none
+Builder: qtc5
+QMakeOptions:
+    - VERSION=%{version}
+PkgConfigBR:
+- Qt5Quick
+- Qt5Qml
+- Qt5Core
+- Qt5SystemInfo
+- qdeclarative5-boostable
+
+Requires:
+- mapplauncherd-booster-silica-qt5
+- sailfishsilica-qt5
+- qt5-qtdeclarative-systeminfo
+Files:
+- /usr/share/icons/hicolor/86x86/apps
+- /usr/share/applications
+- /usr/share/%{name}
+- /usr/bin
+- '%{_bindir}'
+- '%{_datadir}/applications/%{name}.desktop'
+- '%{_datadir}/icons/hicolor/86x86/apps/%{name}.png'
+PkgBR: []

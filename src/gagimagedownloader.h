@@ -64,6 +64,7 @@ private:
     NetworkManager *m_networkManager;
     QList<GagObject> m_gagList;
     bool m_downloadGIF;
+    bool m_downloadFullPic;
 
     QHash<QNetworkReply*, GagObject> m_replyHash;
     int m_imagesTotal;

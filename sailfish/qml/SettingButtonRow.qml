@@ -25,55 +25,51 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "gagrequest.h"
+import QtQuick 2.0
+import Sailfish.Silica 1.0
 
-#include <QtNetwork/QNetworkReply>
+Item {
+    id: root
 
-#include "networkmanager.h"
+    property string text: ""
+    property variant buttonsText: []
+    property int checkedButtonIndex: 0
 
-GagRequest::GagRequest(NetworkManager *networkManager, const QString &section, QObject *parent) :
-    QObject(parent), m_networkManager(networkManager), m_section(section), m_reply(0)
-{
-}
+    signal buttonClicked(int index)
 
-void GagRequest::setLastId(const QString &lastId)
-{
-    m_lastId = lastId;
-}
+    width: parent.width
+    height: settingText.paintedHeight + buttonRow.height + buttonRow.anchors.topMargin
 
-void GagRequest::send()
-{
-    Q_ASSERT(m_reply == 0);
-
-    m_reply = createRequest(m_section, m_lastId);
-    // make sure the QNetworkReply will be destroy when this object is destroyed
-    m_reply->setParent(this);
-    connect(m_reply, SIGNAL(finished()), this, SLOT(onFinished()));
-}
-
-void GagRequest::onFinished()
-{
-    if (m_reply->error()) {
-        qDebug("response error");
-
-        emit failure(m_reply->errorString());
-        m_reply->deleteLater();
-        m_reply = 0;
-        return;
+    Text {
+        id: settingText
+        anchors { left: parent.left; top: parent.top; leftMargin: constant.paddingMedium }
+        font.pixelSize: constant.fontSizeLarge
+        color: constant.colorLight
+        text: root.text
     }
 
-    QByteArray response = m_reply->readAll();
-    m_reply->deleteLater();
-    m_reply = 0;
+    Row {
+        id: buttonRow
+        anchors {
+            top: settingText.bottom
+            left: parent.left
+            right: parent.right
+            margins: constant.paddingSmall
+        }
 
-    m_gagList = parseResponse(response);
-    if (m_gagList.isEmpty())
-        emit failure("Unable to parse response");
-    else
-        emit success(m_gagList);
-}
+        Repeater {
+            id: buttonRepeater
+            model: root.buttonsText
 
-NetworkManager *GagRequest::networkManager() const
-{
-    return m_networkManager;
+            Button {
+                text: modelData
+                onClicked: root.buttonClicked(index)
+            }
+        }
+    }
+
+    Component.onCompleted: {
+        if (buttonRepeater.count > 0)
+            buttonRow.checkedButton = buttonRepeater.itemAt(root.checkedButtonIndex)
+    }
 }
