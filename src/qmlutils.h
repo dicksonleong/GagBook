@@ -39,16 +39,12 @@ class QMLUtils : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int IMAGE_MAX_HEIGHT READ imageMaxHeight CONSTANT)
-    Q_PROPERTY(QUrl DEV_WEBSITE READ devWebsite CONSTANT)
     Q_PROPERTY(QUrl REPO_WEBSITE READ repoWebsite CONSTANT)
 public:
     static QMLUtils *instance();
 
     static const int IMAGE_MAX_HEIGHT;
     int imageMaxHeight() const { return IMAGE_MAX_HEIGHT; }
-
-    static const QUrl DEV_WEBSITE;
-    QUrl devWebsite() const { return DEV_WEBSITE; }
 
     static const QUrl REPO_WEBSITE;
     QUrl repoWebsite() const { return REPO_WEBSITE; }

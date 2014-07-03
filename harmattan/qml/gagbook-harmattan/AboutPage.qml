@@ -86,12 +86,6 @@ and <a href=\"http://9gag.com/privacy\">Privacy Policy</a>.<br>"
 
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "Developer's Website"
-                onClicked: Qt.openUrlExternally(QMLUtils.DEV_WEBSITE)
-            }
-
-            Button {
-                anchors.horizontalCenter: parent.horizontalCenter
                 text: "Source Repository"
                 onClicked: Qt.openUrlExternally(QMLUtils.REPO_WEBSITE)
             }

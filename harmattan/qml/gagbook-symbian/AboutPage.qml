@@ -88,14 +88,6 @@ and <a href=\"http://9gag.com/privacy\">Privacy Policy</a>.<br>"
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
                 platformInverted: appSettings.whiteTheme
-                text: "Developer's Website"
-                width: parent.width * 0.75
-                onClicked: QMLUtils.openDefaultBrowser(QMLUtils.DEV_WEBSITE)
-            }
-
-            Button {
-                anchors.horizontalCenter: parent.horizontalCenter
-                platformInverted: appSettings.whiteTheme
                 text: "Source Repository"
                 width: parent.width * 0.75
                 onClicked: QMLUtils.openDefaultBrowser(QMLUtils.REPO_WEBSITE)

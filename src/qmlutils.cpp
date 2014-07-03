@@ -29,14 +29,17 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QDir>
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-#include <QtGui/QDesktopServices>
-#else
-#include <QtCore/QStandardPaths>
-#endif
 #include <QtGui/QClipboard>
 #include <QtDeclarative/QDeclarativeItem>
 #include <QtGui/QDesktopServices>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QtCore/QStandardPaths>
+#include <QtGui/QGuiApplication>
+#else
+#include <QtGui/QDesktopServices>
+#include <QtGui/QApplication>
+#endif
 
 #ifdef Q_OS_HARMATTAN
 #include <MDataUri>
@@ -62,7 +65,6 @@ const int QMLUtils::IMAGE_MAX_HEIGHT = 2500;
 const int QMLUtils::IMAGE_MAX_HEIGHT = 3000;
 #endif
 
-const QUrl QMLUtils::DEV_WEBSITE("http://dickson-dev.blogspot.com");
 const QUrl QMLUtils::REPO_WEBSITE("https://github.com/dicksonleong/GagBook");
 
 QMLUtils *QMLUtils::instance()
@@ -80,14 +82,16 @@ QMLUtils::QMLUtils(QObject *parent) :
 
 void QMLUtils::copyToClipboard(const QString &text)
 {
-    /* TODO: sailfish
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    QClipboard *clipboard = QGuiApplication::clipboard();
+#else
     QClipboard *clipboard = QApplication::clipboard();
+#endif
     clipboard->setText(text, QClipboard::Clipboard);
     clipboard->setText(text, QClipboard::Selection);
 #ifdef Q_WS_SIMULATOR
     qDebug("Copied to clipboard: %s", qPrintable(text));
 #endif
-*/
 }
 
 QString QMLUtils::saveImage(const QUrl &imageUrl)
