@@ -69,7 +69,7 @@ Page {
             width: Math.max(gagImage.width * gagImage.scale, flickable.width)
             height: Math.max(gagImage.height * gagImage.scale, flickable.height)
 
-            AnimatedImage {
+            Image {
                 id: gagImage
 
                 property real prevScale
@@ -85,8 +85,7 @@ Page {
                 smooth: !flickable.moving
                 cache: false
                 fillMode: Image.PreserveAspectFit
-                // pause the animation when app is in background
-                paused: imagePage.status != PageStatus.Active || !Qt.application.active
+                sourceSize.height: QMLUtils.IMAGE_MAX_HEIGHT
                 source: gag.isGIF ? gag.gifImageUrl : gag.imageUrl
 
                 onScaleChanged: {

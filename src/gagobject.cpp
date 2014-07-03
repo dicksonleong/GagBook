@@ -30,12 +30,13 @@
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QFile>
+#include <QtCore/QSize>
 #include <QDebug>
 
 class GagObjectData : public QSharedData
 {
 public:
-    GagObjectData() : imageHeight(0), votesCount(0), commentsCount(0),
+    GagObjectData() : votesCount(0), commentsCount(0),
         isVideo(false), isNSFW(false), isGIF(false) {}
     ~GagObjectData() {
         if (imageUrl.scheme() == "file")
@@ -50,7 +51,7 @@ public:
     QUrl imageUrl;
     QUrl fullImageUrl;
     QUrl gifImageUrl;
-    int imageHeight;
+    QSize imageSize;
     int votesCount;
     int commentsCount;
     bool isVideo;
@@ -142,14 +143,14 @@ void GagObject::setGifImageUrl(const QUrl &imageUrl)
     d->gifImageUrl = imageUrl;
 }
 
-int GagObject::imageHeight() const
+QSize GagObject::imageSize() const
 {
-    return d->imageHeight;
+    return d->imageSize;
 }
 
-void GagObject::setImageHeight(int imageHeight)
+void GagObject::setImageSize(const QSize &imageSize)
 {
-    d->imageHeight = imageHeight;
+    d->imageSize = imageSize;
 }
 
 int GagObject::votesCount() const
@@ -220,7 +221,7 @@ QVariantMap GagObject::toVariantMap() const
     gagMap["title"] = d->title;
     gagMap["imageUrl"] = d->imageUrl;
     gagMap["fullImageUrl"] = d->fullImageUrl;
-    gagMap["imageHeight"] = d->imageHeight;
+    gagMap["imageSize"] = d->imageSize;
     gagMap["votesCount"] = d->votesCount;
     gagMap["commentsCount"] = d->commentsCount;
     gagMap["isVideo"] = d->isVideo;

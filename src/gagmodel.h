@@ -62,7 +62,7 @@ public:
         ImageUrlRole,
         FullImageUrlRole,
         GifImageUrlRole,
-        ImageHeightRole,
+        ImageSizeRole,
         VotesCountRole,
         CommentsCountRole,
         IsVideoRole,

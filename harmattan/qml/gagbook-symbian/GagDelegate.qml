@@ -56,28 +56,22 @@ Item {
             text: model.votesCount + " points · " + model.commentsCount + " comments"
         }
 
-        Image {
+        AnimatedImage {
             id: gagImage
 
-            function __calculateImageHeight() {
-                var width = 460, height = model.imageHeight;
-                if (height > QMLUtils.IMAGE_MAX_HEIGHT) {
-                    width *= QMLUtils.IMAGE_MAX_HEIGHT / height;
-                    height = QMLUtils.IMAGE_MAX_HEIGHT;
-                }
-                if (width > gagImage.width)
-                   height *= gagImage.width / width;
-                return height || gagImage.width;
-            }
+            property bool playGif: false
 
             anchors { left: parent.left; right: parent.right }
-            height: __calculateImageHeight()
-            sourceSize.height: QMLUtils.IMAGE_MAX_HEIGHT
+            height: (model.imageSize.height * (gagImage.width / model.imageSize.width)) || gagImage.width
             asynchronous: true
             smooth: !root.ListView.view.moving
             cache: false
+            // pause the animation when app is in background
+            paused: mainPage.status != PageStatus.Active || !Qt.application.active
             fillMode: Image.PreserveAspectFit
-            source: model.imageUrl
+            source: playGif ? model.gifImageUrl : model.imageUrl
+
+            onStatusChanged: if (status == AnimatedImage.Ready) playing = true;
 
             Loader {
                 id: errorTextLoader
@@ -94,7 +88,7 @@ Item {
                     case Image.Loading: return loadingRect;
                     case Image.Error: return errorText;
                     case Image.Ready:
-                        if (model.isGIF) return gifPlayIcon;
+                        if (model.isGIF && !gagImage.playGif) return gifPlayIcon;
                         if (model.isVideo) return videoPlayIcon;
                         // fallthrough
                     default: return undefined;
@@ -226,19 +220,26 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
+                enabled: !model.isNSFW && !model.isDownloading
                 onClicked: {
-                    if (model.isNSFW) return;
                     if (model.isVideo) {
-                        QMLUtils.openDefaultBrowser(model.url);
+                        Qt.openUrlExternally(model.url);
+                    } else if (model.isGIF) {
+                        if (!model.gifImageUrl.toString()) {
+                            // download GIF
+                            gagImage.playGif = true;
+                            gagModel.downloadImage(index);
+                        } else {
+                            gagImage.playGif = !gagImage.playGif;
+                            gagImage.playing = true;
+                        }
                         return;
-                    }
-                    if (!gagImage.source.toString()) {
+                    } else if (!gagImage.source.toString()) {
+                        // download image
                         gagModel.downloadImage(index);
-                        return;
+                    } else {
+                        pageStack.push(Qt.resolvedUrl("ImagePage.qml"), { gag: model });
                     }
-                    if (model.isGIF && !model.gifImageUrl.toString())
-                        gagModel.downloadImage(index);
-                    pageStack.push(Qt.resolvedUrl("ImagePage.qml"), { gag: model })
                 }
             }
         }

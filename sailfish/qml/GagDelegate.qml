@@ -31,7 +31,7 @@ import Sailfish.Silica 1.0
 Item {
     id: root
     width: ListView.view.width
-    height: mainColumn.height + 2 * mainColumn.anchors.topMargin + seperator.height
+    height: mainColumn.height + 2 * mainColumn.anchors.topMargin + separator.height
 
     Column {
         id: mainColumn
@@ -48,50 +48,33 @@ Item {
             text: model.title
         }
 
-        Row {
-            anchors { left: parent.left; right: parent.right; margins: Theme.paddingMedium  }
-            spacing: Theme.paddingMedium
-
-            Text {
-                id: commentsVotesCountTxt
-                font.pixelSize: Theme.fontSizeSmall
-                color: Theme.secondaryColor
-                text: model.votesCount + " points · " + model.commentsCount + " comments"
-            }
-
+        Text {
+            anchors { left: parent.left; right: parent.right; margins: Theme.paddingMedium }
+            font.pixelSize: Theme.fontSizeSmall
+            color: Theme.secondaryColor
+            text: model.votesCount + " points · " + model.commentsCount + " comments"
         }
 
         AnimatedImage {
             id: gagImage
-            paused: true
 
-            function __calculateImageHeight() {
-                var width = 540, height = model.imageHeight;
-                if (height > QMLUtils.IMAGE_MAX_HEIGHT) {
-                    width *= QMLUtils.IMAGE_MAX_HEIGHT / height;
-                    height = QMLUtils.IMAGE_MAX_HEIGHT;
-                }
-                if (width > gagImage.width)
-                    height *= gagImage.width / width;
-                return height || gagImage.width;
-            }
+            property bool playGif: false
 
             anchors { left: parent.left; right: parent.right }
-            height: __calculateImageHeight()
-            width: 540
-            //sourceSize.height: QMLUtils.IMAGE_MAX_HEIGHT
+            height: (model.imageSize.height * (gagImage.width / model.imageSize.width)) || gagImage.width
             asynchronous: true
             smooth: !root.ListView.view.moving
             cache: false
-            fillMode: Image.Pad//Image.PreserveAspectFit
-            source: model.imageUrl
+            // pause the animation when app is in background
+            paused: mainPage.status != PageStatus.Active || !Qt.application.active
+            fillMode: Image.PreserveAspectFit
+            source: playGif ? model.gifImageUrl : model.imageUrl
+
+            onStatusChanged: if (status == AnimatedImage.Ready) playing = true;
 
             Rectangle {
-                anchors {
-                    bottom: parent.bottom
-                }
-                width: 540
-                height: 100
+                anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
+                height: Theme.itemSizeSmall
                 color: "#25292C"
                 visible: model.isPartialImage
 
@@ -111,7 +94,6 @@ Item {
             Loader {
                 id: errorTextLoader
                 anchors.fill: parent
-                visible: gagImage.paused
                 sourceComponent: {
                     if (model.isNSFW) return nsfwText;
                     if (!gagImage.source.toString()) {
@@ -124,7 +106,7 @@ Item {
                     case Image.Loading: return loadingRect;
                     case Image.Error: return errorText;
                     case Image.Ready:
-                        if (model.isGIF) return gifPlayIcon;
+                        if (model.isGIF && !gagImage.playGif) return gifPlayIcon;
                         if (model.isVideo) return videoPlayIcon;
                         // fallthrough
                     default: return undefined;
@@ -206,7 +188,6 @@ Item {
                         BusyIndicator {
                             anchors.centerIn: parent
                             running: true
-                            visible: running
                             size: BusyIndicatorSize.Large
                         }
                     }
@@ -255,29 +236,24 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
+                enabled: !model.isNSFW && !model.isDownloading
                 onClicked: {
-                    if (model.isGIF && !model.gifImageUrl.toString()) {
-                        if (gagImage.paused) {
-                            console.log("wants to play gif");
-                            gagImage.paused = false;
-                        }
-                        else {
-                            console.log("wants to stop gif");
-                            gagImage.paused = true;
-                        }
-                    }
-                    else {
-                        if (model.isNSFW) return;
-                        if (model.isVideo) {
-                            Qt.openUrlExternally(model.url);
-                            return;
-                        }
-                        if (!gagImage.source.toString()) {
+                    if (model.isVideo) {
+                        Qt.openUrlExternally(model.url);
+                    } else if (model.isGIF) {
+                        if (!model.gifImageUrl.toString()) {
+                            // download GIF
+                            gagImage.playGif = true;
                             gagModel.downloadImage(index);
-                            return;
+                        } else {
+                            gagImage.playGif = !gagImage.playGif;
                         }
+                        return;
+                    } else if (!gagImage.source.toString()) {
+                        // download image
+                        gagModel.downloadImage(index);
+                    } else {
                         pageStack.push(Qt.resolvedUrl("ImagePage.qml"), { gag: model });
-
                     }
                 }
             }
@@ -305,10 +281,9 @@ Item {
         }
     }
 
-    Rectangle {
-        id: seperator
+    Separator {
+        id: separator
         anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
-        height: 1
         color: Theme.secondaryColor
     }
 }

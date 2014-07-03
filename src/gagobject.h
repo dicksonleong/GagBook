@@ -59,8 +59,8 @@ public:
     QUrl gifImageUrl() const;
     void setGifImageUrl(const QUrl &imageUrl);
 
-    int imageHeight() const;
-    void setImageHeight(int imageHeight);
+    QSize imageSize() const;
+    void setImageSize(const QSize &imageSize);
 
     int votesCount() const;
     void setVotesCount(int votes);

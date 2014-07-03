@@ -28,6 +28,7 @@
 #include "gagmodel.h"
 
 #include <QtCore/QUrl>
+#include <QtCore/QSize>
 #include <QDebug>
 
 #include "gagbookmanager.h"
@@ -46,7 +47,7 @@ GagModel::GagModel(QObject *parent) :
     _roles[ImageUrlRole] = "imageUrl";
     _roles[FullImageUrlRole] = "fullImageUrl";
     _roles[GifImageUrlRole] = "gifImageUrl";
-    _roles[ImageHeightRole] = "imageHeight";
+    _roles[ImageSizeRole] = "imageSize";
     _roles[VotesCountRole] = "votesCount";
     _roles[CommentsCountRole] = "commentsCount";
     _roles[IsVideoRole] = "isVideo";
@@ -96,8 +97,8 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
         if (gag.gifImageUrl().scheme() != "file")
             return QUrl();
         return gag.gifImageUrl();
-    case ImageHeightRole:
-        return gag.imageHeight();
+    case ImageSizeRole:
+        return gag.imageSize();
     case VotesCountRole:
         return gag.votesCount();
     case CommentsCountRole:

@@ -58,7 +58,6 @@ Page {
                     return gagListView.height - (gagListView.headerItem ? gagListView.headerItem.height : 0)
                 return footerColumn.height + 2 * constant.paddingLarge
             }
-            onHeightChanged: console.log(height)
             visible: gagModel.busy
 
             Column {
