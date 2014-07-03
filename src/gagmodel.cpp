@@ -54,10 +54,9 @@ GagModel::GagModel(QObject *parent) :
     _roles[IsGIFRole] = "isGIF";
     _roles[IsPartialImageRole] = "isPartialImage";
     _roles[IsDownloadingRole] = "isDownloading";
-}
-
-QHash<int, QByteArray> GagModel::roleNames() const {
-  return _roles;
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    setRoleNames(_roles);
+#endif
 }
 
 void GagModel::classBegin()
@@ -117,6 +116,11 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
         qWarning("GagModel::data(): Invalid role");
         return QVariant();
     }
+}
+
+QHash<int, QByteArray> GagModel::roleNames() const
+{
+    return _roles;
 }
 
 bool GagModel::isBusy() const

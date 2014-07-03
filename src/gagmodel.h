@@ -30,10 +30,13 @@
 
 #include <QtCore/QAbstractListModel>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-#include <QtDeclarative/QDeclarativeParserStatus>
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+  #include <QtQml/QQmlParserStatus>
+  #define DECL_QMLPARSERSTATUS_INTERFACE Q_INTERFACES(QQmlParserStatus)
 #else
-#include <QQmlParserStatus>
+  #include <QtDeclarative/QDeclarativeParserStatus>
+  #define QQmlParserStatus QDeclarativeParserStatus
+  #define DECL_QMLPARSERSTATUS_INTERFACE Q_INTERFACES(QDeclarativeParserStatus)
 #endif
 
 #include "gagobject.h"
@@ -42,14 +45,10 @@ class GagBookManager;
 class GagRequest;
 class GagImageDownloader;
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-class GagModel : public QAbstractListModel, public QDeclarativeParserStatus
-#else
 class GagModel : public QAbstractListModel, public QQmlParserStatus
-#endif
 {
     Q_OBJECT
-    Q_INTERFACES(QQmlParserStatus)
+    DECL_QMLPARSERSTATUS_INTERFACE
     Q_ENUMS(RefreshType)
     Q_PROPERTY(int count READ gagCount NOTIFY countChanged)
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
