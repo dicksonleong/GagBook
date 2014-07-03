@@ -49,21 +49,39 @@ Page {
 
         delegate: GagDelegate {}
         footer: Item {
-            //anchors.centerIn: parent
+            id: footerItem
             width: parent.width
-            height: gagModel.count > 0 ? 200 : ListView.view.height
+            height: {
+                if (!visible)
+                    return 0;
+                if (gagListView.count === 0)
+                    return gagListView.height - (gagListView.headerItem ? gagListView.headerItem.height : 0)
+                return footerColumn.height + 2 * constant.paddingLarge
+            }
+            onHeightChanged: console.log(height)
             visible: gagModel.busy
 
-            BusyIndicator {
-                id: partialProgressBar
-                anchors.margins: Theme.paddingLarge
-                anchors.centerIn: parent
-                size: gagModel.count > 0 ? BusyIndicatorSize.Medium : BusyIndicatorSize.Large
-                running: gagModel.busy
-                //value: gagModel.progress
-                //indeterminate: gagModel.progress == 0
-            }
+            Column {
+                id: footerColumn
+                anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter }
+                height: childrenRect.height
 
+                Text {
+                    anchors { left: parent.left; right: parent.right }
+                    horizontalAlignment: Text.AlignHCenter
+                    elide: Text.ElideRight
+                    font.pixelSize: constant.fontSizeMedium
+                    color: constant.colorLight
+                    text: "Downloading..."
+                }
+
+                ProgressBar {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width * 0.75
+                    value: gagModel.progress
+                    indeterminate: gagModel.progress == 0
+                }
+            }
         }
 
         onAtYEndChanged: if (atYEnd && !gagModel.busy && count > 0) gagModel.refresh(GagModel.RefreshOlder)

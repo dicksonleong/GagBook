@@ -42,6 +42,8 @@ ApplicationWindow {
         }
     }
 
+    Constant { id: constant }
+
     GagBookManager {
         id: gagbookManager
         settings: AppSettings { id: appSettings }

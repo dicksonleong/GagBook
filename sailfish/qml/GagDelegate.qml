@@ -56,7 +56,7 @@ Item {
                 id: commentsVotesCountTxt
                 font.pixelSize: Theme.fontSizeSmall
                 color: Theme.secondaryColor
-                text: model.votesCount + " points • " + model.commentsCount + " comments"
+                text: model.votesCount + " points · " + model.commentsCount + " comments"
             }
 
         }

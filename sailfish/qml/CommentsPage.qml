@@ -32,26 +32,14 @@ Page {
     id: commentsPage
 
     property string gagURL
-    property string rootUrl: "http://comment.9gag.com/comment/list?url=%1" +
+    readonly property string rootUrl: "http://comment.9gag.com/comment/list?url=%1" +
                              "&appId=a_dd8f2b7d304a10edaf6f29517ea0ca4100a43d1b&readOnly=1"
 
-    PageHeader {
-        id: pageHeader
-        title: "Comments"
-    }
-    SilicaFlickable {
-        anchors {top: pageHeader.bottom; left: parent.left; right: parent.right; bottom: parent.bottom}
-        contentHeight: childrenRect.height
+    SilicaWebView {
+        anchors.fill: parent
+        header: PageHeader { title: "Comments" }
+        url: rootUrl.arg(gagURL)
 
-        ScrollDecorator{}
-
-        SilicaWebView {
-            id: commentsWebView
-            anchors.fill: parent
-            //height: childrenRect.height
-            url: rootUrl.arg(gagURL)
-            onLoadingChanged: console.log("page load status: " + loadRequest.status)
-
-        }
+        VerticalScrollDecorator {}
     }
 }

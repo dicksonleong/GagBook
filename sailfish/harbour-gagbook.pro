@@ -49,6 +49,6 @@ OTHER_FILES += \
     $${TARGET}.png \
     README.md \
     LICENSE \
-    qml/* \
-    qml/Images/*.png \
+    qml/*.qml \
+    qml/Images/*.png
 

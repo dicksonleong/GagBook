@@ -53,13 +53,6 @@ Page {
             spacing: constant.paddingLarge
 
             SettingButtonRow {
-                text: "Theme"
-                checkedButtonIndex: appSettings.whiteTheme ? 1 : 0
-                buttonsText: ["Dark", "White"]
-                onButtonClicked: appSettings.whiteTheme = index === 1
-            }
-
-            SettingButtonRow {
                 text: "Source"
                 buttonsText: ["9GAG", "InfiniGAG"]
                 checkedButtonIndex: {
@@ -78,5 +71,5 @@ Page {
         }
     }
 
-    ScrollDecorator { flickable: settingsFlickable }
+    VerticalScrollDecorator { flickable: settingsFlickable }
 }

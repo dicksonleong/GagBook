@@ -26,27 +26,24 @@
  */
 
 import QtQuick 2.0
+import Sailfish.Silica 1.0
 
 QtObject {
     id: constant
 
-    property color colorHighlighted: colorLight
-    property color colorLight: theme.inverted ? "#ffffff" : "#191919"
-    property color colorMid: theme.inverted ? "#8c8c8c" : "#666666"
-    property color colorTextSelection: "#4591ff"
-    property color colorDisabled: theme.inverted ? "#444444" : "#b2b2b4"
+    readonly property color colorLight: Theme.primaryColor
+    readonly property color colorMid: Theme.secondaryColor
+    readonly property color colorDisabled: Qt.darker(colorMid, 1.5)
 
-    property int paddingSmall: 4
-    property int paddingMedium: 8
-    property int paddingLarge: 12
-    property int paddingXLarge: 16
+    readonly property int paddingSmall: Theme.paddingSmall
+    readonly property int paddingMedium: Theme.paddingMedium
+    readonly property int paddingLarge: Theme.paddingLarge
+    readonly property int paddingXLarge: paddingLarge + paddingSmall
 
-    property int fontSizeXSmall: 20
-    property int fontSizeSmall: 22
-    property int fontSizeMedium: 24
-    property int fontSizeLarge: 26
-    property int fontSizeXLarge: 28
-    property int fontSizeXXLarge: 32
-
-    property int headerHeight: inPortrait ? 72 : 56
+    readonly property int fontSizeXSmall: Theme.fontSizeExtraSmall
+    readonly property int fontSizeSmall: Theme.fontSizeSmall
+    readonly property int fontSizeMedium: Theme.fontSizeMedium
+    readonly property int fontSizeLarge: Theme.fontSizeLarge
+    readonly property int fontSizeXLarge: Theme.fontSizeExtraLarge
+    readonly property int fontSizeXXLarge: Theme.fontSizeHuge
 }
