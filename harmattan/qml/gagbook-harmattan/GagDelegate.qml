@@ -50,7 +50,7 @@ Item {
 
         Text {
             anchors { left: parent.left; right: parent.right; margins: constant.paddingMedium  }
-            font.pixelSize: constant.fontSizeMedium
+            font.pixelSize: constant.fontSizeSmall
             color: constant.colorMid
             elide: Text.ElideRight
             text: model.votesCount + " points · " + model.commentsCount + " comments"
@@ -61,8 +61,12 @@ Item {
 
             property bool playGif: false
 
+            // screen.width, screen.platformWidth and screen.displayWidth are all following orientation,
+            // so have to hard code it (not like there is new MeeGo phone with different resolution coming out anyway)
+            property int screenWidth: 480
+
             anchors { left: parent.left; right: parent.right }
-            height: (model.imageSize.height * (gagImage.width / model.imageSize.width)) || gagImage.width
+            height: (model.imageSize.height * (screenWidth / model.imageSize.width)) || screenWidth
             asynchronous: true
             smooth: !root.ListView.view.moving
             cache: false

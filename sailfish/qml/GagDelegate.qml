@@ -61,7 +61,7 @@ Item {
             property bool playGif: false
 
             anchors { left: parent.left; right: parent.right }
-            height: (model.imageSize.height * (gagImage.width / model.imageSize.width)) || gagImage.width
+            height: (model.imageSize.height * (Screen.width / model.imageSize.width)) || Screen.width
             asynchronous: true
             smooth: !root.ListView.view.moving
             cache: false

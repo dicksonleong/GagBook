@@ -50,7 +50,7 @@ Item {
 
         Text {
             anchors { left: parent.left; right: parent.right; margins: constant.paddingMedium  }
-            font.pixelSize: constant.fontSizeMedium
+            font.pixelSize: constant.fontSizeSmall
             color: constant.colorMid
             elide: Text.ElideRight
             text: model.votesCount + " points · " + model.commentsCount + " comments"
@@ -62,7 +62,7 @@ Item {
             property bool playGif: false
 
             anchors { left: parent.left; right: parent.right }
-            height: (model.imageSize.height * (gagImage.width / model.imageSize.width)) || gagImage.width
+            height: (model.imageSize.height * (screen.displayWidth / model.imageSize.width)) || screen.displayWidth
             asynchronous: true
             smooth: !root.ListView.view.moving
             cache: false
