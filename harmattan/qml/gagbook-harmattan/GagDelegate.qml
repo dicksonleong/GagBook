@@ -48,31 +48,12 @@ Item {
             text: model.title
         }
 
-        Row {
+        Text {
             anchors { left: parent.left; right: parent.right; margins: constant.paddingMedium  }
-            spacing: constant.paddingMedium
-
-            CustomCountBubble {
-                value: model.votesCount
-            }
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: constant.fontSizeMedium
-                color: constant.colorLight
-                text: "points"
-            }
-
-            CustomCountBubble {
-                value: model.commentsCount
-            }
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: constant.fontSizeMedium
-                color: constant.colorLight
-                text: "comments"
-            }
+            font.pixelSize: constant.fontSizeMedium
+            color: constant.colorMid
+            elide: Text.ElideRight
+            text: model.votesCount + " points · " + model.commentsCount + " comments"
         }
 
         Image {
