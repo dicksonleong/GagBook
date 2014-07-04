@@ -88,7 +88,7 @@ Page {
                 cache: false
                 fillMode: Image.PreserveAspectFit
                 sourceSize.height: QMLUtils.IMAGE_MAX_HEIGHT
-                source: gag.isGIF ? gag.gifImageUrl : gag.imageUrl
+                source: gag.isPartialImage ? gag.fullImageUrl : gag.imageUrl
 
                 onScaleChanged: {
                     if ((width * scale) > flickable.width) {

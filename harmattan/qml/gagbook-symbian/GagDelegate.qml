@@ -74,10 +74,10 @@ Item {
             onStatusChanged: if (status == AnimatedImage.Ready) playing = true;
 
             Loader {
-                id: errorTextLoader
                 anchors.fill: parent
                 sourceComponent: {
-                    if (model.isNSFW) return nsfwText;
+                    if (model.isNSFW)
+                        return nsfwText;
                     if (!gagImage.source.toString()) {
                         if (model.isDownloading)
                             return downloadingIndicator;
@@ -88,8 +88,12 @@ Item {
                     case Image.Loading: return loadingRect;
                     case Image.Error: return errorText;
                     case Image.Ready:
-                        if (model.isGIF && !gagImage.playGif) return gifPlayIcon;
-                        if (model.isVideo) return videoPlayIcon;
+                        if (model.isGIF && !gagImage.playGif)
+                            return gifPlayIcon;
+                        if (model.isVideo)
+                            return videoPlayIcon;
+                        if (model.isPartialImage)
+                            return partialImageBar;
                         // fallthrough
                     default: return undefined;
                     }
@@ -213,6 +217,25 @@ Item {
                         Image {
                             anchors.centerIn: parent
                             source: "Images/icon-video-play.png"
+                        }
+                    }
+                }
+
+                Component {
+                    id: partialImageBar
+
+                    Item {
+                        Rectangle {
+                            anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
+                            height: platformStyle.graphicSizeMedium
+                            color: "LightSlateGray"
+
+                            Text {
+                                anchors.centerIn: parent
+                                color: constant.colorLight
+                                font.pixelSize: constant.fontSizeSmall
+                                text: "Click to see full image"
+                            }
                         }
                     }
                 }
