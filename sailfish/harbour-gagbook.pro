@@ -1,12 +1,11 @@
-
-CONFIG += sailfishapp
-
 TARGET = harbour-gagbook
 
-#see gagbook.yml for version setting
+#see gagbook.yaml for version setting
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 QT += network widgets webkitwidgets
+
+CONFIG += sailfishapp
 
 INCLUDEPATH += ..
 
@@ -40,15 +39,13 @@ SOURCES += main.cpp \
 HEADERS += ../qt-json/json.h
 SOURCES += ../qt-json/json.cpp
 
-
 OTHER_FILES += \
     rpm/$${TARGET}.spec \
     rpm/$${TARGET}.yaml \
     rpm/$${TARGET}.changes \
     $${TARGET}.desktop \
     $${TARGET}.png \
-    README.md \
-    LICENSE \
+    ../README.md \
+    ../LICENSE \
     qml/*.qml \
     qml/Images/*.png
-

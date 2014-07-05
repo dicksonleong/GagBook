@@ -2,8 +2,9 @@ Name: harbour-gagbook
 Summary: An unofficial app for 9GAG website
 Version: 0.9.0
 Release: 1
-Group: Applications/Internet
-License: LICENSE
+Group: Qt/Qt
+URL: https://github.com/dicksonleong/GagBook
+License: BSD
 Sources:
 - '%{name}-%{version}.tar.bz2'
 Description: |
@@ -13,22 +14,23 @@ Builder: qtc5
 QMakeOptions:
     - VERSION=%{version}
 PkgConfigBR:
-- Qt5Quick
-- Qt5Qml
 - Qt5Core
+- Qt5Qml
+- Qt5Quick
+- Qt5Network
 - Qt5SystemInfo
+- Qt5Widgets # not officially supported!
+- Qt5WebKitWidgets # not officially supported!
+- sailfishapp
 - qdeclarative5-boostable
 
 Requires:
-- mapplauncherd-booster-silica-qt5
 - sailfishsilica-qt5
+- mapplauncherd-booster-silica-qt5
+- qt5-plugin-imageformat-gif
 - qt5-qtdeclarative-systeminfo
 Files:
-- /usr/share/icons/hicolor/86x86/apps
-- /usr/share/applications
-- /usr/share/%{name}
-- /usr/bin
 - '%{_bindir}'
+- '%{_datadir}/%{name}/qml'
 - '%{_datadir}/applications/%{name}.desktop'
 - '%{_datadir}/icons/hicolor/86x86/apps/%{name}.png'
-PkgBR: []

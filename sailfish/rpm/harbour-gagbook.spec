@@ -15,17 +15,23 @@ Name:       harbour-gagbook
 Summary:    An unofficial app for 9GAG website
 Version:    0.9.0
 Release:    1
-Group:      Applications/Internet
-License:    LICENSE
+Group:      Qt/Qt
+License:    BSD
+URL:        https://github.com/dicksonleong/GagBook
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-gagbook.yaml
-Requires:   mapplauncherd-booster-silica-qt5
 Requires:   sailfishsilica-qt5
+Requires:   mapplauncherd-booster-silica-qt5
+Requires:   qt5-plugin-imageformat-gif
 Requires:   qt5-qtdeclarative-systeminfo
-BuildRequires:  pkgconfig(Qt5Quick)
-BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Core)
+BuildRequires:  pkgconfig(Qt5Qml)
+BuildRequires:  pkgconfig(Qt5Quick)
+BuildRequires:  pkgconfig(Qt5Network)
 BuildRequires:  pkgconfig(Qt5SystemInfo)
+BuildRequires:  pkgconfig(Qt5Widgets)
+BuildRequires:  pkgconfig(Qt5WebKitWidgets)
+BuildRequires:  pkgconfig(sailfishapp)
 BuildRequires:  pkgconfig(qdeclarative5-boostable)
 BuildRequires:  desktop-file-utils
 
@@ -66,11 +72,8 @@ desktop-file-install --delete-original       \
 
 %files
 %defattr(-,root,root,-)
-/usr/share/icons/hicolor/86x86/apps
-/usr/share/applications
-/usr/share/%{name}
-/usr/bin
 %{_bindir}
+%{_datadir}/%{name}/qml
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/86x86/apps/%{name}.png
 # >> files
