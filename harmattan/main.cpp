@@ -45,6 +45,12 @@
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
+#ifdef Q_OS_SYMBIAN
+    // The enum Qt::AA_CaptureMultimediaKeys is introduced in Qt 4.8
+    // but Qt SDK only has Qt 4.7.4 header file, so use int to allow it to compile
+    // See https://qt.gitorious.org/qt/qt/commit/3b6a619
+    QCoreApplication::setAttribute(static_cast<Qt::ApplicationAttribute>(11));
+#endif
     QScopedPointer<QApplication> app(createApplication(argc, argv));
 
     app->setApplicationName("GagBook");
