@@ -41,6 +41,7 @@
 #include "../src/qmlutils.h"
 #include "../src/networkmanager.h"
 #include "../src/appsettings.h"
+#include "../src/volumekeylistener.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -59,6 +60,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QmlApplicationViewer viewer;
     viewer.rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
     viewer.rootContext()->setContextProperty("QMLUtils", QMLUtils::instance());
+
+    VolumeKeyListener volumeKeyListener;
+    viewer.installEventFilter(&volumeKeyListener);
+    viewer.rootContext()->setContextProperty("volumeKeyListener", &volumeKeyListener);
 
     qmlRegisterType<GagBookManager>("GagBook", 1, 0, "GagBookManager");
     qmlRegisterType<GagModel>("GagBook", 1, 0, "GagModel");

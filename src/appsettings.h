@@ -41,6 +41,8 @@ class AppSettings : public QObject
 
     Q_PROPERTY(bool whiteTheme READ isWhiteTheme WRITE setWhiteTheme NOTIFY whiteThemeChanged)
     Q_PROPERTY(Source source READ source WRITE setSource NOTIFY sourceChanged)
+    Q_PROPERTY(bool scrollWithVolumeKeys READ scrollWithVolumeKeys WRITE setScrollWithVolumeKeys
+               NOTIFY scrollWithVolumeKeysChanged)
     Q_PROPERTY(QStringList sections READ sections WRITE setSections NOTIFY sectionsChanged)
 public:
     enum Source {
@@ -56,12 +58,16 @@ public:
     Source source() const;
     void setSource(Source source);
 
+    bool scrollWithVolumeKeys() const;
+    void setScrollWithVolumeKeys(bool scrollWithVolumeKeys);
+
     QStringList sections() const;
     void setSections(const QStringList &sections);
 
 signals:
     void whiteThemeChanged();
     void sourceChanged();
+    void scrollWithVolumeKeysChanged();
     void sectionsChanged();
 
 private:
@@ -70,6 +76,7 @@ private:
     QSettings *m_settings;
     bool m_whiteTheme;
     Source m_source;
+    bool m_scrollWithVolumeKeys;
     QStringList m_sections;
 };
 

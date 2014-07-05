@@ -21,7 +21,8 @@ HEADERS += \
     ../src/infinigagrequest.h \
     ../src/networkmanager.h \
     ../src/gagimagedownloader.h \
-    ../src/gagcookiejar.h
+    ../src/gagcookiejar.h \
+    ../src/volumekeylistener.h
 
 SOURCES += main.cpp \
     ../src/qmlutils.cpp \
@@ -34,7 +35,8 @@ SOURCES += main.cpp \
     ../src/infinigagrequest.cpp \
     ../src/networkmanager.cpp \
     ../src/gagimagedownloader.cpp \
-    ../src/gagcookiejar.cpp
+    ../src/gagcookiejar.cpp \
+    ../src/volumekeylistener.cpp
 
 # Simulator
 simulator{
@@ -53,8 +55,9 @@ contains(MEEGO_EDITION,harmattan) {
     folder_01.target = qml
     DEPLOYMENTFOLDERS = folder_01
 
-    CONFIG += shareuiinterface-maemo-meegotouch mdatauri qdeclarative-boostable
-    DEFINES += Q_OS_HARMATTAN
+    CONFIG += link_pkgconfig shareuiinterface-maemo-meegotouch mdatauri qdeclarative-boostable
+    PKGCONFIG += qdeclarative-boostable libresourceqt1
+    DEFINES += Q_OS_HARMATTAN HAS_LIBRESOURCEQT
 
     splash.files = splash/gagbook-splash-portrait.jpg splash/gagbook-splash-landscape.jpg
     splash.path = /opt/$${TARGET}/splash

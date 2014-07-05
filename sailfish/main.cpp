@@ -36,6 +36,7 @@
 #include "src/qmlutils.h"
 #include "src/networkmanager.h"
 #include "src/appsettings.h"
+#include "src/volumekeylistener.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -57,6 +58,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setApplicationVersion(APP_VERSION);
 
     QScopedPointer<QQuickView> view(SailfishApp::createView());
+
+    VolumeKeyListener volumeKeyListener;
+    view->installEventFilter(&volumeKeyListener);
+    view->rootContext()->setContextProperty("volumeKeyListener", &volumeKeyListener);
 
     view->rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
     view->rootContext()->setContextProperty("QMLUtils", QMLUtils::instance());

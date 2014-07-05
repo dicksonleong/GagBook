@@ -77,6 +77,31 @@ Page {
                     }
                 }
             }
+
+            Item {
+                anchors { left: parent.left; right: parent.right }
+                height: volumeScrollSwitch.height * 2
+
+                Switch {
+                    id: volumeScrollSwitch
+                    anchors {
+                        left: parent.left; leftMargin: constant.paddingMedium
+                        verticalCenter: parent.verticalCenter
+                    }
+                    checked: appSettings.scrollWithVolumeKeys
+                    onCheckedChanged: appSettings.scrollWithVolumeKeys = checked;
+                }
+
+                Text {
+                    anchors {
+                        left: volumeScrollSwitch.right; right: parent.right; margins: constant.paddingLarge
+                        verticalCenter: parent.verticalCenter
+                    }
+                    color: constant.colorLight
+                    font.pixelSize: constant.fontSizeLarge
+                    text: "Scroll with volume keys"
+                }
+            }
         }
     }
 

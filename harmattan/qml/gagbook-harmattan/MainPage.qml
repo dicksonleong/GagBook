@@ -124,6 +124,30 @@ Page {
         onRefreshFailure: infoBanner.alert(errorMessage);
     }
 
+    Connections {
+        target: volumeKeyListener
+        onVolumeUpClicked: {
+            var currentIndex = gagListView.indexAt(gagListView.contentX, gagListView.contentY);
+            if (currentIndex > 0)
+                gagListView.positionViewAtIndex(currentIndex - 1, ListView.Beginning);
+            else if (currentIndex == 0 && !gagListView.atYBeginning)
+                gagListView.positionViewAtBeginning();
+        }
+        onVolumeDownClicked: {
+            var currentIndex = gagListView.indexAt(gagListView.contentX, gagListView.contentY);
+            if (currentIndex < gagListView.count - 1)
+                gagListView.positionViewAtIndex(currentIndex + 1, ListView.Beginning);
+            else if (currentIndex == gagListView.count - 1 && !gagListView.atYEnd)
+                gagListView.positionViewAtEnd();
+        }
+    }
+
+    Binding {
+        target: volumeKeyListener
+        property: "enabled"
+        value: appSettings.scrollWithVolumeKeys && Qt.application.active && mainPage.status == PageStatus.Active
+    }
+
     QtObject {
         id: dialogManager
 

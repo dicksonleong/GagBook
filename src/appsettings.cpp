@@ -53,6 +53,7 @@ AppSettings::AppSettings(QObject *parent) :
 {
     m_whiteTheme = m_settings->value("whiteTheme", false).toBool();
     m_source = static_cast<Source>(m_settings->value("source", 0).toInt());
+    m_scrollWithVolumeKeys = m_settings->value("scrollWithVolumeKeys", false).toBool();
     m_sections = m_settings->value("sections").toStringList();
 
     if (m_sections.isEmpty())
@@ -84,6 +85,20 @@ void AppSettings::setSource(Source source)
         m_source = source;
         m_settings->setValue("source", static_cast<int>(m_source));
         emit sourceChanged();
+    }
+}
+
+bool AppSettings::scrollWithVolumeKeys() const
+{
+    return m_scrollWithVolumeKeys;
+}
+
+void AppSettings::setScrollWithVolumeKeys(bool scrollWithVolumeKeys)
+{
+    if (m_scrollWithVolumeKeys != scrollWithVolumeKeys) {
+        m_scrollWithVolumeKeys = scrollWithVolumeKeys;
+        m_settings->setValue("scrollWithVolumeKeys", m_scrollWithVolumeKeys);
+        emit scrollWithVolumeKeysChanged();
     }
 }
 

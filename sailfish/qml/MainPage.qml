@@ -91,6 +91,10 @@ Page {
                 onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
             }
             MenuItem {
+                text: "Settings"
+                onClicked: pageStack.push(Qt.resolvedUrl("AppSettingsPage.qml"));
+            }
+            MenuItem {
                 text: "More sections..."
                 onClicked: dialogManager.createSectionDialog()
             }
@@ -109,6 +113,7 @@ Page {
             }
         }
     }
+
     GagModel {
         id: gagModel
         manager: gagbookManager
@@ -119,6 +124,30 @@ Page {
         onBusyChanged: {
             console.log("working...");
         }
+    }
+
+    Connections {
+        target: volumeKeyListener
+        onVolumeUpClicked: {
+            var currentIndex = gagListView.indexAt(gagListView.contentX, gagListView.contentY);
+            if (currentIndex > 0)
+                gagListView.positionViewAtIndex(currentIndex - 1, ListView.Beginning);
+            else if (currentIndex == 0 && !gagListView.atYBeginning)
+                gagListView.positionViewAtBeginning();
+        }
+        onVolumeDownClicked: {
+            var currentIndex = gagListView.indexAt(gagListView.contentX, gagListView.contentY);
+            if (currentIndex < gagListView.count - 1)
+                gagListView.positionViewAtIndex(currentIndex + 1, ListView.Beginning);
+            else if (currentIndex == gagListView.count - 1 && !gagListView.atYEnd)
+                gagListView.positionViewAtEnd();
+        }
+    }
+
+    Binding {
+        target: volumeKeyListener
+        property: "enabled"
+        value: appSettings.scrollWithVolumeKeys && Qt.application.active && mainPage.status == PageStatus.Active
     }
 
     QtObject {

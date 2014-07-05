@@ -23,6 +23,7 @@ PkgConfigBR:
 - Qt5WebKitWidgets # not officially supported!
 - sailfishapp
 - qdeclarative5-boostable
+- libresourceqt5 # not officially supported yet!
 
 Requires:
 - sailfishsilica-qt5

@@ -1,11 +1,12 @@
 TARGET = harbour-gagbook
 
 #see gagbook.yaml for version setting
-DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+DEFINES += APP_VERSION=\\\"$$VERSION\\\" HAS_LIBRESOURCEQT
 
 QT += network widgets webkitwidgets
 
-CONFIG += sailfishapp
+CONFIG += link_pkgconfig sailfishapp
+PKGCONFIG += libresourceqt5
 
 INCLUDEPATH += ..
 
@@ -20,7 +21,8 @@ HEADERS += \
     ../src/ninegagrequest.h \
     ../src/networkmanager.h \
     ../src/gagimagedownloader.h \
-    ../src/gagcookiejar.h
+    ../src/gagcookiejar.h \
+    ../src/volumekeylistener.h
 
 SOURCES += main.cpp \
     ../src/qmlutils.cpp \
@@ -33,7 +35,8 @@ SOURCES += main.cpp \
     ../src/ninegagrequest.cpp \
     ../src/networkmanager.cpp \
     ../src/gagimagedownloader.cpp \
-    ../src/gagcookiejar.cpp
+    ../src/gagcookiejar.cpp \
+    ../src/volumekeylistener.cpp
 
 # Qt-Json
 HEADERS += ../qt-json/json.h

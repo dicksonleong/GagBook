@@ -25,48 +25,58 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import QtQuick 2.0
-import Sailfish.Silica 1.0
-import GagBook 1.0
+#include "volumekeylistener.h"
 
-Page {
-    id: settingsPage
+#include <QtCore/QEvent>
+#include <QtGui/QKeyEvent>
 
-    SilicaFlickable {
-        id: settingsFlickable
-        anchors.fill: parent
-        contentHeight: settingsColumn.height
+#ifdef HAS_LIBRESOURCEQT
+#include <policy/resource.h>
+#endif
 
-        Column {
-            id: settingsColumn
-            anchors { left: parent.left; right: parent.right }
-            height: childrenRect.height
+VolumeKeyListener::VolumeKeyListener(QObject *parent) :
+    QObject(parent), m_enabled(false)
+{
+#if HAS_LIBRESOURCEQT
+    set = new ResourcePolicy::ResourceSet("player", this);
+    set->addResource(ResourcePolicy::ScaleButtonType);
+#endif
+}
 
-            PageHeader { title: "App Settings" }
+bool VolumeKeyListener::enabled() const
+{
+    return m_enabled;
+}
 
-            ComboBox {
-                anchors { left: parent.left; right: parent.right }
-                label: "Source"
-                menu: ContextMenu {
-                    MenuItem { text: "9GAG" }
-                    MenuItem { text: "InfiniGAG" }
-                }
-                onCurrentIndexChanged: {
-                    switch (currentIndex) {
-                    case 0: appSettings.source = AppSettings.NineGagSource; break;
-                    case 1: appSettings.source = AppSettings.InfiniGagSource; break;
-                    }
-                }
-            }
+void VolumeKeyListener::setEnabled(bool enabled)
+{
+    if (m_enabled != enabled) {
+        m_enabled = enabled;
+#if HAS_LIBRESOURCEQT
+        if (m_enabled)
+            set->acquire();
+        else
+            set->release();
+#endif
+        emit enabledChanged();
+    }
+}
 
-            TextSwitch {
-                anchors { left: parent.left; right: parent.right }
-                text: "Scroll with volume keys"
-                checked: appSettings.scrollWithVolumeKeys
-                onCheckedChanged: appSettings.scrollWithVolumeKeys = checked;
-            }
+bool VolumeKeyListener::eventFilter(QObject *obj, QEvent *event)
+{
+    if (m_enabled && event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+
+        switch (keyEvent->key()) {
+        case Qt::Key_VolumeUp:
+            emit volumeUpClicked();
+            return true;
+        case Qt::Key_VolumeDown:
+            emit volumeDownClicked();
+            return true;
+        default:
+            break;
         }
     }
-
-    VerticalScrollDecorator { flickable: settingsFlickable }
+    return QObject::eventFilter(obj, event);
 }

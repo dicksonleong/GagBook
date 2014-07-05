@@ -25,51 +25,38 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import QtQuick 2.0
-import Sailfish.Silica 1.0
+#ifndef VOLUMEKEYLISTENER_H
+#define VOLUMEKEYLISTENER_H
 
-Item {
-    id: root
+#include <QtCore/QObject>
 
-    property string text: ""
-    property variant buttonsText: []
-    property int checkedButtonIndex: 0
+#ifdef HAS_LIBRESOURCEQT
+#include <policy/resource-set.h>
+#endif
 
-    signal buttonClicked(int index)
+class VolumeKeyListener : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
+public:
+    explicit VolumeKeyListener(QObject *parent = 0);
 
-    width: parent.width
-    height: settingText.paintedHeight + buttonRow.height + buttonRow.anchors.topMargin
+    bool enabled() const;
+    void setEnabled(bool enabled);
 
-    Text {
-        id: settingText
-        anchors { left: parent.left; top: parent.top; leftMargin: constant.paddingMedium }
-        font.pixelSize: constant.fontSizeLarge
-        color: constant.colorLight
-        text: root.text
-    }
+signals:
+    void enabledChanged();
+    void volumeUpClicked();
+    void volumeDownClicked();
 
-    Row {
-        id: buttonRow
-        anchors {
-            top: settingText.bottom
-            left: parent.left
-            right: parent.right
-            margins: constant.paddingSmall
-        }
+protected:
+    bool eventFilter(QObject *obj, QEvent *event);
 
-        Repeater {
-            id: buttonRepeater
-            model: root.buttonsText
+private:
+    bool m_enabled;
+#ifdef HAS_LIBRESOURCEQT
+    ResourcePolicy::ResourceSet *set;
+#endif
+};
 
-            Button {
-                text: modelData
-                onClicked: root.buttonClicked(index)
-            }
-        }
-    }
-
-    Component.onCompleted: {
-        if (buttonRepeater.count > 0)
-            buttonRow.checkedButton = buttonRepeater.itemAt(root.checkedButtonIndex)
-    }
-}
+#endif // VOLUMEKEYLISTENER_H
