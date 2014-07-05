@@ -31,16 +31,17 @@ import Sailfish.Silica 1.0
 Page {
     id: aboutPage
 
-    Flickable {
+    SilicaFlickable {
         id: aboutPageFlickable
-        anchors { top: pageHeader.bottom; bottom: parent.bottom; left: parent.left; right: parent.right }
+        anchors.fill: parent
         contentHeight: column.height + 2 * column.anchors.margins
 
         Column {
             id: column
-            anchors { left: parent.left; right: parent.right; top: parent.top; margins: Theme.paddingMedium }
+            anchors { left: parent.left; right: parent.right }
             height: childrenRect.height
-            spacing: Theme.paddingMedium
+
+            PageHeader { title: "About" }
 
             Text {
                 anchors { left: parent.left; right: parent.right }
@@ -52,7 +53,7 @@ Page {
             }
 
             Text {
-                anchors { left: parent.left; right: parent.right }
+                anchors { left: parent.left; right: parent.right; margins: constant.paddingLarge }
                 font.pixelSize: Theme.fontSizeMedium
                 horizontalAlignment: Text.AlignHCenter
                 color: Theme.primaryColor
@@ -84,12 +85,7 @@ and <a href=\"http://9gag.com/privacy\">Privacy Policy</a>.<br>"
                 onClicked: Qt.openUrlExternally(QMLUtils.REPO_WEBSITE)
             }
         }
-    }
 
-    ScrollDecorator { flickable: aboutPageFlickable }
-
-    PageHeader {
-        id: pageHeader
-        title: "About"
+        VerticalScrollDecorator {}
     }
 }

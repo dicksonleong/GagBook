@@ -29,23 +29,25 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import GagBook 1.0
 
-ApplicationWindow {
-    id: appWindow
+Page {
+    id: sectionPage
 
-    initialPage: Component { MainPage { } }
-    cover: CoverBackground {
-        CoverPlaceholder {
-            text: "GagBook"
-            icon.source: "Images/harbour-gagbook.png"
+    property GagModel gagModel
+
+    SilicaListView {
+        anchors.fill: parent
+        model: appSettings.sections
+
+        header: PageHeader { title: "Section" }
+
+        delegate: SimpleListItem {
+            selected: gagModel.selectedSection == index
+            text: modelData
+            onClicked: {
+                gagModel.selectedSection = index;
+                gagModel.refresh(GagModel.RefreshAll);
+                pageStack.navigateBack();
+            }
         }
-    }
-
-    Constant { id: constant }
-
-    InfoBanner { id: infoBanner }
-
-    GagBookManager {
-        id: gagbookManager
-        settings: AppSettings { id: appSettings }
     }
 }

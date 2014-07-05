@@ -66,7 +66,7 @@ Page {
                 onCheckedChanged: appSettings.scrollWithVolumeKeys = checked;
             }
         }
-    }
 
-    VerticalScrollDecorator { flickable: settingsFlickable }
+        VerticalScrollDecorator {}
+    }
 }

@@ -32,11 +32,20 @@ import GagBook 1.0
 Page {
     id: mainPage
 
+    property bool __pushedAttached: false
+    onStatusChanged: {
+        if (status == PageStatus.Active && !__pushedAttached) {
+            pageStack.pushAttached(Qt.resolvedUrl("SectionPage.qml"), { gagModel: gagModel });
+            __pushedAttached = true;
+        }
+    }
+
     SilicaListView {
         id: gagListView
         anchors.fill: parent
         model: gagModel
         orientation: ListView.Vertical
+        spacing: constant.paddingMedium
         header: PageHeader {title: "/" + appSettings.sections[gagModel.selectedSection]}
 
         ViewPlaceholder {
@@ -52,11 +61,9 @@ Page {
             id: footerItem
             width: parent.width
             height: {
-                if (!visible)
-                    return 0;
                 if (gagListView.count === 0)
                     return gagListView.height - (gagListView.headerItem ? gagListView.headerItem.height : 0)
-                return footerColumn.height + 2 * constant.paddingLarge
+                return footerColumn.height + 2 * constant.paddingSmall
             }
             visible: gagModel.busy
 
@@ -93,23 +100,10 @@ Page {
             MenuItem {
                 text: "Settings"
                 onClicked: pageStack.push(Qt.resolvedUrl("AppSettingsPage.qml"));
-            }
-            MenuItem {
-                text: "More sections..."
-                onClicked: dialogManager.createSectionDialog()
-            }
-            MenuItem {
-                text: gagModel.selectedSection == 0 ? "Trending" : "Hot"
-                onClicked: {
-                    gagModel.selectedSection = gagModel.selectedSection == 0 ? 1:0;
-                    gagModel.refresh(GagModel.RefreshAll);
-                }
-            }
+            }            
             MenuItem {
                 text: "Refresh"
-                onClicked: {
-                    gagModel.refresh(GagModel.RefreshAll);
-                }
+                onClicked: gagModel.refresh(GagModel.RefreshAll);
             }
         }
     }
@@ -117,13 +111,7 @@ Page {
     GagModel {
         id: gagModel
         manager: gagbookManager
-        onRefreshFailure: {
-            console.log("refresh failed");
-            state = "noConnection";
-        }
-        onBusyChanged: {
-            console.log("working...");
-        }
+        onRefreshFailure: infoBanner.alert(errorMessage);
     }
 
     Connections {
@@ -148,44 +136,5 @@ Page {
         target: volumeKeyListener
         property: "enabled"
         value: appSettings.scrollWithVolumeKeys && Qt.application.active && mainPage.status == PageStatus.Active
-    }
-
-    QtObject {
-        id: dialogManager
-
-        property Component __listModelComponent: Component { ListModel {} }
-        property Component __selectionDialogComponent: Component { SelectionDialog {} }
-        property Component __openLinkDialogComponent: null
-
-        function createSectionDialog() {
-            // convert array (appSettings.sections) to ListModel because SelectionDialog can not accept array
-            var listModel = __listModelComponent.createObject(null);
-            appSettings.sections.forEach(function(s) { listModel.append({ "text": s }) });
-
-            var p = { title: "Section", model: listModel, selectedIndex: gagModel.selectedSection }
-            var dialog = __selectionDialogComponent.createObject(mainPage, p);
-            dialog.statusChanged.connect(function() {
-                if (dialog.status == DialogStatus.Closed) {
-                    dialog.destroy(250);
-                    listModel.destroy();
-                }
-            });
-            dialog.accepted.connect(function() {
-                gagModel.selectedSection = dialog.selectedIndex;
-                gagModel.refresh(GagModel.RefreshAll);
-            });
-            dialog.open();
-        }
-
-        function createOpenLinkDialog(link) {
-            if (!__openLinkDialogComponent)
-                __openLinkDialogComponent = Qt.createComponent("OpenLinkDialog.qml")
-            var dialog = __openLinkDialogComponent.createObject(mainPage, { link: link });
-            dialog.statusChanged.connect(function() {
-                if (dialog.status == DialogStatus.Closed)
-                    dialog.destroy(250);
-            });
-            dialog.open();
-        }
     }
 }

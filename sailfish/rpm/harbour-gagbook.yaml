@@ -18,7 +18,6 @@ PkgConfigBR:
 - Qt5Qml
 - Qt5Quick
 - Qt5Network
-- Qt5SystemInfo
 - Qt5Widgets # not officially supported!
 - Qt5WebKitWidgets # not officially supported!
 - sailfishapp
@@ -29,7 +28,6 @@ Requires:
 - sailfishsilica-qt5
 - mapplauncherd-booster-silica-qt5
 - qt5-plugin-imageformat-gif
-- qt5-qtdeclarative-systeminfo
 Files:
 - '%{_bindir}'
 - '%{_datadir}/%{name}/qml'

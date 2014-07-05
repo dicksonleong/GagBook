@@ -31,11 +31,11 @@ import Sailfish.Silica 1.0
 Item {
     id: root
     width: ListView.view.width
-    height: mainColumn.height + 2 * mainColumn.anchors.topMargin + separator.height
+    height: mainColumn.height + separator.height
 
     Column {
         id: mainColumn
-        anchors { left: parent.left; right: parent.right; top: parent.top; topMargin: Theme.paddingLarge }
+        anchors { left: parent.left; right: parent.right }
         height: childrenRect.height
         spacing: Theme.paddingMedium
 

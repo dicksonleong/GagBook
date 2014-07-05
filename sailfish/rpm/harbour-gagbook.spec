@@ -23,12 +23,10 @@ Source100:  harbour-gagbook.yaml
 Requires:   sailfishsilica-qt5
 Requires:   mapplauncherd-booster-silica-qt5
 Requires:   qt5-plugin-imageformat-gif
-Requires:   qt5-qtdeclarative-systeminfo
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  pkgconfig(Qt5Network)
-BuildRequires:  pkgconfig(Qt5SystemInfo)
 BuildRequires:  pkgconfig(Qt5Widgets)
 BuildRequires:  pkgconfig(Qt5WebKitWidgets)
 BuildRequires:  pkgconfig(sailfishapp)
