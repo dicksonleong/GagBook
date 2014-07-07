@@ -117,14 +117,14 @@ Page {
     Connections {
         target: volumeKeyListener
         onVolumeUpClicked: {
-            var currentIndex = gagListView.indexAt(gagListView.contentX, gagListView.contentY);
+            var currentIndex = gagListView.indexAt(gagListView.contentX, gagListView.contentY + 1);
             if (currentIndex > 0)
                 gagListView.positionViewAtIndex(currentIndex - 1, ListView.Beginning);
             else if (currentIndex == 0 && !gagListView.atYBeginning)
                 gagListView.positionViewAtBeginning();
         }
         onVolumeDownClicked: {
-            var currentIndex = gagListView.indexAt(gagListView.contentX, gagListView.contentY);
+            var currentIndex = gagListView.indexAt(gagListView.contentX, gagListView.contentY + 1);
             if (currentIndex < gagListView.count - 1)
                 gagListView.positionViewAtIndex(currentIndex + 1, ListView.Beginning);
             else if (currentIndex == gagListView.count - 1 && !gagListView.atYEnd)
