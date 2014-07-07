@@ -29,7 +29,6 @@
 
 #include <QtCore/QUrl>
 #include <QtCore/QSize>
-#include <QDebug>
 
 #include "gagbookmanager.h"
 #include "appsettings.h"
@@ -183,13 +182,11 @@ void GagModel::refresh(RefreshType refreshType)
         qWarning("GagModel::refresh(): Invalid source, default source will be used");
         // fallthrough
     case AppSettings::NineGagSource:
-    case AppSettings::InfiniGagSource:
         m_request = new NineGagRequest(manager()->networkManager(), section, this);
         break;
-    /*case AppSettings::InfiniGagSource:
-        qDebug() << "Using InfiniGagSource";
+    case AppSettings::InfiniGagSource:
         m_request = new InfiniGagRequest(manager()->networkManager(), section, this);
-        break;*/
+        break;
     }
 
     if (!m_gagList.isEmpty()) {

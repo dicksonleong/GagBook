@@ -35,7 +35,6 @@
 #endif
 #include <QtGui/QImageReader>
 #include <QtNetwork/QNetworkReply>
-#include <QDebug>
 
 #include "networkmanager.h"
 

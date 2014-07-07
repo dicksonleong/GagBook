@@ -38,7 +38,6 @@
 #endif
 
 #include <QUrl>
-#include <QDebug>
 
 #include "networkmanager.h"
 #include "qmlutils.h"
@@ -62,8 +61,6 @@ QNetworkReply *NineGagRequest::createRequest(const QString &section, const QStri
 #endif
     }
 
-    qDebug() << "getting url: " << requestUrl;
-
     return networkManager()->createGetRequest(requestUrl, NetworkManager::HTML);
 }
 
@@ -72,8 +69,6 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems);
 
 QList<GagObject> NineGagRequest::parseResponse(const QByteArray &response)
 {
-    qDebug() << "ineGagRequest::parseResponse: got response with length: " << response.length();
-
     return parseGAG(getEntryItemsFromHtml(QString::fromUtf8(response)));
 }
 
@@ -125,9 +120,6 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
             const QUrl imgUrl = QString("%1/photo/%2_700b.jpg").arg(regularImgUrl.toString(QUrl::RemovePath)).arg(gag.id());
 
             Q_ASSERT(imgUrl.isValid());
-
-            qDebug() << "regularImgUrl: " << regularImgUrl;
-            qDebug() << "imgUrl: " << imgUrl;
 
             gag.setFullImageUrl(imgUrl);
             gag.setImageUrl(regularImgUrl);

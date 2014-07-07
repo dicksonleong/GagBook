@@ -54,8 +54,6 @@ void GagRequest::send()
 void GagRequest::onFinished()
 {
     if (m_reply->error()) {
-        qDebug("response error");
-
         emit failure(m_reply->errorString());
         m_reply->deleteLater();
         m_reply = 0;

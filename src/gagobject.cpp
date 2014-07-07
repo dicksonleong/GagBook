@@ -31,13 +31,12 @@
 #include <QtCore/QUrl>
 #include <QtCore/QFile>
 #include <QtCore/QSize>
-#include <QDebug>
 
 class GagObjectData : public QSharedData
 {
 public:
     GagObjectData() : votesCount(0), commentsCount(0),
-        isVideo(false), isNSFW(false), isGIF(false) {}
+        isVideo(false), isNSFW(false), isGIF(false), isPartialImage(false) {}
     ~GagObjectData() {
         if (imageUrl.scheme() == "file")
             QFile::remove(imageUrl.toLocalFile());
