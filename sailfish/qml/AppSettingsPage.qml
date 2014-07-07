@@ -47,6 +47,7 @@ Page {
             ComboBox {
                 anchors { left: parent.left; right: parent.right }
                 label: "Source"
+                currentIndex: appSettings.source
                 menu: ContextMenu {
                     MenuItem { text: "9GAG" }
                     MenuItem { text: "InfiniGAG" }

@@ -111,7 +111,7 @@ Item {
                             spacing: Theme.paddingMedium
 
                             Text {
-                                anchors { left: parent.left; right: parent.right }
+                                anchors { left: parent.left; right: parent.right; margins: constant.paddingMedium }
                                 horizontalAlignment: Text.AlignHCenter
                                 font.pixelSize: Theme.fontSizeLarge
                                 color: Theme.primaryColor
@@ -121,7 +121,7 @@ Item {
                             }
 
                             Text {
-                                anchors { left: parent.left; right: parent.right }
+                                anchors { left: parent.left; right: parent.right; margins: constant.paddingMedium }
                                 horizontalAlignment: Text.AlignHCenter
                                 font.pixelSize: Theme.fontSizeMedium
                                 color: Theme.primaryColor
@@ -145,7 +145,7 @@ Item {
                             spacing: Theme.paddingMedium
 
                             Text {
-                                anchors { left: parent.left; right: parent.right }
+                                anchors { left: parent.left; right: parent.right; margins: constant.paddingMedium }
                                 horizontalAlignment: Text.AlignHCenter
                                 font.pixelSize: Theme.fontSizeLarge
                                 color: Theme.primaryColor
@@ -155,7 +155,7 @@ Item {
                             }
 
                             Text {
-                                anchors { left: parent.left; right: parent.right }
+                                anchors { left: parent.left; right: parent.right; margins: constant.paddingMedium }
                                 horizontalAlignment: Text.AlignHCenter
                                 font.pixelSize: Theme.fontSizeMedium
                                 color: Theme.primaryColor
@@ -263,23 +263,50 @@ Item {
         }
 
         Row {
-            anchors {left:parent.left; right:parent.right; margins: Theme.paddingMedium}
+            anchors { left:parent.left; right:parent.right; margins: Theme.paddingMedium }
             height: childrenRect.height
-            spacing: 10
+            spacing: constant.paddingMedium
 
             IconButton {
-                icon.source: "image://theme/icon-m-up"
-            }
-            IconButton {
-                icon.source: "image://theme/icon-m-down"
-            }
-            IconButton {
+                icon.height: Theme.iconSizeMedium; icon.width: Theme.iconSizeMedium
                 icon.source: "image://theme/icon-m-message"
                 onClicked: pageStack.push(Qt.resolvedUrl("CommentsPage.qml"), { gagURL: model.url })
             }
             IconButton {
+                icon.height: Theme.iconSizeMedium; icon.width: Theme.iconSizeMedium
+                icon.source: "image://theme/icon-lock-social"
+                onClicked: pageStack.push(Qt.resolvedUrl("OpenLinkDialog.qml"), { url: model.url });
+            }
+            /* Sailfish does not has (public) sharing API yet
+            IconButton {
+                icon.height: Theme.iconSizeMedium; icon.width: Theme.iconSizeMedium
                 icon.source: "image://theme/icon-m-share"
                 onClicked: QMLUtils.shareLink(model.url, model.title)
+            }*/
+            IconButton {
+                property string __savedFilePath: ""
+                icon.height: Theme.iconSizeMedium; icon.width: Theme.iconSizeMedium
+                icon.source: "image://theme/icon-m-" + (__savedFilePath ? "image" : "download")
+                onClicked: {
+                    if (!__savedFilePath) {
+                        if (model.isGIF && !model.gifImageUrl.toString()) {
+                            infoBanner.alert("You have to download the GIF first by clicking on the image");
+                            return;
+                        }
+                        __savedFilePath = QMLUtils.saveImage(model.isGIF ? model.gifImageUrl : model.imageUrl);
+                        if (__savedFilePath) {
+                            var displayPath = __savedFilePath;
+                            if (__savedFilePath.indexOf("file://") == 0)
+                                displayPath = displayPath.substring(7);
+                            infoBanner.alert("Image saved to " + displayPath);
+                        } else {
+                            infoBanner.alert("Unable to save image");
+                        }
+                    } else {
+                        Qt.openUrlExternally(__savedFilePath);
+                        __savedFilePath = "";
+                    }
+                }
             }
         }
     }
