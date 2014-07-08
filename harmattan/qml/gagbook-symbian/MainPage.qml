@@ -27,7 +27,7 @@
 
 import QtQuick 1.1
 import com.nokia.symbian 1.1
-import GagBook 1.0
+import GagBook.Core 1.0
 
 Page {
     id: mainPage

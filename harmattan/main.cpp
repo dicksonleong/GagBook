@@ -71,9 +71,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     viewer.installEventFilter(&volumeKeyListener);
     viewer.rootContext()->setContextProperty("volumeKeyListener", &volumeKeyListener);
 
-    qmlRegisterType<GagBookManager>("GagBook", 1, 0, "GagBookManager");
-    qmlRegisterType<GagModel>("GagBook", 1, 0, "GagModel");
-    qmlRegisterType<AppSettings>("GagBook", 1, 0, "AppSettings");
+    qmlRegisterType<GagBookManager>("GagBook.Core", 1, 0, "GagBookManager");
+    qmlRegisterType<GagModel>("GagBook.Core", 1, 0, "GagModel");
+    qmlRegisterType<AppSettings>("GagBook.Core", 1, 0, "AppSettings");
 
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 #if defined(Q_OS_HARMATTAN)

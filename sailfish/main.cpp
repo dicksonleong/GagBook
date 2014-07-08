@@ -67,9 +67,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view->rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
     view->rootContext()->setContextProperty("QMLUtils", QMLUtils::instance());
 
-    qmlRegisterType<GagBookManager>("GagBook", 1, 0, "GagBookManager");
-    qmlRegisterType<GagModel>("GagBook", 1, 0, "GagModel");
-    qmlRegisterType<AppSettings>("GagBook", 1, 0, "AppSettings");
+    qmlRegisterType<GagBookManager>("harbour.gagbook.Core", 1, 0, "GagBookManager");
+    qmlRegisterType<GagModel>("harbour.gagbook.Core", 1, 0, "GagModel");
+    qmlRegisterType<AppSettings>("harbour.gagbook.Core", 1, 0, "AppSettings");
 
     //view.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 
