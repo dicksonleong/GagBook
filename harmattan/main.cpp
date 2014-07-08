@@ -65,7 +65,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QmlApplicationViewer viewer;
     viewer.rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
-    viewer.rootContext()->setContextProperty("QMLUtils", QMLUtils::instance());
+
+    QMLUtils qmlUtils;
+    viewer.rootContext()->setContextProperty("QMLUtils", &qmlUtils);
 
     VolumeKeyListener volumeKeyListener;
     viewer.installEventFilter(&volumeKeyListener);

@@ -55,29 +55,25 @@ _LIT(KBrowserPrefix, "4 " );
 static const TUid KUidBrowser = { 0x10008D39 };
 #endif
 
-QScopedPointer<QMLUtils> QMLUtils::m_instance(0);
-
-#if defined(Q_OS_HARMATTAN)
-const int QMLUtils::IMAGE_MAX_HEIGHT = 2048;
-#elif defined(Q_OS_SYMBIAN)
-const int QMLUtils::IMAGE_MAX_HEIGHT = 2500;
-#else
-const int QMLUtils::IMAGE_MAX_HEIGHT = 3000;
-#endif
-
-const QUrl QMLUtils::REPO_WEBSITE("https://github.com/dicksonleong/GagBook");
-
-QMLUtils *QMLUtils::instance()
-{
-    if (m_instance.isNull())
-        m_instance.reset(new QMLUtils);
-
-    return m_instance.data();
-}
-
 QMLUtils::QMLUtils(QObject *parent) :
     QObject(parent)
 {
+}
+
+int QMLUtils::imageMaxHeight() const
+{
+#if defined(Q_OS_HARMATTAN)
+    return 2048;
+#elif defined(Q_OS_SYMBIAN)
+    return 2500;
+#else
+    return 3000;
+#endif
+}
+
+QUrl QMLUtils::repoWebsite() const
+{
+    return QUrl("https://github.com/dicksonleong/GagBook");
 }
 
 void QMLUtils::copyToClipboard(const QString &text)

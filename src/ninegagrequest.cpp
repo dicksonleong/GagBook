@@ -40,7 +40,6 @@
 #include <QUrl>
 
 #include "networkmanager.h"
-#include "qmlutils.h"
 
 NineGagRequest::NineGagRequest(NetworkManager *networkManager, const QString &section, QObject *parent) :
     GagRequest(networkManager, section, parent)

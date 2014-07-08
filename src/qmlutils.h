@@ -41,13 +41,10 @@ class QMLUtils : public QObject
     Q_PROPERTY(int IMAGE_MAX_HEIGHT READ imageMaxHeight CONSTANT)
     Q_PROPERTY(QUrl REPO_WEBSITE READ repoWebsite CONSTANT)
 public:
-    static QMLUtils *instance();
+    explicit QMLUtils(QObject *parent = 0);
 
-    static const int IMAGE_MAX_HEIGHT;
-    int imageMaxHeight() const { return IMAGE_MAX_HEIGHT; }
-
-    static const QUrl REPO_WEBSITE;
-    QUrl repoWebsite() const { return REPO_WEBSITE; }
+    int imageMaxHeight() const;
+    QUrl repoWebsite() const;
 
     // Copy text to system clipboard
     Q_INVOKABLE void copyToClipboard(const QString &text);
@@ -62,9 +59,6 @@ public:
     Q_INVOKABLE void openDefaultBrowser(const QUrl &url);
 
 private:
-    static QScopedPointer<QMLUtils> m_instance;
-
-    explicit QMLUtils(QObject *parent = 0);
     Q_DISABLE_COPY(QMLUtils)
 };
 

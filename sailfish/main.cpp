@@ -59,25 +59,21 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     app.setApplicationVersion(APP_VERSION);
 
     QScopedPointer<QQuickView> view(SailfishApp::createView());
+    view->rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
+
+    QMLUtils qmlUtils;
+    view->rootContext()->setContextProperty("QMLUtils", &qmlUtils);
 
     VolumeKeyListener volumeKeyListener;
     view->installEventFilter(&volumeKeyListener);
     view->rootContext()->setContextProperty("volumeKeyListener", &volumeKeyListener);
 
-    view->rootContext()->setContextProperty("APP_VERSION", APP_VERSION);
-    view->rootContext()->setContextProperty("QMLUtils", QMLUtils::instance());
-
     qmlRegisterType<GagBookManager>("harbour.gagbook.Core", 1, 0, "GagBookManager");
     qmlRegisterType<GagModel>("harbour.gagbook.Core", 1, 0, "GagModel");
     qmlRegisterType<AppSettings>("harbour.gagbook.Core", 1, 0, "AppSettings");
 
-    //view.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
-
     view->setSource(SailfishApp::pathTo("qml/main.qml"));
-
-    //show the view
     view->show();
-
 
     return app.exec();
 }
