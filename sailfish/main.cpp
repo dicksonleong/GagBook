@@ -28,6 +28,7 @@
 #include <QApplication>
 #include <QQuickView>
 #include <QQmlContext>
+#include <QtQml/qqml.h> // qmlRegisterType
 
 #include "sailfishapp.h"
 

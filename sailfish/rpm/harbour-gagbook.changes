@@ -5,5 +5,9 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Tue Jul 8 2014 Dickson <dicksonleong8@gmail.com> 1.0.0-1
+- Improve UI
+- Add scroll with volume keys feature
+
 * Mon Jun 30 2014 b0bben <bob.jelica@gmail.com> 0.9.0-1
 - Add support for Sailfish

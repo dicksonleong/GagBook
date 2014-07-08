@@ -1,3 +1,11 @@
+gagbook (1.0.0) unstable; urgency=medium
+  * Inline GIF player
+  * Fix viewing tall image
+  * Add scroll with volume keys feature
+  * Minor UI improvement
+
+ -- Dickson <dicksonleong8@gmail.com>  Tue, 08 Jul 2014 15:39:07 +0800
+
 gagbook (0.9.0) unstable; urgency=medium
   * Remove website settings
   * Remove auto download GIFs setting
