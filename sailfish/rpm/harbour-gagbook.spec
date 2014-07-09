@@ -14,14 +14,13 @@ Name:       harbour-gagbook
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    An unofficial app for 9GAG website
 Version:    1.0.0
-Release:    1
+Release:    2
 Group:      Qt/Qt
 License:    BSD
 URL:        https://github.com/dicksonleong/GagBook
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-gagbook.yaml
 Requires:   sailfishsilica-qt5
-Requires:   mapplauncherd-booster-silica-qt5
 Requires:   qt5-plugin-imageformat-gif
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
@@ -49,7 +48,7 @@ GagBook is an unofficial mobile app for 9GAG website that allows you to view pos
 # << build pre
 
 %qtc_qmake5  \
-    VERSION=%{version}
+    VERSION='%{version}-%{release}'
 
 %qtc_make %{?_smp_mflags}
 

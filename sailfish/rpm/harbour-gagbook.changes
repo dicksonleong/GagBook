@@ -5,6 +5,9 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Wed Jul 9 2014 Dickson <dicksonleong@gmail.com> 1.0.0-2
+- Fix GIF not playing
+
 * Tue Jul 8 2014 Dickson <dicksonleong8@gmail.com> 1.0.0-1
 - Improve UI
 - Add scroll with volume keys feature
