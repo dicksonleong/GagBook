@@ -54,7 +54,7 @@ public:
     void stop();
 
 signals:
-    void downloadProgress(int imagesDownloaded, int imagesTotal);
+    void downloadProgress(qint64 downloaded, qint64 total);
     void finished();
 
 private slots:
@@ -64,7 +64,6 @@ private:
     NetworkManager *m_networkManager;
     QList<GagObject> m_gagList;
     bool m_downloadGIF;
-    bool m_downloadFullPic;
 
     QHash<QNetworkReply*, GagObject> m_replyHash;
     int m_imagesTotal;

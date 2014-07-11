@@ -100,10 +100,16 @@ void GagImageDownloader::start()
         m_replyHash.insert(reply, gag);
         connect(reply, SIGNAL(finished()), SLOT(onFinished()));
     }
+
     m_imagesTotal = m_replyHash.count();
-    emit downloadProgress(0, m_imagesTotal);
-    if (m_imagesTotal == 0)
+    if (m_imagesTotal > 1) {
+        emit downloadProgress(0, m_imagesTotal);
+    } else if (m_imagesTotal == 1) {
+        connect(m_replyHash.keys().first(), SIGNAL(downloadProgress(qint64, qint64)),
+                this, SIGNAL(downloadProgress(qint64,qint64)));
+    } else {
         emit finished();
+    }
 }
 
 void GagImageDownloader::stop()

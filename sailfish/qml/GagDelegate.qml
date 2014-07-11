@@ -193,6 +193,13 @@ Item {
                             running: true
                             size: BusyIndicatorSize.Large
                         }
+
+                        Text {
+                            anchors.centerIn: parent
+                            font.pixelSize: constant.fontSizeSmall
+                            color: constant.colorLight
+                            text: Math.round(gagModel.manualProgress * 100) + "%"
+                        }
                     }
                 }
 

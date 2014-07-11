@@ -50,9 +50,9 @@ class GagModel : public QAbstractListModel, public QQmlParserStatus
     Q_OBJECT
     DECL_QMLPARSERSTATUS_INTERFACE
     Q_ENUMS(RefreshType)
-    Q_PROPERTY(int count READ gagCount NOTIFY countChanged)
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
     Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
+    Q_PROPERTY(qreal manualProgress READ manualProgress NOTIFY manualProgressChanged)
     Q_PROPERTY(GagBookManager *manager READ manager WRITE setManager)
     Q_PROPERTY(int selectedSection READ selectedSection WRITE setSelectedSection NOTIFY selectedSectionChanged)
 public:
@@ -88,7 +88,7 @@ public:
 
     bool isBusy() const;
     qreal progress() const;
-    int gagCount() const;
+    qreal manualProgress() const;
 
     GagBookManager *manager() const;
     void setManager(GagBookManager *manager);
@@ -101,26 +101,28 @@ public:
     Q_INVOKABLE void downloadImage(int i);
 
 signals:
-    void countChanged();
     void busyChanged();
     void progressChanged();
+    void manualProgressChanged();
     void selectedSectionChanged();
     void refreshFailure(const QString &errorMessage);
 
 private slots:
     void onSuccess(const QList<GagObject> &gagList);
     void onFailure(const QString &errorMessage);
-    void onImageDownloadProgress(int imagesDownloaded, int imagesTotal);
+    void onDownloadProgress(qint64 downloaded, qint64 total);
     void onDownloadFinished();
+    void onManualDownloadProgress(qint64 downloaded, qint64 total);
     void onManualDownloadFinished();
 
 private:
     bool m_busy;
     qreal m_progress;
+    qreal m_manualProgress;
     GagBookManager *m_manager;
     int m_selectedSection;
-    QHash<int, QByteArray> _roles;
 
+    QHash<int, QByteArray> _roles;
     QList<GagObject> m_gagList;
     GagRequest *m_request;
     GagImageDownloader *m_imageDownloader;

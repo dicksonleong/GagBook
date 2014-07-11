@@ -38,8 +38,8 @@
 #include "gagimagedownloader.h"
 
 GagModel::GagModel(QObject *parent) :
-    QAbstractListModel(parent), m_busy(false), m_progress(0), m_manager(0), m_selectedSection(0),
-    m_request(0), m_imageDownloader(0), m_manualImageDownloader(0), m_downloadingIndex(-1)
+    QAbstractListModel(parent), m_busy(false), m_progress(0), m_manualProgress(0), m_manager(0),
+    m_selectedSection(0), m_request(0), m_imageDownloader(0), m_manualImageDownloader(0), m_downloadingIndex(-1)
 {
     _roles[TitleRole] = "title";
     _roles[UrlRole] = "url";
@@ -133,9 +133,9 @@ qreal GagModel::progress() const
     return m_progress;
 }
 
-int GagModel::gagCount() const
+qreal GagModel::manualProgress() const
 {
-    return m_gagList.count();
+    return m_manualProgress;
 }
 
 GagBookManager *GagModel::manager() const
@@ -201,15 +201,17 @@ void GagModel::refresh(RefreshType refreshType)
     connect(m_request, SIGNAL(success(QList<GagObject>)), this, SLOT(onSuccess(QList<GagObject>)));
     connect(m_request, SIGNAL(failure(QString)), this, SLOT(onFailure(QString)));
 
-    m_request->send();
-
-    m_busy = true;
-    emit busyChanged();
+    if (m_busy != true) {
+        m_busy = true;
+        emit busyChanged();
+    }
 
     if (m_progress != 0) {
         m_progress = 0;
         emit progressChanged();
     }
+
+    m_request->send();
 }
 
 void GagModel::stopRefresh()
@@ -245,12 +247,19 @@ void GagModel::downloadImage(int i)
     m_downloadingIndex = i;
     emit dataChanged(index(i), index(i));
 
+    if (m_manualProgress != 0) {
+        m_manualProgress = 0;
+        emit manualProgressChanged();
+    }
+
     QList<GagObject> gags;
     gags.append(m_gagList.at(i));
 
     m_manualImageDownloader = new GagImageDownloader(manager()->networkManager(), this);
     m_manualImageDownloader->setGagList(gags);
     m_manualImageDownloader->setDownloadGIF(gags.first().isGIF());
+    connect(m_manualImageDownloader, SIGNAL(downloadProgress(qint64,qint64)),
+            SLOT(onManualDownloadProgress(qint64,qint64)));
     connect(m_manualImageDownloader, SIGNAL(finished()), SLOT(onManualDownloadFinished()));
     m_manualImageDownloader->start();
 }
@@ -260,7 +269,7 @@ void GagModel::onSuccess(const QList<GagObject> &gagList)
     m_imageDownloader = new GagImageDownloader(manager()->networkManager(), this);
     m_imageDownloader->setGagList(gagList);
     m_imageDownloader->setDownloadGIF(false);
-    connect(m_imageDownloader, SIGNAL(downloadProgress(int,int)), SLOT(onImageDownloadProgress(int,int)));
+    connect(m_imageDownloader, SIGNAL(downloadProgress(qint64,qint64)), SLOT(onDownloadProgress(qint64,qint64)));
     connect(m_imageDownloader, SIGNAL(finished()), SLOT(onDownloadFinished()));
     m_imageDownloader->start();
 
@@ -273,15 +282,18 @@ void GagModel::onFailure(const QString &errorMessage)
     emit refreshFailure(errorMessage);
     m_request->deleteLater();
     m_request = 0;
-    m_busy = false;
-    emit busyChanged();
+
+    if (m_busy != false) {
+        m_busy = false;
+        emit busyChanged();
+    }
 }
 
-void GagModel::onImageDownloadProgress(int imagesDownloaded, int imagesTotal)
+void GagModel::onDownloadProgress(qint64 downloaded, qint64 total)
 {
     qreal progress;
-    if (imagesTotal > 0)
-        progress = qreal(imagesDownloaded) / qreal(imagesTotal);
+    if (total > 0)
+        progress = qreal(downloaded) / qreal(total);
     else
         progress = 1;
 
@@ -299,12 +311,27 @@ void GagModel::onDownloadFinished()
     m_gagList.append(gagList);
     endInsertRows();
 
-    m_busy = false;
-    emit busyChanged();
-    emit countChanged();
+    if (m_busy != false) {
+        m_busy = false;
+        emit busyChanged();
+    }
 
     m_imageDownloader->deleteLater();
     m_imageDownloader = 0;
+}
+
+void GagModel::onManualDownloadProgress(qint64 downloaded, qint64 total)
+{
+    qreal progress;
+    if (total > 0)
+        progress = qreal(downloaded) / qreal(total);
+    else
+        progress = 1;
+
+    if (m_manualProgress != progress) {
+        m_manualProgress = progress;
+        emit manualProgressChanged();
+    }
 }
 
 void GagModel::onManualDownloadFinished()

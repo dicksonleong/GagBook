@@ -189,11 +189,24 @@ Item {
                     id: downloadingIndicator
 
                     Item {
-                        BusyIndicator {
-                            anchors.centerIn: parent
-                            height: platformStyle.graphicSizeLarge
-                            width: platformStyle.graphicSizeLarge
-                            running: true
+                        Column {
+                            anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter }
+                            spacing: constant.paddingMedium
+
+                            BusyIndicator {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                platformInverted: appSettings.whiteTheme
+                                height: platformStyle.graphicSizeLarge
+                                width: platformStyle.graphicSizeLarge
+                                running: true
+                            }
+
+                            Text {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                font.pixelSize: constant.fontSizeMedium
+                                color: constant.colorLight
+                                text: Math.round(gagModel.manualProgress * 100) + "%"
+                            }
                         }
                     }
                 }

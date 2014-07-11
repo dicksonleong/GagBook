@@ -197,6 +197,13 @@ Item {
                             anchors.centerIn: parent
                             running: true
                             platformStyle: BusyIndicatorStyle { size: "large" }
+
+                            Text {
+                                anchors.centerIn: parent
+                                font.pixelSize: constant.fontSizeSmall
+                                color: constant.colorLight
+                                text: Math.round(gagModel.manualProgress * 100) + "%"
+                            }
                         }
                     }
                 }
