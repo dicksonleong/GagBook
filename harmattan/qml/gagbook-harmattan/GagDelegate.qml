@@ -56,8 +56,8 @@ Item {
             text: model.votesCount + " points · " + model.commentsCount + " comments"
         }
 
-        AnimatedImage {
-            id: gagImage
+        Loader {
+            id: gagImageLoader
 
             property bool playGif: false
 
@@ -67,39 +67,57 @@ Item {
 
             anchors { left: parent.left; right: parent.right }
             height: (model.imageSize.height * (screenWidth / model.imageSize.width)) || screenWidth
-            asynchronous: true
-            smooth: !root.ListView.view.moving
-            cache: false
-            // pause the animation when app is in background
-            paused: mainPage.status != PageStatus.Active || !Qt.application.active
-            fillMode: Image.PreserveAspectFit
-            source: playGif ? model.gifImageUrl : model.imageUrl
+            sourceComponent: playGif ? animatedImageComponent : imageComponent
 
-            onStatusChanged: if (status == AnimatedImage.Ready) playing = true;
+            Component {
+                id: imageComponent
+
+                Image {
+                    asynchronous: true
+                    smooth: !root.ListView.view.moving
+                    cache: false
+                    fillMode: Image.PreserveAspectFit
+                    source: model.imageUrl
+                }
+            }
+
+            Component {
+                id: animatedImageComponent
+
+                AnimatedImage {
+                    asynchronous: true
+                    smooth: !root.ListView.view.moving
+                    cache: false
+                    // pause the animation when app is in background
+                    paused: mainPage.status != PageStatus.Active || !Qt.application.active
+                    fillMode: Image.PreserveAspectFit
+                    source: model.gifImageUrl
+                }
+            }
 
             Loader {
                 anchors.fill: parent
+                z: 1
                 sourceComponent: {
-                    if (model.isNSFW)
-                        return nsfwText;
-                    if (!gagImage.source.toString()) {
+                    switch (gagImageLoader.item.status) {
+                    case Image.Null:
+                        if (model.isNSFW)
+                            return nsfwText;
                         if (model.isDownloading)
                             return downloadingIndicator;
                         return notDownloadedText;
-                    }
-
-                    switch (gagImage.status) {
-                    case Image.Loading: return loadingRect;
-                    case Image.Error: return errorText;
+                    case Image.Loading:
+                        return loadingRect;
+                    case Image.Error:
+                        return errorText;
                     case Image.Ready:
-                        if (model.isGIF && !gagImage.playGif)
+                        if (model.isGIF && !gagImageLoader.playGif)
                             return gifPlayIcon;
                         if (model.isVideo)
                             return videoPlayIcon;
                         if (model.isPartialImage)
                             return partialImageBar;
-                        // fallthrough
-                    default: return undefined;
+                        return undefined;
                     }
                 }
 
@@ -253,14 +271,13 @@ Item {
                     } else if (model.isGIF) {
                         if (!model.gifImageUrl.toString()) {
                             // download GIF
-                            gagImage.playGif = true;
+                            gagImageLoader.playGif = true;
                             gagModel.downloadImage(index);
                         } else {
-                            gagImage.playGif = !gagImage.playGif;
-                            gagImage.playing = true;
+                            gagImageLoader.playGif = !gagImageLoader.playGif;
                         }
                         return;
-                    } else if (!gagImage.source.toString()) {
+                    } else if (gagImageLoader.item.status == Image.Null) {
                         // download image
                         gagModel.downloadImage(index);
                     } else {
