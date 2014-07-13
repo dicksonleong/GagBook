@@ -31,6 +31,16 @@ import harbour.gagbook.Core 1.0
 
 Page {
     id: mainPage
+    objectName: "mainPage"
+
+    // for access by cover
+    property alias gagModel: gagModel
+    property int currentIndex: 0
+
+    function positionAtIndex(index) {
+        gagListView.positionViewAtIndex(index, ListView.Beginning);
+        currentIndex = index;
+    }
 
     property bool __pushedAttached: false
     onStatusChanged: {
@@ -91,6 +101,7 @@ Page {
         }
 
         onAtYEndChanged: if (atYEnd && !gagModel.busy && count > 0) gagModel.refresh(GagModel.RefreshOlder)
+        onMovementEnded: mainPage.currentIndex = gagListView.indexAt(gagListView.contentX, gagListView.contentY + 1);
 
         PullDownMenu {
             MenuItem {
@@ -117,16 +128,14 @@ Page {
     Connections {
         target: volumeKeyListener
         onVolumeUpClicked: {
-            var currentIndex = gagListView.indexAt(gagListView.contentX, gagListView.contentY + 1);
             if (currentIndex > 0)
-                gagListView.positionViewAtIndex(currentIndex - 1, ListView.Beginning);
+                positionAtIndex(currentIndex - 1, ListView.Beginning);
             else if (currentIndex == 0 && !gagListView.atYBeginning)
                 gagListView.positionViewAtBeginning();
         }
         onVolumeDownClicked: {
-            var currentIndex = gagListView.indexAt(gagListView.contentX, gagListView.contentY + 1);
             if (currentIndex < gagListView.count - 1)
-                gagListView.positionViewAtIndex(currentIndex + 1, ListView.Beginning);
+                positionAtIndex(currentIndex + 1, ListView.Beginning);
             else if (currentIndex == gagListView.count - 1 && !gagListView.atYEnd)
                 gagListView.positionViewAtEnd();
         }

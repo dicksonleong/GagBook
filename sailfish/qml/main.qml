@@ -33,12 +33,7 @@ ApplicationWindow {
     id: appWindow
 
     initialPage: Component { MainPage { } }
-    cover: CoverBackground {
-        CoverPlaceholder {
-            text: "GagBook"
-            icon.source: "Images/harbour-gagbook.png"
-        }
-    }
+    cover: Qt.resolvedUrl("CoverPage.qml")
 
     Constant { id: constant }
 
