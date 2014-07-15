@@ -15,7 +15,7 @@ Name:       harbour-gagbook
 Summary:    An unofficial app for 9GAG website
 Version:    1.0.0
 Release:    2
-Group:      Qt/Qt
+Group:      Applications/Internet
 License:    BSD
 URL:        https://github.com/dicksonleong/GagBook
 Source0:    %{name}-%{version}.tar.bz2
@@ -71,7 +71,7 @@ desktop-file-install --delete-original       \
 %files
 %defattr(-,root,root,-)
 %{_bindir}
-%{_datadir}/%{name}/qml
+%{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/86x86/apps/%{name}.png
 # >> files

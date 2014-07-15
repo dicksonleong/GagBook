@@ -1,8 +1,6 @@
 [Desktop Entry]
-Encoding=UTF-8
-Version=1.0
 Type=Application
 X-Nemo-Application-Type=qtquick2
 Name=GagBook
-Exec=harbour-gagbook
 Icon=harbour-gagbook
+Exec=harbour-gagbook

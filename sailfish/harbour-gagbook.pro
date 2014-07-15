@@ -1,6 +1,5 @@
 TARGET = harbour-gagbook
 
-#see gagbook.yaml for version setting
 DEFINES += APP_VERSION=\\\"$$VERSION\\\" HAS_LIBRESOURCEQT
 
 QT += network widgets webkitwidgets
@@ -52,6 +51,18 @@ OTHER_FILES += \
     $${TARGET}.png \
     ../README.md \
     ../LICENSE \
-    qml/*.qml \
-    qml/Images/*.png \
-    qml/LoginPage.qml
+    qml/AboutPage.qml \
+    qml/AppSettingsPage.qml \
+    qml/CommentsPage.qml \
+    qml/Constant.qml \
+    qml/CoverPage.qml \
+    qml/GagDelegate.qml \
+    qml/ImagePage.qml \
+    qml/InfoBanner.qml \
+    qml/main.qml \
+    qml/MainPage.qml \
+    qml/OpenLinkDialog.qml \
+    qml/SectionPage.qml \
+    qml/SimpleListItem.qml \
+    qml/Images/icon-gif-play.png \
+    qml/Images/icon-video-play.png
