@@ -101,7 +101,7 @@ Page {
         }
 
         onAtYEndChanged: if (atYEnd && !gagModel.busy && count > 0) gagModel.refresh(GagModel.RefreshOlder)
-        onMovementEnded: mainPage.currentIndex = gagListView.indexAt(gagListView.contentX, gagListView.contentY + 1);
+        onMovementEnded: mainPage.currentIndex = gagListView.indexAt(0, gagListView.contentY + gagListView.height / 2);
 
         PullDownMenu {
             MenuItem {
@@ -129,13 +129,13 @@ Page {
         target: volumeKeyListener
         onVolumeUpClicked: {
             if (currentIndex > 0)
-                positionAtIndex(currentIndex - 1, ListView.Beginning);
+                positionAtIndex(currentIndex - 1);
             else if (currentIndex == 0 && !gagListView.atYBeginning)
                 gagListView.positionViewAtBeginning();
         }
         onVolumeDownClicked: {
             if (currentIndex < gagListView.count - 1)
-                positionAtIndex(currentIndex + 1, ListView.Beginning);
+                positionAtIndex(currentIndex + 1);
             else if (currentIndex == gagListView.count - 1 && !gagListView.atYEnd)
                 gagListView.positionViewAtEnd();
         }

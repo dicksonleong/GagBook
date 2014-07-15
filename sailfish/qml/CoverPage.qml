@@ -35,6 +35,7 @@ CoverBackground {
     property Item mainPage: pageStack.find(function(t) { return t.objectName == "mainPage"; } )
 
     property bool __increamentIndexAfterLoad: false
+    property bool __positionAtIndexWhenDeactivate: false
 
     SlideshowView {
         id: slideView
@@ -71,17 +72,32 @@ CoverBackground {
 
                 Component {
                     id: nsfwText
-                    Label { width: gagImage.width; wrapMode: Text.Wrap; text: "NSFW" }
+                    Label {
+                        width: gagImage.width
+                        horizontalAlignment: Text.AlignHCenter
+                        wrapMode: Text.Wrap
+                        text: "NSFW"
+                    }
                 }
 
                 Component {
                     id: notDownloadedText
-                    Label { width: gagImage.width; wrapMode: Text.Wrap; text: "Image not downloaded" }
+                    Label {
+                        width: gagImage.width
+                        horizontalAlignment: Text.AlignHCenter
+                        wrapMode: Text.Wrap
+                        text: "Image not downloaded"
+                    }
                 }
 
                 Component {
                     id: errorText
-                    Label { width: gagImage.width; wrapMode: Text.Wrap; text: "Error loading image" }
+                    Label {
+                        width: gagImage.width
+                        horizontalAlignment: Text.AlignHCenter
+                        wrapMode: Text.Wrap
+                        text: "Error loading image"
+                    }
                 }
 
                 Component {
@@ -135,6 +151,7 @@ CoverBackground {
                     __increamentIndexAfterLoad = true;
                     mainPage.gagModel.refresh(GagModel.RefreshOlder);
                 } else {
+                    __positionAtIndexWhenDeactivate = true;
                     slideView.incrementCurrentIndex();
                 }
             }
@@ -143,7 +160,9 @@ CoverBackground {
 
     onStatusChanged: {
         // when cover is deactivating means app is activating
-        if (status == Cover.Deactivating)
+        if (status == Cover.Deactivating && __positionAtIndexWhenDeactivate) {
+            __positionAtIndexWhenDeactivate = false;
             mainPage.positionAtIndex(slideView.currentIndex);
+        }
     }
 }
