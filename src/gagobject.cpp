@@ -36,7 +36,7 @@ class GagObjectData : public QSharedData
 {
 public:
     GagObjectData() : votesCount(0), commentsCount(0),
-        isVideo(false), isNSFW(false), isGIF(false), isPartialImage(false) {}
+        isNSFW(false), isGIF(false), isPartialImage(false) {}
     ~GagObjectData() {
         if (imageUrl.scheme() == "file")
             QFile::remove(imageUrl.toLocalFile());
@@ -53,7 +53,6 @@ public:
     QSize imageSize;
     int votesCount;
     int commentsCount;
-    bool isVideo;
     bool isNSFW;
     bool isGIF;
     bool isPartialImage;
@@ -172,16 +171,6 @@ void GagObject::setCommentsCount(int comments)
     d->commentsCount = comments;
 }
 
-bool GagObject::isVideo() const
-{
-    return d->isVideo;
-}
-
-void GagObject::setIsVideo(bool isVideo)
-{
-    d->isVideo = isVideo;
-}
-
 bool GagObject::isNSFW() const
 {
     return d->isNSFW;
@@ -223,7 +212,6 @@ QVariantMap GagObject::toVariantMap() const
     gagMap["imageSize"] = d->imageSize;
     gagMap["votesCount"] = d->votesCount;
     gagMap["commentsCount"] = d->commentsCount;
-    gagMap["isVideo"] = d->isVideo;
     gagMap["isNSFW"] = d->isNSFW;
     gagMap["isGIF"] = d->isGIF;
     gagMap["isPartialImage"] = d->isPartialImage;

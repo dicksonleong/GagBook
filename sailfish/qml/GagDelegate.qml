@@ -108,8 +108,6 @@ Item {
                     case Image.Ready:
                         if (model.isGIF && !gagImageLoader.playGif)
                             return gifPlayIcon;
-                        if (model.isVideo)
-                            return videoPlayIcon;
                         if (model.isPartialImage)
                             return partialImageBar;
                         return undefined;
@@ -233,17 +231,6 @@ Item {
                 }
 
                 Component {
-                    id: videoPlayIcon
-
-                    Item {
-                        Image {
-                            anchors.centerIn: parent
-                            source: "Images/icon-video-play.png"
-                        }
-                    }
-                }
-
-                Component {
                     id: partialImageBar
 
                     Item {
@@ -266,9 +253,7 @@ Item {
                 anchors.fill: parent
                 enabled: !model.isNSFW && !model.isDownloading
                 onClicked: {
-                    if (model.isVideo) {
-                        Qt.openUrlExternally(model.url);
-                    } else if (model.isGIF) {
+                    if (model.isGIF) {
                         if (!model.gifImageUrl.toString()) {
                             // download GIF
                             gagImageLoader.playGif = true;

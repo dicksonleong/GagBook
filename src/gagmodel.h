@@ -65,7 +65,6 @@ public:
         ImageSizeRole,
         VotesCountRole,
         CommentsCountRole,
-        IsVideoRole,
         IsNSFWRole,
         IsGIFRole,
         IsPartialImageRole,
