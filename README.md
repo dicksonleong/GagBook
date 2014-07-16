@@ -1,7 +1,8 @@
 GagBook
 =======
 
-GagBook is an unofficial mobile app for [9GAG](http://9gag.com) website, currently available for MeeGo Harmattan and Symbian^3.
+GagBook is an unofficial mobile app for [9GAG](http://9gag.com) website, currently available
+for SailfishOS, MeeGo Harmattan and Symbian^3.
 
 GagBook get data from 9GAG by scraping their website, or using [InfiniGAG](https://github.com/k3min/infinigag)
 API. This might be unethical but I made this app because there is no official 9GAG app for MeeGo Harmattan
@@ -23,7 +24,6 @@ Limitation / Known Issues / To Do
 - Image upload is not supported
 - Large image will be stretched down due to hardware limitation
 - Some animated GIFs will not play properly due to hardware limitation
-- Playing (Youtube) video inside the app is not supported
 
 Contact Me
 ----------

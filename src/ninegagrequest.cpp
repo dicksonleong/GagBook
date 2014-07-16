@@ -98,7 +98,6 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
         gag.setVotesCount(element.attribute("data-entry-votes").toInt());
         gag.setCommentsCount(element.attribute("data-entry-comments").toInt());
         gag.setTitle(element.findFirst("a").toPlainText().trimmed());
-        gag.setIsPartialImage(false);
 
         gag.setIsLiked(!element.findFirst("ul.badge-item-vote-container.up").isNull());
         gag.setIsDisliked(!element.findFirst("ul.badge-item-vote-container.down").isNull());
@@ -107,18 +106,13 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
 
         if (!postContainer.findFirst("div.nsfw-post").isNull()) {
             gag.setIsNSFW(true);
-        } else if (!postContainer.findFirst("span.play").isNull()) {
-            if (!postContainer.findFirst("div.video-post").isNull()) {
-                gag.setIsVideo(true);
-                gag.setImageUrl(postContainer.findFirst("img.youtube-thumb").attribute("src"));
-            } else {
-                gag.setIsGIF(true);
-                gag.setImageUrl(postContainer.findFirst("img.badge-item-img").attribute("src"));
-                gag.setGifImageUrl(postContainer.findFirst("div.badge-animated-container-animated").attribute("data-image"));
-            }
-        } else if(!element.findFirst("div.post-container.with-button").isNull()) {
+        } else if (!postContainer.findFirst("div.badge-animated-container-animated").isNull()) {
+            gag.setIsGIF(true);
+            gag.setImageUrl(postContainer.findFirst("img.badge-item-img").attribute("src"));
+            gag.setGifImageUrl(postContainer.findFirst("div.badge-animated-container-animated").attribute("data-image"));
+        } else if (postContainer.hasClass("with-button")) {
             //not full pic, we'll need to go deeper for the full lenght image
-            const QUrl regularImgUrl = QString(postContainer.findFirst("img.badge-item-img").attribute("src"));
+            const QUrl regularImgUrl = postContainer.findFirst("img.badge-item-img").attribute("src");
             const QUrl imgUrl = QString("%1/photo/%2_700b.jpg").arg(regularImgUrl.toString(QUrl::RemovePath)).arg(gag.id());
 
             Q_ASSERT(imgUrl.isValid());
@@ -126,9 +120,7 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
             gag.setFullImageUrl(imgUrl);
             gag.setImageUrl(regularImgUrl);
             gag.setIsPartialImage(true);
-        }
-
-        else {
+        } else {
             gag.setImageUrl(postContainer.findFirst("img.badge-item-img").attribute("src"));
         }
 

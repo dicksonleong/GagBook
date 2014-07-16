@@ -50,7 +50,6 @@ GagModel::GagModel(QObject *parent) :
     _roles[ImageSizeRole] = "imageSize";
     _roles[VotesCountRole] = "votesCount";
     _roles[CommentsCountRole] = "commentsCount";
-    _roles[IsVideoRole] = "isVideo";
     _roles[IsNSFWRole] = "isNSFW";
     _roles[IsGIFRole] = "isGIF";
     _roles[IsPartialImageRole] = "isPartialImage";
@@ -107,8 +106,6 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
         return gag.votesCount();
     case CommentsCountRole:
         return gag.commentsCount();
-    case IsVideoRole:
-        return gag.isVideo();
     case IsNSFWRole:
         return gag.isNSFW();
     case IsGIFRole:

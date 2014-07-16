@@ -68,9 +68,6 @@ public:
     int commentsCount() const;
     void setCommentsCount(int comments);
 
-    bool isVideo() const;
-    void setIsVideo(bool isVideo);
-
     bool isNSFW() const;
     void setIsNSFW(bool isNSFW);
 

@@ -64,5 +64,4 @@ OTHER_FILES += \
     qml/OpenLinkDialog.qml \
     qml/SectionPage.qml \
     qml/SimpleListItem.qml \
-    qml/Images/icon-gif-play.png \
-    qml/Images/icon-video-play.png
+    qml/Images/icon-gif-play.png

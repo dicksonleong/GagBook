@@ -64,8 +64,6 @@ CoverBackground {
                     case Image.Ready:
                         if (model.isGIF)
                             return gifPlayIcon;
-                        if (model.isVideo)
-                            return videoPlayIcon;
                         return undefined;
                     }
                 }
@@ -103,11 +101,6 @@ CoverBackground {
                 Component {
                     id: gifPlayIcon
                     Image { source: "Images/icon-gif-play.png" }
-                }
-
-                Component {
-                    id: videoPlayIcon
-                    Image { source: "Images/icon-video-play.png" }
                 }
             }
         }
