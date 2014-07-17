@@ -38,6 +38,12 @@ public:
     ~GagCookieJar();
 
     void clear();
+    void save();
+    QList<QNetworkCookie> cookiesForUrl(const QUrl &url) const;
+    bool setCookiesFromUrl(const QList<QNetworkCookie> &cookieList, const QUrl &url);
+
+signals:
+    void cookiesChanged();
 };
 
 #endif // GAGCOOKIEJAR_H

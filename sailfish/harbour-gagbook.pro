@@ -51,4 +51,5 @@ OTHER_FILES += \
     ../README.md \
     ../LICENSE \
     qml/*.qml \
-    qml/Images/*.png
+    qml/Images/*.png \
+    qml/LoginPage.qml

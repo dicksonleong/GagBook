@@ -29,6 +29,8 @@
 
 #include <QtCore/QSettings>
 #include <QtNetwork/QNetworkCookie>
+#include <QDateTime>
+#include <QDebug>
 
 GagCookieJar::GagCookieJar(QObject *parent) :
     QNetworkCookieJar(parent)
@@ -39,6 +41,11 @@ GagCookieJar::GagCookieJar(QObject *parent) :
 }
 
 GagCookieJar::~GagCookieJar()
+{
+    this->save(); //save to file storage, otherwise they're gone when this instance is released from memory
+}
+
+void GagCookieJar::save()
 {
     QByteArray rawCookies;
     foreach (const QNetworkCookie cookie, allCookies()) {
@@ -54,6 +61,43 @@ GagCookieJar::~GagCookieJar()
 
     QSettings settings;
     settings.setValue("cookies", rawCookies);
+    qDebug() << Q_FUNC_INFO;
+}
+
+QList<QNetworkCookie> GagCookieJar::cookiesForUrl(const QUrl &url) const
+{
+    Q_UNUSED(url); //we never save any cookies that are not from 9gag.com (see this->save())
+    return allCookies();
+}
+
+bool GagCookieJar::setCookiesFromUrl(const QList<QNetworkCookie> &cookieList, const QUrl &url)
+{
+    bool addedCookies = false;
+
+    // lets save cookies for 90 days only
+    QDateTime soon = QDateTime::currentDateTime();
+    soon = soon.addDays(90);
+
+    foreach(QNetworkCookie cookie, cookieList) {
+        QList<QNetworkCookie> lst;
+        if (!cookie.isSessionCookie() && cookie.expirationDate() > soon) {
+            cookie.setExpirationDate(soon);
+        }
+        lst += cookie;
+        if (QNetworkCookieJar::setCookiesFromUrl(lst, url)) {
+            addedCookies = true;
+        } else {
+            // finally force it in if wanted
+            QList<QNetworkCookie> cookies = allCookies();
+            cookies += cookie;
+            setAllCookies(cookies);
+            addedCookies = true;
+        }
+    }
+
+    this->save(); //save to file storage, otherwise they're gone when this instance is released from memory
+
+    return addedCookies;
 }
 
 void GagCookieJar::clear()

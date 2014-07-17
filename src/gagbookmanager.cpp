@@ -25,16 +25,24 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <QNetworkCookie>
+#include <QDateTime>
+
 #include "gagbookmanager.h"
 
 #include "networkmanager.h"
 #include "gagimagedownloader.h"
+#include "appsettings.h"
+#include "gagcookiejar.h"
+
+#include <QDebug>
 
 GagBookManager::GagBookManager(QObject *parent) :
     QObject(parent), m_settings(0), m_netManager(new NetworkManager(this))
 {
     GagImageDownloader::initializeCache();
     connect(m_netManager, SIGNAL(downloadCounterChanged()), SIGNAL(downloadCounterChanged()));
+    connect(m_netManager, SIGNAL(loggedInChanged()), SIGNAL(loggedInChanged()));
 }
 
 QString GagBookManager::downloadCounter() const
@@ -55,4 +63,36 @@ void GagBookManager::setSettings(AppSettings *settings)
 NetworkManager *GagBookManager::networkManager() const
 {
     return m_netManager;
+}
+
+void GagBookManager::login(const QString &username, const QString &password)
+{
+    qDebug() << Q_FUNC_INFO;
+    Q_ASSERT(m_netManager);
+    m_netManager->login(username, password);
+}
+
+void GagBookManager::logout()
+{
+    qDebug() << Q_FUNC_INFO;
+    //we log out by removing the loggedin cookie
+    m_netManager->clearCookies();
+
+    emit loggedInChanged();
+}
+
+bool GagBookManager::isLoggedIn() const
+{
+    bool m_loggedIn = false;
+    QList<QNetworkCookie> m_cookies = m_netManager->cookieJar()->cookiesForUrl((QUrl("9gag.com")));
+
+    foreach (QNetworkCookie cookie, m_cookies) {
+        QDateTime now = QDateTime::currentDateTime();
+        if (cookie.expirationDate() < now)
+            continue;
+
+        m_loggedIn = (cookie.name() == "loggedin" && cookie.value() == "1");
+    }
+
+    return m_loggedIn;
 }

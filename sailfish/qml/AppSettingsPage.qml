@@ -32,6 +32,8 @@ import harbour.gagbook.Core 1.0
 Page {
     id: settingsPage
 
+    LoginPage {id: loginPage}
+
     SilicaFlickable {
         id: settingsFlickable
         anchors.fill: parent
@@ -66,8 +68,20 @@ Page {
                 checked: appSettings.scrollWithVolumeKeys
                 onCheckedChanged: appSettings.scrollWithVolumeKeys = checked;
             }
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: gagbookManager.loggedIn ? "Log out from 9gag.com" : "Login to 9gag.com"
+                onClicked: gagbookManager.loggedIn ? gagbookManager.logout() : pageStack.push(loginPage);
+            }
         }
 
         VerticalScrollDecorator {}
+    }
+
+    Component.onCompleted: {
+       // loginPage.accepted.connect(function() {
+       //     console.log("accepted login");
+       // });
     }
 }

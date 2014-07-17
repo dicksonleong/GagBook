@@ -106,7 +106,7 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: "About GagBook"
-                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
+                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"));
             }
             MenuItem {
                 text: "Settings"
