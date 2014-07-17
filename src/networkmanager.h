@@ -29,6 +29,7 @@
 #define NETWORKMANAGER_H
 
 #include <QtCore/QObject>
+#include "gagcookiejar.h"
 
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -54,13 +55,18 @@ public:
 
     void clearCookies();
 
+    GagCookieJar *cookieJar() const;
+
     QString downloadCounter() const;
+
+    void login(const QString username, const QString password);
 
 signals:
     void downloadCounterChanged();
+    void loggedInChanged();
 
 private slots:
-    void increaseDownloadCounter(QNetworkReply *reply);
+    void replyFinished(QNetworkReply *reply);
 
 private:
     Q_DISABLE_COPY(NetworkManager)

@@ -38,6 +38,7 @@ class GagBookManager : public QObject
     Q_OBJECT
     Q_PROPERTY(QString downloadCounter READ downloadCounter NOTIFY downloadCounterChanged)
     Q_PROPERTY(AppSettings *settings READ settings WRITE setSettings)
+    Q_PROPERTY(bool loggedIn READ isLoggedIn NOTIFY loggedInChanged)
 public:
     explicit GagBookManager(QObject *parent = 0);
 
@@ -48,8 +49,14 @@ public:
 
     NetworkManager *networkManager() const;
 
+    bool isLoggedIn() const;
+
+    Q_INVOKABLE void login(const QString &username, const QString &password);
+    Q_INVOKABLE void logout();
+
 signals:
     void downloadCounterChanged();
+    void loggedInChanged();
 
 private:
     AppSettings *m_settings;
