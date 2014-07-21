@@ -43,6 +43,7 @@ Dialog {
         TextField {
             id: usernameField
             width: 480
+            text: appSettings.username ? appSettings.username : ""
             inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
             placeholderText: "9gag.com username"
         }
@@ -52,12 +53,6 @@ Dialog {
             width: 480
             echoMode: TextInput.Password
             placeholderText: "Password"
-        }
-        Text {
-            id: wrongLoginDetails
-            text: "Wrong username or password"
-            color: "red"
-            visible: false
         }
     }
 
@@ -70,19 +65,6 @@ Dialog {
             passwordField.text = "Password";
 
             gagbookManager.login(username, password);
-            acceptPending = true;
-        }
-    }
-
-    Connections {
-        target: gagbookManager
-        onLoggedInChanged: {
-            if (!gagbookManager.loggedIn)
-                wrongLoginDetails.visible = true;
-            else {
-                wrongLoginDetails.visible = false;
-                accept();
-            }
         }
     }
 }

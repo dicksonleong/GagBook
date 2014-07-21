@@ -58,6 +58,7 @@ class GagModel : public QAbstractListModel, public QQmlParserStatus
 public:
     enum Roles {
         TitleRole = Qt::UserRole,
+        IdRole,
         UrlRole,
         ImageUrlRole,
         FullImageUrlRole,
@@ -69,6 +70,8 @@ public:
         IsNSFWRole,
         IsGIFRole,
         IsPartialImageRole,
+        IsLikedRole,
+        IsDislikedRole,
         IsDownloadingRole
     };
 

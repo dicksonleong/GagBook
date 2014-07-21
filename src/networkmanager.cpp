@@ -72,10 +72,16 @@ QNetworkReply *NetworkManager::createPostRequest(const QUrl &url, const QByteArr
     QNetworkRequest request;
     request.setUrl(url);
     request.setRawHeader("User-Agent", USER_AGENT);
+    request.setHeader(QNetworkRequest::ContentTypeHeader,
+                      "application/x-www-form-urlencoded");
+
+    m_networkAccessManager->setCookieJar(new GagCookieJar); //why is this needed? won't get cookies otherwise :/
     return m_networkAccessManager->post(request, data);
 }
 
 void NetworkManager::login(const QString username, const QString password) {
+    this->clearCookies();
+
     QUrlQuery postData;
     postData.addQueryItem("username", username);
     postData.addQueryItem("password", password);

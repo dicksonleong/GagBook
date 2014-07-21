@@ -69,6 +69,7 @@ void GagBookManager::login(const QString &username, const QString &password)
 {
     qDebug() << Q_FUNC_INFO;
     Q_ASSERT(m_netManager);
+    m_settings->setUsername(username); //save username so users don't have to input it everytime
     m_netManager->login(username, password);
 }
 
