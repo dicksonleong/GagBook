@@ -42,6 +42,7 @@ GagModel::GagModel(QObject *parent) :
     m_selectedSection(0), m_request(0), m_imageDownloader(0), m_manualImageDownloader(0), m_downloadingIndex(-1)
 {
     _roles[TitleRole] = "title";
+    _roles[IdRole] = "id";
     _roles[UrlRole] = "url";
     _roles[ImageUrlRole] = "imageUrl";
     _roles[FullImageUrlRole] = "fullImageUrl";
@@ -52,6 +53,8 @@ GagModel::GagModel(QObject *parent) :
     _roles[IsNSFWRole] = "isNSFW";
     _roles[IsGIFRole] = "isGIF";
     _roles[IsPartialImageRole] = "isPartialImage";
+    _roles[IsLikedRole] = "isLiked";
+    _roles[IsDislikedRole] = "isDisliked";
     _roles[IsDownloadingRole] = "isDownloading";
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     setRoleNames(_roles);
@@ -82,6 +85,8 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case TitleRole:
         return gag.title();
+    case IdRole:
+        return gag.id();
     case UrlRole:
         return gag.url();
     case ImageUrlRole:
@@ -107,6 +112,10 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
         return gag.isGIF();
     case IsPartialImageRole:
         return gag.isPartialImage();
+    case IsLikedRole:
+        return gag.isLiked();
+    case IsDislikedRole:
+        return gag.isDisliked();
     case IsDownloadingRole:
         return index.row() == m_downloadingIndex;
     default:

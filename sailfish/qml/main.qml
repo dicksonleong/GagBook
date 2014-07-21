@@ -43,4 +43,8 @@ ApplicationWindow {
         id: gagbookManager
         settings: AppSettings { id: appSettings }
     }
+
+    VotingManager {
+        id: votingManager
+    }
 }

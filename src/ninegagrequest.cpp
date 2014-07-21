@@ -99,6 +99,9 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
         gag.setCommentsCount(element.attribute("data-entry-comments").toInt());
         gag.setTitle(element.findFirst("a").toPlainText().trimmed());
 
+        gag.setIsLiked(!element.findFirst("ul.badge-item-vote-container.up").isNull());
+        gag.setIsDisliked(!element.findFirst("ul.badge-item-vote-container.down").isNull());
+
         const QWebElement postContainer = element.findFirst("div.post-container");
 
         if (!postContainer.findFirst("div.nsfw-post").isNull()) {

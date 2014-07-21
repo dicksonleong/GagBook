@@ -61,7 +61,6 @@ void GagCookieJar::save()
 
     QSettings settings;
     settings.setValue("cookies", rawCookies);
-    qDebug() << Q_FUNC_INFO;
 }
 
 QList<QNetworkCookie> GagCookieJar::cookiesForUrl(const QUrl &url) const

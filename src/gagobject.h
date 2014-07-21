@@ -77,6 +77,12 @@ public:
     bool isPartialImage() const;
     void setIsPartialImage(bool isPartialImage);
 
+    bool isLiked() const;
+    void setIsLiked(bool isLiked);
+
+    bool isDisliked() const;
+    void setIsDisliked(bool isDisliked);
+
     QVariantMap toVariantMap() const;
     
 private:

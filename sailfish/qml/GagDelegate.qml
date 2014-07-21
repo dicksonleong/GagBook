@@ -278,6 +278,33 @@ Item {
             spacing: constant.paddingMedium
 
             IconButton {
+                id: likeButton
+                icon.source: "image://theme/icon-m-up"
+                highlighted: model.isLiked
+                onClicked: {
+                    console.log("clicked Like with id: " + model.id + ", current: " + model.isLiked);
+                    if (gagbookManager.loggedIn){
+                        votingManager.setLike(model.id, !model.isLiked);
+                        model.isLiked = !model.isLiked;
+                    }
+                    else
+                        infoBanner.alert("You must login before you can vote. Go to settings and log in.");
+                }
+            }
+            IconButton {
+                icon.source: "image://theme/icon-m-down"
+                highlighted: model.isDisliked
+                onClicked: {
+                    if (gagbookManager.loggedIn){
+                        votingManager.setDislike(model.id, !model.isDisliked);
+                        model.isDisliked = !model.isDisliked;
+                    }
+                    else
+                        infoBanner.alert("You must login before you can vote. Go to settings and log in.");
+                }
+            }
+
+            IconButton {
                 icon.height: Theme.iconSizeMedium; icon.width: Theme.iconSizeMedium
                 icon.source: "image://theme/icon-m-message"
                 onClicked: pageStack.push(Qt.resolvedUrl("CommentsPage.qml"), { gagURL: model.url })
@@ -326,4 +353,30 @@ Item {
         anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
         color: Theme.secondaryColor
     }
+
+    Component.onCompleted: {
+        //votingManager.invalidVote.connect(onInvalidVote);
+        //votingManager.liked.connect(onLiked);
+        //votingManager.disliked.connect(onDisliked);
+        //votingManager.unliked.connect(onUnliked);
+    }
+
+    function onInvalidVote() {
+        console.log("reporting invalid vote");
+    }
+    function onLiked() {
+        console.log("reporting liked vote");
+        model.isLiked = true;
+        model.isDisliked = false;
+    }
+    function onUnliked() {
+        console.log("reporting unliked vote");
+        model.isLiked = false;
+    }
+    function onDisliked() {
+        console.log("reporting disliked vote");
+        model.isLiked = false;
+        model.isDisliked = true;
+    }
+
 }

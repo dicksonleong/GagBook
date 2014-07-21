@@ -58,6 +58,8 @@ AppSettings::AppSettings(QObject *parent) :
 
     if (m_sections.isEmpty())
         setSections(defaultSections());
+
+    m_username = m_settings->value("username").toString();
 }
 
 bool AppSettings::isWhiteTheme() const
@@ -113,5 +115,19 @@ void AppSettings::setSections(const QStringList &sections)
         m_sections = sections;
         m_settings->setValue("sections", m_sections);
         emit sectionsChanged();
+    }
+}
+
+QString AppSettings::username() const
+{
+    return m_username;
+}
+
+void AppSettings::setUsername(const QString &username)
+{
+    if (m_username != username) {
+        m_username = username;
+        m_settings->setValue("username", username);
+        emit usernameChanged();
     }
 }
