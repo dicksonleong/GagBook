@@ -36,7 +36,7 @@ class GagObjectData : public QSharedData
 {
 public:
     GagObjectData() : votesCount(0), commentsCount(0),
-        isVideo(false), isNSFW(false), isGIF(false), isPartialImage(false),
+        isNSFW(false), isGIF(false), isPartialImage(false),
         isLiked(false), isDisliked(false) {}
     ~GagObjectData() {
         if (imageUrl.scheme() == "file")
