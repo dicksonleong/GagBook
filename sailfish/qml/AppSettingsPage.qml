@@ -32,7 +32,7 @@ import harbour.gagbook.Core 1.0
 Page {
     id: settingsPage
 
-    LoginPage {id: loginPage}
+    readonly property bool busy: gagbookManager.busy
 
     SilicaFlickable {
         id: settingsFlickable
@@ -71,32 +71,22 @@ Page {
 
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: gagbookManager.loggedIn ? "Log out" : "Login to 9gag.com"
-                onClicked: gagbookManager.loggedIn ? gagbookManager.logout() : pageStack.push(loginPage);
-            }
-            Text {
-                id: wrongLoginDetails
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width
-                text: "Wrong username or password, please try again..."
-                font.pixelSize: constant.fontSizeSmall
-                color: "red"
-                visible: false
+                enabled: !gagbookManager.busy
+                text: gagbookManager.loggedIn ? "Log out" : "Login to 9GAG"
+                onClicked: {
+                    if (gagbookManager.loggedIn) {
+                        gagbookManager.logout();
+                        infoBanner.alert("Logged out from 9GAG");
+                    } else {
+                        var dialog = pageStack.push(Qt.resolvedUrl("LoginDialog.qml"));
+                        dialog.accepted.connect(function() {
+                            gagbookManager.login(dialog.username, dialog.password);
+                        })
+                    }
+                }
             }
         }
 
         VerticalScrollDecorator {}
-    }
-
-    Component.onCompleted: {
-        gagbookManager.loggedInChanged.connect(onLoggedInChanged);
-    }
-
-    function onLoggedInChanged() {
-        console.log("logged in changed: " + gagbookManager.loggedIn);
-        if (!gagbookManager.loggedIn)
-            wrongLoginDetails.visible = true;
-        else
-            wrongLoginDetails.visible = false;
     }
 }

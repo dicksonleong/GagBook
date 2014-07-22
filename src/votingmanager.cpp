@@ -1,3 +1,31 @@
+/*
+ * Copyright (c) 2014 Bob Jelica
+ * Copyright (c) 2014 Dickson Leong
+ * All rights reserved.
+ *
+ * This file is part of GagBook.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 #include "votingmanager.h"
 
 #include <QMetaEnum>
@@ -9,8 +37,13 @@
 #include "networkmanager.h"
 
 VotingManager::VotingManager(QObject *parent) :
-    QObject(parent), m_manager(0)
+    QObject(parent), m_isBusy(false), m_manager(0), m_reply(0)
 {  
+}
+
+bool VotingManager::isBusy() const
+{
+    return m_isBusy;
 }
 
 GagBookManager *VotingManager::manager() const
@@ -23,71 +56,55 @@ void VotingManager::setManager(GagBookManager *manager)
     m_manager = manager;
 }
 
-void VotingManager::vote(VoteType type, const QString &id)
+void VotingManager::vote(const QString &id, VotingManager::VoteType voteType)
 {
-    Q_ASSERT(!id.isEmpty());
+    Q_ASSERT(m_manager != 0);
 
-    QUrl voteUrl("http://9gag.com/vote/"+ enumToString(type).toLower() +"/id/" + id);
-    qDebug() << "vote url: " << voteUrl;
-    QNetworkReply *m_reply = m_manager->networkManager()->createPostRequest(voteUrl, QByteArray());
+    if (m_reply != 0) {
+        m_reply->disconnect();
+        m_reply->deleteLater();
+        m_reply = 0;
+    }
+
+    if (m_isBusy != true) {
+        m_isBusy = true;
+        emit busyChanged();
+    }
+
+    QUrl voteUrl("http://9gag.com/vote/"+ enumToString(voteType).toLower() +"/id/" + id);
+    m_reply = m_manager->networkManager()->createPostRequest(voteUrl, QByteArray());
     m_reply->setParent(this);
     connect(m_reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
 }
 
-void VotingManager::setLike(const QString &id, bool liked)
-{
-    liked ? this->vote(Like,id) : this->vote(Unlike,id);
-}
-
-void VotingManager::setDislike(const QString &id, bool disliked)
-{
-    if (disliked)  //don't need to do anything when de-activating a Dislake
-        this->vote(Dislike,id);
-}
-
 void VotingManager::onReplyFinished()
 {
-    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    Q_ASSERT_X(reply != 0, Q_FUNC_INFO, "Unable to cast sender() to QNetworkReply *");
+    if (m_reply->error() == QNetworkReply::NoError) {
+        bool ok;
+        const QVariantMap result = QtJson::parse(QString::fromUtf8(m_reply->readAll()), ok).toMap();
 
-    if (reply->error()) {
-        emit failure(reply->errorString());
-        reply->deleteLater();
-        reply = 0;
-        return;
+        Q_ASSERT_X(ok, Q_FUNC_INFO, "Error parsing JSON");
+        Q_ASSERT_X(!result.isEmpty(), Q_FUNC_INFO, "Error parsing JSON or JSON is empty");
+
+        const QString id = result.value("id").toString();
+        const int score = result.value("myScore").toInt();
+        const QString msg = result.value("msg").toString();
+
+        if (msg.contains("loved", Qt::CaseInsensitive)) // if success, msg can be "Loved" or "Not loved"
+            emit voteSuccess(id, score);
+         else
+            emit failure(msg);
+    } else {
+        emit failure(m_reply->errorString());
     }
 
-    QByteArray response = reply->readAll();
-    reply->deleteLater();
-    reply = 0;
+    m_reply->deleteLater();
+    m_reply = 0;
 
-    bool ok;
-    const QVariantMap result = QtJson::parse(QString::fromUtf8(response), ok).toMap();
-
-    Q_ASSERT_X(ok, Q_FUNC_INFO, "Error parsing JSON");
-    Q_ASSERT_X(!result.isEmpty(), Q_FUNC_INFO, "Error parsing JSON or JSON is empty");
-
-    const QString msg = result.value("msg").toString();
-    const QString score = result.value("myScore").toString();
-    const QString id = result.value("id").toString();
-
-    if(msg == "Loved")
-        emit liked(id);
-
-    else if(msg == "Invalid vote.")
-        emit invalidVote();
-
-    else if(msg == "Not loved") { //this msg will be in 2 different cases, unliked+disliked, diffrence being the score
-        if (score == "-1")
-            emit disliked(id);
-        else if (score == "0")
-            emit unliked(id);
-        else
-            emit invalidVote();
+    if (m_isBusy != false) {
+        m_isBusy = false;
+        emit busyChanged();
     }
-    else
-        emit invalidVote();
-
 }
 
 

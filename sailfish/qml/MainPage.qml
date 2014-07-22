@@ -33,6 +33,8 @@ Page {
     id: mainPage
     objectName: "mainPage"
 
+    readonly property alias busy: votingManager.busy
+
     // for access by cover
     property alias gagModel: gagModel
     property int currentIndex: 0
@@ -128,6 +130,8 @@ Page {
     VotingManager {
         id: votingManager
         manager: gagbookManager
+        onVoteSuccess: gagModel.changeLikes(id, likes);
+        onFailure: infoBanner.alert(errorMessage);
     }
 
     Connections {

@@ -55,8 +55,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    app.setApplicationName("GagBook");
-    app.setOrganizationName("GagBook");
+    app.setApplicationDisplayName("GagBook");
+    app.setApplicationName("harbour-gagbook");
+    app.setOrganizationName("harbour-gagbook");
+    app.setOrganizationDomain("harbour-gagbook");
     app.setApplicationVersion(APP_VERSION);
 
     QScopedPointer<QQuickView> view(SailfishApp::createView());

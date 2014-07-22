@@ -29,41 +29,42 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Dialog {
-    property string username
-    property string password
+    id: loginDialog
+
+    property alias username: usernameField.text
+    property alias password: passwordField.text
+
+    canAccept: usernameField.acceptableInput && passwordField.acceptableInput
 
     Column {
-        spacing: 10
-        anchors.fill: parent
+        anchors { left: parent.left; right: parent.right }
+        spacing: constant.paddingMedium
 
-        DialogHeader {
-            acceptText: "Login"
-        }
+        DialogHeader { title: "Login" }
 
         TextField {
             id: usernameField
-            width: 480
+            anchors { left: parent.left; right: parent.right }
             inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            placeholderText: "9gag.com username"
+            label: "Username or Email"
+            placeholderText: label
+            validator: RegExpValidator { regExp: /^\S+$/ }
+            EnterKey.enabled: acceptableInput
+            EnterKey.iconSource: "image://theme/icon-m-enter-next"
+            EnterKey.onClicked: passwordField.forceActiveFocus();
         }
 
         TextField {
             id: passwordField
-            width: 480
+            anchors { left: parent.left; right: parent.right }
+            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
             echoMode: TextInput.Password
-            placeholderText: "Password"
-        }
-    }
-
-    onDone: {
-        if (result == DialogResult.Accepted) {
-            console.log("accepted dialog");
-            username = usernameField.text;
-            password = passwordField.text;
-
-            passwordField.text = "Password";
-
-            gagbookManager.login(username, password);
+            label: "Password"
+            placeholderText: label
+            validator: RegExpValidator { regExp: /^\S+$/ }
+            EnterKey.enabled: acceptableInput
+            EnterKey.iconSource: "image://theme/icon-m-enter-accept"
+            EnterKey.onClicked: loginDialog.accept();
         }
     }
 }

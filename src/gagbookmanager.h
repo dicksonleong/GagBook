@@ -38,12 +38,14 @@ class GagBookManager : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool loggedIn READ isLoggedIn NOTIFY loggedInChanged)
+    Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
     Q_PROPERTY(QString downloadCounter READ downloadCounter NOTIFY downloadCounterChanged)
     Q_PROPERTY(AppSettings *settings READ settings WRITE setSettings)
 public:
     explicit GagBookManager(QObject *parent = 0);
 
     bool isLoggedIn() const;
+    bool isBusy() const;
     QString downloadCounter() const;
 
     AppSettings *settings() const;
@@ -56,13 +58,17 @@ public:
 
 signals:
     void loggedInChanged();
+    void busyChanged();
     void downloadCounterChanged();
+    void loginSuccess();
+    void loginFailure(const QString &errorMessage);
 
 private slots:
     void onLoginFinished();
 
 private:
     bool m_isLoggedIn;
+    bool m_isBusy;
     AppSettings *m_settings;
     NetworkManager *m_netManager;
     QNetworkReply *m_loginReply;

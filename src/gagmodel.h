@@ -66,11 +66,10 @@ public:
         ImageSizeRole,
         VotesCountRole,
         CommentsCountRole,
+        LikesRole,
         IsNSFWRole,
         IsGIFRole,
         IsPartialImageRole,
-        IsLikedRole,
-        IsDislikedRole,
         IsDownloadingRole
     };
 
@@ -101,6 +100,7 @@ public:
     Q_INVOKABLE void refresh(RefreshType refreshType);
     Q_INVOKABLE void stopRefresh();
     Q_INVOKABLE void downloadImage(int i);
+    Q_INVOKABLE void changeLikes(const QString &id, int likes);
 
 signals:
     void busyChanged();

@@ -41,7 +41,8 @@
 #include "appsettings.h"
 
 GagBookManager::GagBookManager(QObject *parent) :
-    QObject(parent), m_isLoggedIn(false), m_settings(0), m_netManager(new NetworkManager(this)), m_loginReply(0)
+    QObject(parent), m_isLoggedIn(false), m_isBusy(false), m_settings(0),
+    m_netManager(new NetworkManager(this)), m_loginReply(0)
 {
     GagImageDownloader::initializeCache();
     connect(m_netManager, SIGNAL(downloadCounterChanged()), SIGNAL(downloadCounterChanged()));
@@ -51,6 +52,11 @@ GagBookManager::GagBookManager(QObject *parent) :
 bool GagBookManager::isLoggedIn() const
 {
     return m_isLoggedIn;
+}
+
+bool GagBookManager::isBusy() const
+{
+    return m_isBusy;
 }
 
 QString GagBookManager::downloadCounter() const
@@ -83,12 +89,25 @@ void GagBookManager::login(const QString &username, const QString &password)
         m_loginReply = 0;
     }
 
-    QUrlQuery postData;
-    postData.addQueryItem("username", username);
-    postData.addQueryItem("password", password);
+    if (m_isBusy != true) {
+        m_isBusy = true;
+        emit busyChanged();
+    }
 
-    m_loginReply = m_netManager->createPostRequest(QUrl("https://9gag.com/login"),
-                                                   postData.toString(QUrl::FullyEncoded).toUtf8());
+    QByteArray postData;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    QUrlQuery postDataQuery;
+    postDataQuery.addQueryItem("username", username);
+    postDataQuery.addQueryItem("password", password);
+    postData = postDataQuery.toString(QUrl::FullyEncoded).toUtf8();
+#else
+    QUrl postDataQuery;
+    postDataQuery.addQueryItem("username", username);
+    postDataQuery.addQueryItem("password", password);
+    postData = postDataQuery.encodedQuery();
+#endif
+
+    m_loginReply = m_netManager->createPostRequest(QUrl("https://9gag.com/login"), postData);
     connect(m_loginReply, SIGNAL(finished()), SLOT(onLoginFinished()));
 }
 
@@ -108,15 +127,21 @@ void GagBookManager::onLoginFinished()
         if (checkIsLoggedIn()) {
             m_isLoggedIn = true;
             emit loggedInChanged();
+            emit loginSuccess();
         } else {
-            qWarning("GagBookManager::onLoginFinished(): Login failed, probably because wrong username/password");
+            emit loginFailure("Wrong username or password. Please try again.");
         }
     } else {
-        qWarning("GagBookManager::onLoginFinished(): Login error: %s", qPrintable(m_loginReply->errorString()));
+        emit loginFailure(m_loginReply->errorString());
     }
 
     m_loginReply->deleteLater();
     m_loginReply = 0;
+
+    if (m_isBusy != false) {
+        m_isBusy = false;
+        emit busyChanged();
+    }
 }
 
 bool GagBookManager::checkIsLoggedIn()
