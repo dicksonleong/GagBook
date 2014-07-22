@@ -29,9 +29,9 @@
 #define NETWORKMANAGER_H
 
 #include <QtCore/QObject>
-#include "gagcookiejar.h"
 
 class QNetworkAccessManager;
+class QNetworkCookieJar;
 class QNetworkReply;
 class QUrl;
 
@@ -51,22 +51,16 @@ public:
     QNetworkReply *createGetRequest(const QUrl &url, AcceptType acceptType = None);
     QNetworkReply *createPostRequest(const QUrl &url, const QByteArray &data);
 
-    bool isMobileData() const;
-
+    QNetworkCookieJar *cookieJar() const;
     void clearCookies();
-
-    GagCookieJar *cookieJar() const;
 
     QString downloadCounter() const;
 
-    void login(const QString username, const QString password);
-
 signals:
     void downloadCounterChanged();
-    void loggedInChanged();
 
 private slots:
-    void replyFinished(QNetworkReply *reply);
+    void increaseDownloadCounter(QNetworkReply *reply);
 
 private:
     Q_DISABLE_COPY(NetworkManager)

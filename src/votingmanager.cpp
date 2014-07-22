@@ -2,13 +2,25 @@
 
 #include <QMetaEnum>
 #include <QtNetwork/QNetworkReply>
-#include "networkmanager.h"
 #include <../qt-json/json.h>
 #include <QDebug>
 
+#include "gagbookmanager.h"
+#include "networkmanager.h"
+
 VotingManager::VotingManager(QObject *parent) :
-    QObject(parent), m_netManager(new NetworkManager(this))
+    QObject(parent), m_manager(0)
 {  
+}
+
+GagBookManager *VotingManager::manager() const
+{
+    return m_manager;
+}
+
+void VotingManager::setManager(GagBookManager *manager)
+{
+    m_manager = manager;
 }
 
 void VotingManager::vote(VoteType type, const QString &id)
@@ -17,7 +29,7 @@ void VotingManager::vote(VoteType type, const QString &id)
 
     QUrl voteUrl("http://9gag.com/vote/"+ enumToString(type).toLower() +"/id/" + id);
     qDebug() << "vote url: " << voteUrl;
-    QNetworkReply *m_reply = m_netManager->createPostRequest(voteUrl, QByteArray());
+    QNetworkReply *m_reply = m_manager->networkManager()->createPostRequest(voteUrl, QByteArray());
     m_reply->setParent(this);
     connect(m_reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
 }

@@ -125,6 +125,11 @@ Page {
         onRefreshFailure: infoBanner.alert(errorMessage);
     }
 
+    VotingManager {
+        id: votingManager
+        manager: gagbookManager
+    }
+
     Connections {
         target: volumeKeyListener
         onVolumeUpClicked: {

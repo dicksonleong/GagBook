@@ -30,13 +30,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QNetworkConfiguration>
 #include <QtNetwork/QNetworkCookie>
-#include <QDebug>
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-#include <QUrlQuery>
-#endif
 
 #include "gagcookiejar.h"
 
@@ -47,7 +41,7 @@ NetworkManager::NetworkManager(QObject *parent) :
     m_downloadCounter(0), m_downloadCounterStr("0.00")
 {
     m_networkAccessManager->setCookieJar(new GagCookieJar);
-    connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), SLOT(replyFinished(QNetworkReply*)));
+    connect(m_networkAccessManager, SIGNAL(finished(QNetworkReply*)), SLOT(increaseDownloadCounter(QNetworkReply*)));
 }
 
 QNetworkReply *NetworkManager::createGetRequest(const QUrl &url, AcceptType acceptType)
@@ -72,40 +66,14 @@ QNetworkReply *NetworkManager::createPostRequest(const QUrl &url, const QByteArr
     QNetworkRequest request;
     request.setUrl(url);
     request.setRawHeader("User-Agent", USER_AGENT);
-    request.setHeader(QNetworkRequest::ContentTypeHeader,
-                      "application/x-www-form-urlencoded");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
-    m_networkAccessManager->setCookieJar(new GagCookieJar); //why is this needed? won't get cookies otherwise :/
     return m_networkAccessManager->post(request, data);
 }
 
-void NetworkManager::login(const QString username, const QString password) {
-    this->clearCookies();
-
-    QUrlQuery postData;
-    postData.addQueryItem("username", username);
-    postData.addQueryItem("password", password);
-
-    QNetworkRequest request(QUrl("http://9gag.com/login"));
-
-    request.setHeader(QNetworkRequest::ContentTypeHeader,
-                      "application/x-www-form-urlencoded");
-
-    m_networkAccessManager->post(request, postData.toString(QUrl::FullyEncoded).toUtf8());
-}
-
-bool NetworkManager::isMobileData() const
+QNetworkCookieJar *NetworkManager::cookieJar() const
 {
-    const QNetworkConfiguration activeConfiguration = m_networkAccessManager->activeConfiguration();
-    switch (activeConfiguration.bearerType()) {
-    case QNetworkConfiguration::Bearer2G:
-    case QNetworkConfiguration::BearerCDMA2000:
-    case QNetworkConfiguration::BearerWCDMA:
-    case QNetworkConfiguration::BearerHSPA:
-        return true;
-    default:
-        return false;
-    }
+    return m_networkAccessManager->cookieJar();
 }
 
 void NetworkManager::clearCookies()
@@ -113,8 +81,6 @@ void NetworkManager::clearCookies()
     GagCookieJar *cookieJar = qobject_cast<GagCookieJar *>(m_networkAccessManager->cookieJar());
     Q_ASSERT(cookieJar != 0);
     cookieJar->clear();
-
-    emit loggedInChanged();
 }
 
 QString NetworkManager::downloadCounter() const
@@ -122,7 +88,7 @@ QString NetworkManager::downloadCounter() const
     return m_downloadCounterStr;
 }
 
-void NetworkManager::replyFinished(QNetworkReply *reply)
+void NetworkManager::increaseDownloadCounter(QNetworkReply *reply)
 {
     m_downloadCounter += reply->size();
     const QString downloadCounterStr = QString::number(qreal(m_downloadCounter) / 1024 / 1024, 'f', 2);
@@ -130,44 +96,4 @@ void NetworkManager::replyFinished(QNetworkReply *reply)
         m_downloadCounterStr = downloadCounterStr;
         emit downloadCounterChanged();
     }
-
-    //this is to handle login/logout only
-    if(reply->error() == QNetworkReply::NoError) {
-        // Get the http status code
-        int v = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-
-        if (v >= 200 && v < 300) // Success
-        {
-            //no need to do anything
-        }
-        else if (v >= 300 && v < 400) // Redirection
-        {
-            // Redirection is expected when logging in, if login succesful we'll be directed to 9gag.com/
-
-            // Get the redirection url
-            QUrl newUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
-            // Because the redirection url can be relative,
-            // we have to use the previous one to resolve it
-            newUrl = reply->url().resolved(newUrl);
-
-            //save all the cookies we got from 9gag (including the loggedin one, which we'll use later)
-            QVariant variantCookies = reply->header(QNetworkRequest::SetCookieHeader);
-            QList<QNetworkCookie> cookies = qvariant_cast<QList<QNetworkCookie> >(variantCookies);
-
-            m_networkAccessManager->cookieJar()->setCookiesFromUrl(cookies, QUrl("9gag.com"));
-        }
-
-        //refresh the status in case we've been loggin in/logging out
-        emit loggedInChanged();
-    }
-    else
-    {
-        // Error
-        qDebug() << "Reply error: " << reply->errorString();
-    }
-}
-
-GagCookieJar *NetworkManager::cookieJar() const
-{
-    return qobject_cast<GagCookieJar *>(m_networkAccessManager->cookieJar());
 }

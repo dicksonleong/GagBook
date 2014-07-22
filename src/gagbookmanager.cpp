@@ -25,24 +25,32 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <QNetworkCookie>
-#include <QDateTime>
-
 #include "gagbookmanager.h"
+
+#include <QtCore/QDateTime>
+#include <QtNetwork/QNetworkCookieJar>
+#include <QtNetwork/QNetworkCookie>
+#include <QtNetwork/QNetworkReply>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QtCore/QUrlQuery>
+#endif
 
 #include "networkmanager.h"
 #include "gagimagedownloader.h"
 #include "appsettings.h"
-#include "gagcookiejar.h"
-
-#include <QDebug>
 
 GagBookManager::GagBookManager(QObject *parent) :
-    QObject(parent), m_settings(0), m_netManager(new NetworkManager(this))
+    QObject(parent), m_isLoggedIn(false), m_settings(0), m_netManager(new NetworkManager(this)), m_loginReply(0)
 {
     GagImageDownloader::initializeCache();
     connect(m_netManager, SIGNAL(downloadCounterChanged()), SIGNAL(downloadCounterChanged()));
-    connect(m_netManager, SIGNAL(loggedInChanged()), SIGNAL(loggedInChanged()));
+    m_isLoggedIn = checkIsLoggedIn();
+}
+
+bool GagBookManager::isLoggedIn() const
+{
+    return m_isLoggedIn;
 }
 
 QString GagBookManager::downloadCounter() const
@@ -67,33 +75,60 @@ NetworkManager *GagBookManager::networkManager() const
 
 void GagBookManager::login(const QString &username, const QString &password)
 {
-    qDebug() << Q_FUNC_INFO;
     Q_ASSERT(m_netManager);
     m_settings->setUsername(username); //save username so users don't have to input it everytime
-    m_netManager->login(username, password);
+
+    if (m_loginReply != 0) {
+        m_loginReply->disconnect();
+        m_loginReply->deleteLater();
+        m_loginReply = 0;
+    }
+
+    QUrlQuery postData;
+    postData.addQueryItem("username", username);
+    postData.addQueryItem("password", password);
+
+    m_loginReply = m_netManager->createPostRequest(QUrl("https://9gag.com/login"),
+                                                   postData.toString(QUrl::FullyEncoded).toUtf8());
+    connect(m_loginReply, SIGNAL(finished()), SLOT(onLoginFinished()));
 }
 
 void GagBookManager::logout()
 {
-    qDebug() << Q_FUNC_INFO;
     //we log out by removing the loggedin cookie
     m_netManager->clearCookies();
-
-    emit loggedInChanged();
+    if (m_isLoggedIn != false) {
+        m_isLoggedIn = false;
+        emit loggedInChanged();
+    }
 }
 
-bool GagBookManager::isLoggedIn() const
+void GagBookManager::onLoginFinished()
 {
-    bool m_loggedIn = false;
-    QList<QNetworkCookie> m_cookies = m_netManager->cookieJar()->cookiesForUrl((QUrl("9gag.com")));
-
-    foreach (QNetworkCookie cookie, m_cookies) {
-        QDateTime now = QDateTime::currentDateTime();
-        if (cookie.expirationDate() < now)
-            continue;
-
-        m_loggedIn = (cookie.name() == "loggedin" && cookie.value() == "1");
+    if(m_loginReply->error() == QNetworkReply::NoError) {
+        if (checkIsLoggedIn()) {
+            m_isLoggedIn = true;
+            emit loggedInChanged();
+        } else {
+            qWarning("GagBookManager::onLoginFinished(): Login failed, probably because wrong username/password");
+        }
+    } else {
+        qWarning("GagBookManager::onLoginFinished(): Login error: %s", qPrintable(m_loginReply->errorString()));
     }
 
-    return m_loggedIn;
+    m_loginReply->deleteLater();
+    m_loginReply = 0;
+}
+
+bool GagBookManager::checkIsLoggedIn()
+{
+    const QList<QNetworkCookie> cookies = m_netManager->cookieJar()->cookiesForUrl((QUrl("http://9gag.com/")));
+
+    foreach (const QNetworkCookie &cookie, cookies) {
+        if (cookie.name() == "loggedin" && cookie.value() == "1"
+                && cookie.expirationDate() > QDateTime::currentDateTime())
+            return true;
+    }
+
+    return false;
 }
