@@ -43,7 +43,6 @@ Dialog {
         TextField {
             id: usernameField
             width: 480
-            text: appSettings.username ? appSettings.username : ""
             inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
             placeholderText: "9gag.com username"
         }

@@ -71,7 +71,7 @@ Page {
 
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: gagbookManager.loggedIn ? "Log out " + appSettings.username : "Login to 9gag.com"
+                text: gagbookManager.loggedIn ? "Log out" : "Login to 9gag.com"
                 onClicked: gagbookManager.loggedIn ? gagbookManager.logout() : pageStack.push(loginPage);
             }
             Text {
@@ -89,10 +89,6 @@ Page {
     }
 
     Component.onCompleted: {
-        loginPage.accepted.connect(function() {
-            console.log("accepted login for " + appSettings.username);
-        });
-
         gagbookManager.loggedInChanged.connect(onLoggedInChanged);
     }
 

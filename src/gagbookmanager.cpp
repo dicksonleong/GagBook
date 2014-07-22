@@ -76,7 +76,6 @@ NetworkManager *GagBookManager::networkManager() const
 void GagBookManager::login(const QString &username, const QString &password)
 {
     Q_ASSERT(m_netManager);
-    m_settings->setUsername(username); //save username so users don't have to input it everytime
 
     if (m_loginReply != 0) {
         m_loginReply->disconnect();

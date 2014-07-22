@@ -44,7 +44,6 @@ class AppSettings : public QObject
     Q_PROPERTY(bool scrollWithVolumeKeys READ scrollWithVolumeKeys WRITE setScrollWithVolumeKeys
                NOTIFY scrollWithVolumeKeysChanged)
     Q_PROPERTY(QStringList sections READ sections WRITE setSections NOTIFY sectionsChanged)
-    Q_PROPERTY(QString username READ username WRITE setUsername NOTIFY usernameChanged)
 public:
     enum Source {
         NineGagSource,
@@ -65,15 +64,11 @@ public:
     QStringList sections() const;
     void setSections(const QStringList &sections);
 
-    QString username() const;
-    void setUsername(const QString &username);
-
 signals:
     void whiteThemeChanged();
     void sourceChanged();
     void scrollWithVolumeKeysChanged();
     void sectionsChanged();
-    void usernameChanged();
 
 private:
     Q_DISABLE_COPY(AppSettings)
@@ -83,7 +78,6 @@ private:
     Source m_source;
     bool m_scrollWithVolumeKeys;
     QStringList m_sections;
-    QString m_username;
 };
 
 #endif // APPSETTINGS_H
