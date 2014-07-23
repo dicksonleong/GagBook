@@ -27,9 +27,10 @@
 
 import QtQuick 1.1
 import com.nokia.symbian 1.1
+import GagBook.Core 1.0
 
 Item {
-    id: root
+    id: gagDelegate
     width: ListView.view.width
     height: mainColumn.height + 2 * mainColumn.anchors.topMargin + seperator.height
 
@@ -70,7 +71,7 @@ Item {
 
                 Image {
                     asynchronous: true
-                    smooth: !root.ListView.view.moving
+                    smooth: !gagDelegate.ListView.view.moving
                     cache: false
                     fillMode: Image.PreserveAspectFit
                     source: model.imageUrl
@@ -82,7 +83,7 @@ Item {
 
                 AnimatedImage {
                     asynchronous: true
-                    smooth: !root.ListView.view.moving
+                    smooth: !gagDelegate.ListView.view.moving
                     cache: false
                     // pause the animation when app is in background
                     paused: mainPage.status != PageStatus.Active || !Qt.application.active
@@ -289,47 +290,33 @@ Item {
 
             Button {
                 platformInverted: appSettings.whiteTheme
+                enabled: gagbookManager.loggedIn && !votingManager.busy
+                opacity: enabled ? 1.0 : 0.5
+                checked: model.likes == 1
+                iconSource: "Images/up" + (platformInverted ? "_inverted.svg" : ".svg")
+                onClicked: votingManager.vote(model.id, checked ? VotingManager.Unlike : VotingManager.Like);
+            }
+            Button {
+                platformInverted: appSettings.whiteTheme
+                enabled: gagbookManager.loggedIn && !votingManager.busy
+                opacity: enabled ? 1.0 : 0.5
+                checked: model.likes == -1
+                iconSource: "Images/down" + (platformInverted ? "_inverted.svg" : ".svg")
+                onClicked: votingManager.vote(model.id, checked ? VotingManager.Unlike : VotingManager.Dislike);
+            }
+            Button {
+                platformInverted: appSettings.whiteTheme
                 iconSource: "Images/instant_messenger_chat" + (platformInverted ? "_inverted.svg" : ".svg")
                 onClicked: pageStack.push(Qt.resolvedUrl("CommentsPage.qml"), { gagURL: model.url })
             }
             Button {
+                property Item contextMenu
                 platformInverted: appSettings.whiteTheme
-                iconSource: "Images/internet" + (platformInverted ? "_inverted.svg" : ".svg")
-                onClicked: dialogManager.createOpenLinkDialog(model.url)
-            }
-            Button {
-                platformInverted: appSettings.whiteTheme
-                iconSource: "image://theme/toolbar-share" + (platformInverted ? "_inverse" : "")
-                onClicked: dialogManager.createShareDialog(model.url)
-            }
-            Button {
-                property string __savedFilePath: ""
-                platformInverted: appSettings.whiteTheme
-                iconSource: {
-                    if (!__savedFilePath)
-                        return "Images/download" + (platformInverted ? "_inverted.svg" : ".svg");
-                    else
-                        return "Images/photos" + (platformInverted ? "_inverted.svg" : ".svg");
-                }
+                iconSource: "image://theme/toolbar-menu" + (platformInverted ? "_inverse" : "")
                 onClicked: {
-                    if (!__savedFilePath) {
-                        if (model.isGIF && !model.gifImageUrl.toString()) {
-                            infoBanner.alert("You have to download the GIF first by clicking on the image");
-                            return;
-                        }
-                        __savedFilePath = QMLUtils.saveImage(model.isGIF ? model.gifImageUrl : model.imageUrl);
-                        if (__savedFilePath) {
-                            var displayPath = __savedFilePath;
-                            if (displayPath.indexOf("file://") == 0)
-                                displayPath = displayPath.substring(7);
-                            infoBanner.alert("Image saved to " + displayPath);
-                        } else {
-                            infoBanner.alert("Unable to save image");
-                        }
-                    } else {
-                        Qt.openUrlExternally(__savedFilePath);
-                        __savedFilePath = "";
-                    }
+                    if (!contextMenu)
+                        contextMenu = buttonRowContextMenuComponent.createObject(gagDelegate);
+                    contextMenu.open();
                 }
             }
         }
@@ -340,5 +327,44 @@ Item {
         anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
         height: 1
         color: constant.colorMid
+    }
+
+    Component {
+        id: buttonRowContextMenuComponent
+
+        ContextMenu {
+            platformInverted: appSettings.whiteTheme
+
+            MenuLayout {
+                MenuItem {
+                    platformInverted: appSettings.whiteTheme
+                    text: "Link"
+                    onClicked: dialogManager.createOpenLinkDialog(model.url);
+                }
+                MenuItem {
+                    platformInverted: appSettings.whiteTheme
+                    text: "Share"
+                    onClicked: dialogManager.createShareDialog(model.url);
+                }
+                MenuItem {
+                    platformInverted: appSettings.whiteTheme
+                    text: "Save image"
+                    onClicked: {
+                        if (model.isGIF && !model.gifImageUrl.toString()) {
+                            infoBanner.alert("You have to download the GIF first by clicking on the image");
+                            return;
+                        }
+                        var savedFilePath = QMLUtils.saveImage(model.isGIF ? model.gifImageUrl : model.imageUrl);
+                        if (savedFilePath) {
+                            if (savedFilePath.indexOf("file://") == 0)
+                                savedFilePath = savedFilePath.substring(7);
+                            infoBanner.alert("Image saved to " + savedFilePath);
+                        } else {
+                            infoBanner.alert("Unable to save image");
+                        }
+                    }
+                }
+            }
+        }
     }
 }

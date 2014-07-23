@@ -22,7 +22,8 @@ HEADERS += \
     ../src/networkmanager.h \
     ../src/gagimagedownloader.h \
     ../src/gagcookiejar.h \
-    ../src/volumekeylistener.h
+    ../src/volumekeylistener.h \
+    ../src/votingmanager.h
 
 SOURCES += main.cpp \
     ../src/qmlutils.cpp \
@@ -36,7 +37,8 @@ SOURCES += main.cpp \
     ../src/networkmanager.cpp \
     ../src/gagimagedownloader.cpp \
     ../src/gagcookiejar.cpp \
-    ../src/volumekeylistener.cpp
+    ../src/volumekeylistener.cpp \
+    ../src/votingmanager.cpp
 
 # Simulator
 simulator{

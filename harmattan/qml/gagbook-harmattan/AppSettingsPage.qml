@@ -102,6 +102,29 @@ Page {
                     text: "Scroll with volume keys"
                 }
             }
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+                enabled: !gagbookManager.busy
+                text: gagbookManager.loggedIn ? "Log out" : "Login to 9GAG"
+                onClicked: {
+                    if (gagbookManager.loggedIn) {
+                        gagbookManager.logout();
+                        infoBanner.alert("Logged out from 9GAG");
+                    } else {
+                        var component = Qt.createComponent("LoginDialog.qml");
+                        var dialog = component.createObject(settingsPage);
+                        dialog.statusChanged.connect(function() {
+                            if (dialog.status == DialogStatus.Closed)
+                                dialog.destroy(250);
+                        });
+                        dialog.accepted.connect(function() {
+                            gagbookManager.login(dialog.username, dialog.password);
+                        });
+                        dialog.open();
+                    }
+                }
+            }
         }
     }
 
@@ -111,6 +134,7 @@ Page {
         id: pageHeader
         anchors { top: parent.top; left: parent.left; right: parent.right }
         text: "App Settings"
+        busy: gagbookManager.busy
         enabled: false
     }
 }
