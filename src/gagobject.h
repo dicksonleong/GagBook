@@ -68,6 +68,9 @@ public:
     int commentsCount() const;
     void setCommentsCount(int comments);
 
+    int likes() const;
+    void setLikes(int likes);
+
     bool isNSFW() const;
     void setIsNSFW(bool isNSFW);
 
@@ -76,8 +79,6 @@ public:
 
     bool isPartialImage() const;
     void setIsPartialImage(bool isPartialImage);
-
-    QVariantMap toVariantMap() const;
     
 private:
     QExplicitlySharedDataPointer<GagObjectData> d;

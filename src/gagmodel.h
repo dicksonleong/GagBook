@@ -58,6 +58,7 @@ class GagModel : public QAbstractListModel, public QQmlParserStatus
 public:
     enum Roles {
         TitleRole = Qt::UserRole,
+        IdRole,
         UrlRole,
         ImageUrlRole,
         FullImageUrlRole,
@@ -65,6 +66,7 @@ public:
         ImageSizeRole,
         VotesCountRole,
         CommentsCountRole,
+        LikesRole,
         IsNSFWRole,
         IsGIFRole,
         IsPartialImageRole,
@@ -98,6 +100,7 @@ public:
     Q_INVOKABLE void refresh(RefreshType refreshType);
     Q_INVOKABLE void stopRefresh();
     Q_INVOKABLE void downloadImage(int i);
+    Q_INVOKABLE void changeLikes(const QString &id, int likes);
 
 signals:
     void busyChanged();

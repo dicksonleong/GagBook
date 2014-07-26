@@ -42,6 +42,7 @@
 #include "../src/networkmanager.h"
 #include "../src/appsettings.h"
 #include "../src/volumekeylistener.h"
+#include "../src/votingmanager.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -76,6 +77,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<GagBookManager>("GagBook.Core", 1, 0, "GagBookManager");
     qmlRegisterType<GagModel>("GagBook.Core", 1, 0, "GagModel");
     qmlRegisterType<AppSettings>("GagBook.Core", 1, 0, "AppSettings");
+    qmlRegisterType<VotingManager>("GagBook.Core", 1, 0, "VotingManager");
 
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 #if defined(Q_OS_HARMATTAN)

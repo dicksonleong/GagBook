@@ -27,6 +27,7 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import harbour.gagbook.Core 1.0
 
 Item {
     id: root
@@ -142,7 +143,9 @@ Item {
                                 font.pixelSize: Theme.fontSizeMedium
                                 color: Theme.primaryColor
                                 wrapMode: Text.Wrap
-                                text: "Unfortunately, GagBook does not support viewing NSFW images yet"
+                                text: gagbookManager.loggedIn ? "You need to enable showing of NSFW posts " +
+                                                                "for your account at 9GAG website."
+                                                              : "You need to login to view NSFW images."
                             }
                         }
                     }
@@ -277,6 +280,18 @@ Item {
             height: childrenRect.height
             spacing: constant.paddingMedium
 
+            IconButton {
+                enabled: gagbookManager.loggedIn && !votingManager.busy
+                icon.source: "image://theme/icon-m-up"
+                highlighted: model.likes == 1
+                onClicked: votingManager.vote(model.id, highlighted ? VotingManager.Unlike : VotingManager.Like);
+            }
+            IconButton {
+                enabled: gagbookManager.loggedIn && !votingManager.busy
+                icon.source: "image://theme/icon-m-down"
+                highlighted: model.likes == -1
+                onClicked: votingManager.vote(model.id, highlighted ? VotingManager.Unlike : VotingManager.Dislike);
+            }
             IconButton {
                 icon.height: Theme.iconSizeMedium; icon.width: Theme.iconSizeMedium
                 icon.source: "image://theme/icon-m-message"

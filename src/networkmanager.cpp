@@ -30,7 +30,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QNetworkConfiguration>
+#include <QtNetwork/QNetworkCookie>
 
 #include "gagcookiejar.h"
 
@@ -66,21 +66,14 @@ QNetworkReply *NetworkManager::createPostRequest(const QUrl &url, const QByteArr
     QNetworkRequest request;
     request.setUrl(url);
     request.setRawHeader("User-Agent", USER_AGENT);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+
     return m_networkAccessManager->post(request, data);
 }
 
-bool NetworkManager::isMobileData() const
+QNetworkCookieJar *NetworkManager::cookieJar() const
 {
-    const QNetworkConfiguration activeConfiguration = m_networkAccessManager->activeConfiguration();
-    switch (activeConfiguration.bearerType()) {
-    case QNetworkConfiguration::Bearer2G:
-    case QNetworkConfiguration::BearerCDMA2000:
-    case QNetworkConfiguration::BearerWCDMA:
-    case QNetworkConfiguration::BearerHSPA:
-        return true;
-    default:
-        return false;
-    }
+    return m_networkAccessManager->cookieJar();
 }
 
 void NetworkManager::clearCookies()

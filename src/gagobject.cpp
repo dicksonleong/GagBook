@@ -35,7 +35,7 @@
 class GagObjectData : public QSharedData
 {
 public:
-    GagObjectData() : votesCount(0), commentsCount(0),
+    GagObjectData() : votesCount(0), commentsCount(0), likes(0),
         isNSFW(false), isGIF(false), isPartialImage(false) {}
     ~GagObjectData() {
         if (imageUrl.scheme() == "file")
@@ -53,6 +53,7 @@ public:
     QSize imageSize;
     int votesCount;
     int commentsCount;
+    int likes;
     bool isNSFW;
     bool isGIF;
     bool isPartialImage;
@@ -171,6 +172,16 @@ void GagObject::setCommentsCount(int comments)
     d->commentsCount = comments;
 }
 
+int GagObject::likes() const
+{
+    return d->likes;
+}
+
+void GagObject::setLikes(int likes)
+{
+    d->likes = likes;
+}
+
 bool GagObject::isNSFW() const
 {
     return d->isNSFW;
@@ -199,21 +210,4 @@ bool GagObject::isPartialImage() const
 void GagObject::setIsPartialImage(bool isPartialImage)
 {
     d->isPartialImage = isPartialImage;
-}
-
-QVariantMap GagObject::toVariantMap() const
-{
-    QVariantMap gagMap;
-    gagMap["id"] = d->id;
-    gagMap["url"] = d->url;
-    gagMap["title"] = d->title;
-    gagMap["imageUrl"] = d->imageUrl;
-    gagMap["fullImageUrl"] = d->fullImageUrl;
-    gagMap["imageSize"] = d->imageSize;
-    gagMap["votesCount"] = d->votesCount;
-    gagMap["commentsCount"] = d->commentsCount;
-    gagMap["isNSFW"] = d->isNSFW;
-    gagMap["isGIF"] = d->isGIF;
-    gagMap["isPartialImage"] = d->isPartialImage;
-    return gagMap;
 }

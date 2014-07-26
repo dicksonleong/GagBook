@@ -42,6 +42,7 @@ GagModel::GagModel(QObject *parent) :
     m_selectedSection(0), m_request(0), m_imageDownloader(0), m_manualImageDownloader(0), m_downloadingIndex(-1)
 {
     _roles[TitleRole] = "title";
+    _roles[IdRole] = "id";
     _roles[UrlRole] = "url";
     _roles[ImageUrlRole] = "imageUrl";
     _roles[FullImageUrlRole] = "fullImageUrl";
@@ -49,6 +50,7 @@ GagModel::GagModel(QObject *parent) :
     _roles[ImageSizeRole] = "imageSize";
     _roles[VotesCountRole] = "votesCount";
     _roles[CommentsCountRole] = "commentsCount";
+    _roles[LikesRole] = "likes";
     _roles[IsNSFWRole] = "isNSFW";
     _roles[IsGIFRole] = "isGIF";
     _roles[IsPartialImageRole] = "isPartialImage";
@@ -82,6 +84,8 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case TitleRole:
         return gag.title();
+    case IdRole:
+        return gag.id();
     case UrlRole:
         return gag.url();
     case ImageUrlRole:
@@ -101,6 +105,8 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
         return gag.votesCount();
     case CommentsCountRole:
         return gag.commentsCount();
+    case LikesRole:
+        return gag.likes();
     case IsNSFWRole:
         return gag.isNSFW();
     case IsGIFRole:
@@ -259,6 +265,20 @@ void GagModel::downloadImage(int i)
             SLOT(onManualDownloadProgress(qint64,qint64)));
     connect(m_manualImageDownloader, SIGNAL(finished()), SLOT(onManualDownloadFinished()));
     m_manualImageDownloader->start();
+}
+
+void GagModel::changeLikes(const QString &id, int likes)
+{
+    for (int i = 0; i < m_gagList.count(); ++i) {
+        GagObject gag = m_gagList.at(i);
+        if (gag.id() == id) {
+            int oldLikes = gag.likes();
+            gag.setLikes(likes);
+            gag.setVotesCount(gag.votesCount() + (likes - oldLikes));
+            emit dataChanged(index(i), index(i));
+            break;
+        }
+    }
 }
 
 void GagModel::onSuccess(const QList<GagObject> &gagList)

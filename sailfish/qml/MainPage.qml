@@ -33,6 +33,8 @@ Page {
     id: mainPage
     objectName: "mainPage"
 
+    readonly property alias busy: votingManager.busy
+
     // for access by cover
     property alias gagModel: gagModel
     property int currentIndex: 0
@@ -106,7 +108,7 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: "About GagBook"
-                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
+                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"));
             }
             MenuItem {
                 text: "Settings"
@@ -123,6 +125,13 @@ Page {
         id: gagModel
         manager: gagbookManager
         onRefreshFailure: infoBanner.alert(errorMessage);
+    }
+
+    VotingManager {
+        id: votingManager
+        manager: gagbookManager
+        onVoteSuccess: gagModel.changeLikes(id, likes);
+        onFailure: infoBanner.alert(errorMessage);
     }
 
     Connections {

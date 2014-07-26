@@ -13,6 +13,7 @@ Features
 - Simple, smooth and native UI
 - View posts in different sections, eg. hot, trending, fresh, etc
 - Full screen view of image with pinch-to-zoom
+- Login (with email only) and voting
 - View comments for each post
 - Save image
 - Share post using Harmattan's integrated sharing
@@ -20,7 +21,6 @@ Features
 Limitation / Known Issues / To Do
 ---------------------------------
 - **GagBook may fail to work anytime when 9GAG update their website** (if this happens, you will see "error: Unable to parse response")
-- Sign in and voting is not supported
 - Image upload is not supported
 - Large image will be stretched down due to hardware limitation
 - Some animated GIFs will not play properly due to hardware limitation

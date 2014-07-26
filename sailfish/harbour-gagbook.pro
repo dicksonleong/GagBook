@@ -21,7 +21,8 @@ HEADERS += \
     ../src/networkmanager.h \
     ../src/gagimagedownloader.h \
     ../src/gagcookiejar.h \
-    ../src/volumekeylistener.h
+    ../src/volumekeylistener.h \
+    ../src/votingmanager.h
 
 SOURCES += main.cpp \
     ../src/qmlutils.cpp \
@@ -35,7 +36,8 @@ SOURCES += main.cpp \
     ../src/networkmanager.cpp \
     ../src/gagimagedownloader.cpp \
     ../src/gagcookiejar.cpp \
-    ../src/volumekeylistener.cpp
+    ../src/volumekeylistener.cpp \
+    ../src/votingmanager.cpp
 
 # Qt-Json
 HEADERS += ../qt-json/json.h
@@ -62,4 +64,5 @@ OTHER_FILES += \
     qml/OpenLinkDialog.qml \
     qml/SectionPage.qml \
     qml/SimpleListItem.qml \
+    qml/LoginDialog.qml \
     qml/Images/icon-gif-play.png

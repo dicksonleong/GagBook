@@ -27,9 +27,10 @@
 
 import QtQuick 1.1
 import com.nokia.meego 1.0
+import GagBook.Core 1.0
 
 Item {
-    id: root
+    id: gagDelegate
     width: ListView.view.width
     height: mainColumn.height + 2 * mainColumn.anchors.topMargin + seperator.height
 
@@ -74,7 +75,7 @@ Item {
 
                 Image {
                     asynchronous: true
-                    smooth: !root.ListView.view.moving
+                    smooth: !gagDelegate.ListView.view.moving
                     cache: false
                     fillMode: Image.PreserveAspectFit
                     source: model.imageUrl
@@ -86,7 +87,7 @@ Item {
 
                 AnimatedImage {
                     asynchronous: true
-                    smooth: !root.ListView.view.moving
+                    smooth: !gagDelegate.ListView.view.moving
                     cache: false
                     // pause the animation when app is in background
                     paused: mainPage.status != PageStatus.Active || !Qt.application.active
@@ -147,7 +148,9 @@ Item {
                                 font.pixelSize: constant.fontSizeMedium
                                 color: constant.colorLight
                                 wrapMode: Text.Wrap
-                                text: "Unfortunately, GagBook does not support viewing NSFW images yet"
+                                text: gagbookManager.loggedIn ? "You need to enable showing of NSFW posts " +
+                                                                "for your account at 9GAG website."
+                                                              : "You need to login to view NSFW images."
                             }
                         }
                     }
@@ -279,50 +282,36 @@ Item {
             }
         }
 
-        ButtonRow{
+        ButtonRow {
             anchors { left: parent.left; right: parent.right; margins: constant.paddingMedium }
             height: childrenRect.height
             exclusive: false
 
             Button {
+                iconSource: "image://theme/icon-m-toolbar-up" + (appSettings.whiteTheme ? "" : "-selected")
+                enabled: gagbookManager.loggedIn && !votingManager.busy
+                opacity: enabled ? 1.0 : 0.5
+                checked: model.likes == 1
+                onClicked: votingManager.vote(model.id, checked ? VotingManager.Unlike : VotingManager.Like);
+            }
+            Button {
+                iconSource: "image://theme/icon-m-toolbar-down" + (appSettings.whiteTheme ? "" : "-selected")
+                enabled: gagbookManager.loggedIn && !votingManager.busy
+                opacity: enabled ? 1.0 : 0.5
+                checked: model.likes == -1
+                onClicked: votingManager.vote(model.id, checked ? VotingManager.Unlike : VotingManager.Dislike);
+            }
+            Button {
                 iconSource: "image://theme/icon-m-toolbar-new-message" + (appSettings.whiteTheme ? "" : "-selected")
                 onClicked: pageStack.push(Qt.resolvedUrl("CommentsPage.qml"), { gagURL: model.url })
             }
             Button {
-                iconSource: "image://theme/icon-l-browser-main-view"
-                onClicked: dialogManager.createOpenLinkDialog(model.url)
-            }
-            Button {
-                iconSource: "image://theme/icon-m-toolbar-share" + (appSettings.whiteTheme ? "" : "-selected")
-                onClicked: QMLUtils.shareLink(model.url, model.title);
-            }
-            Button {
-                property string __savedFilePath: ""
-                iconSource: {
-                    if (!__savedFilePath)
-                        return "image://theme/icon-s-transfer-download" + (appSettings.whiteTheme ? "" : "-inverse")
-                    else
-                        return "image://theme/icon-m-toolbar-gallery" + (appSettings.whiteTheme ? "" : "-selected")
-                }
+                property Item contextMenu
+                iconSource: "image://theme/icon-m-toolbar-view-menu" + (appSettings.whiteTheme ? "" : "-selected")
                 onClicked: {
-                    if (!__savedFilePath) {
-                        if (model.isGIF && !model.gifImageUrl.toString()) {
-                            infoBanner.alert("You have to download the GIF first by clicking on the image");
-                            return;
-                        }
-                        __savedFilePath = QMLUtils.saveImage(model.isGIF ? model.gifImageUrl : model.imageUrl);
-                        if (__savedFilePath) {
-                            var displayPath = __savedFilePath;
-                            if (displayPath.indexOf("file://") == 0)
-                                displayPath = displayPath.substring(7);
-                            infoBanner.alert("Image saved to " + displayPath);
-                        } else {
-                            infoBanner.alert("Unable to save image");
-                        }
-                    } else {
-                        Qt.openUrlExternally(__savedFilePath);
-                        __savedFilePath = "";
-                    }
+                    if (!contextMenu)
+                        contextMenu = buttonRowContextMenuComponent.createObject(gagDelegate);
+                    contextMenu.open();
                 }
             }
         }
@@ -333,5 +322,39 @@ Item {
         anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
         height: 1
         color: constant.colorMid
+    }
+
+    Component {
+        id: buttonRowContextMenuComponent
+
+        ContextMenu {
+            MenuLayout {
+                MenuItem {
+                    text: "Link"
+                    onClicked: dialogManager.createOpenLinkDialog(model.url)
+                }
+                MenuItem {
+                    text: "Share"
+                    onClicked: QMLUtils.shareLink(model.url, model.title);
+                }
+                MenuItem {
+                    text: "Save image"
+                    onClicked: {
+                        if (model.isGIF && !model.gifImageUrl.toString()) {
+                            infoBanner.alert("You have to download the GIF first by clicking on the image");
+                            return;
+                        }
+                        var savedFilePath = QMLUtils.saveImage(model.isGIF ? model.gifImageUrl : model.imageUrl);
+                        if (savedFilePath) {
+                            if (savedFilePath.indexOf("file://") == 0)
+                                savedFilePath = savedFilePath.substring(7);
+                            infoBanner.alert("Image saved to " + savedFilePath);
+                        } else {
+                            infoBanner.alert("Unable to save image");
+                        }
+                    }
+                }
+            }
+        }
     }
 }

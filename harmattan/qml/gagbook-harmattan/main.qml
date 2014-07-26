@@ -57,5 +57,7 @@ PageStackWindow {
     GagBookManager {
         id: gagbookManager
         settings: AppSettings { id: appSettings }
+        onLoginSuccess: infoBanner.alert("Login to 9GAG successfully!");
+        onLoginFailure: infoBanner.alert(errorMessage);
     }
 }

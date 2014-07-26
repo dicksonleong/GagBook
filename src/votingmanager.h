@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014 Dickson Leong.
+ * Copyright (c) 2014 Bob Jelica
+ * Copyright (c) 2014 Dickson Leong
  * All rights reserved.
  *
  * This file is part of GagBook.
@@ -25,55 +26,50 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef GAGBOOKMANAGER_H
-#define GAGBOOKMANAGER_H
+#ifndef VOTINGMANAGER_H
+#define VOTINGMANAGER_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
-class NetworkManager;
-class AppSettings;
 class QNetworkReply;
+class GagBookManager;
 
-class GagBookManager : public QObject
+class VotingManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool loggedIn READ isLoggedIn NOTIFY loggedInChanged)
+    Q_ENUMS(VoteType)
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
-    Q_PROPERTY(QString downloadCounter READ downloadCounter NOTIFY downloadCounterChanged)
-    Q_PROPERTY(AppSettings *settings READ settings WRITE setSettings)
+    Q_PROPERTY(GagBookManager *manager READ manager WRITE setManager)
 public:
-    explicit GagBookManager(QObject *parent = 0);
+    explicit VotingManager(QObject *parent = 0);
 
-    bool isLoggedIn() const;
+    enum VoteType {
+        Like,
+        Unlike,
+        Dislike
+    };
+
     bool isBusy() const;
-    QString downloadCounter() const;
 
-    AppSettings *settings() const;
-    void setSettings(AppSettings *settings);
+    GagBookManager *manager() const;
+    void setManager(GagBookManager *manager);
 
-    NetworkManager *networkManager() const;
-
-    Q_INVOKABLE void login(const QString &username, const QString &password);
-    Q_INVOKABLE void logout();
+    Q_INVOKABLE void vote(const QString &id, VoteType voteType);
 
 signals:
-    void loggedInChanged();
     void busyChanged();
-    void downloadCounterChanged();
-    void loginSuccess();
-    void loginFailure(const QString &errorMessage);
+    void voteSuccess(const QString &id, int likes);
+    void failure(const QString &errorMessage);
 
 private slots:
-    void onLoginFinished();
+    void onReplyFinished();
 
 private:
-    bool m_isLoggedIn;
     bool m_isBusy;
-    AppSettings *m_settings;
-    NetworkManager *m_netManager;
-    QNetworkReply *m_loginReply;
+    GagBookManager *m_manager;
+    QNetworkReply *m_reply;
 
-    bool checkIsLoggedIn();
+    QString enumToString(VoteType aElement);
 };
 
-#endif // GAGBOOKMANAGER_H
+#endif // VOTINGMANAGER_H

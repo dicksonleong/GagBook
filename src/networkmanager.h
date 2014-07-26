@@ -31,6 +31,7 @@
 #include <QtCore/QObject>
 
 class QNetworkAccessManager;
+class QNetworkCookieJar;
 class QNetworkReply;
 class QUrl;
 
@@ -50,8 +51,7 @@ public:
     QNetworkReply *createGetRequest(const QUrl &url, AcceptType acceptType = None);
     QNetworkReply *createPostRequest(const QUrl &url, const QByteArray &data);
 
-    bool isMobileData() const;
-
+    QNetworkCookieJar *cookieJar() const;
     void clearCookies();
 
     QString downloadCounter() const;

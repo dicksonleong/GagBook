@@ -125,7 +125,7 @@ Page {
         id: pageHeader
         anchors { top: parent.top; left: parent.left; right: parent.right }
         text: "/" + appSettings.sections[gagModel.selectedSection]
-        busy: gagModel.busy
+        busy: gagModel.busy || votingManager.busy
         onClicked: gagListView.positionViewAtBeginning()
     }
 
@@ -133,6 +133,13 @@ Page {
         id: gagModel
         manager: gagbookManager
         onRefreshFailure: infoBanner.alert(errorMessage);
+    }
+
+    VotingManager {
+        id: votingManager
+        manager: gagbookManager
+        onVoteSuccess: gagModel.changeLikes(id, likes);
+        onFailure: infoBanner.alert(errorMessage);
     }
 
     Connections {

@@ -41,7 +41,7 @@ GagCookieJar::GagCookieJar(QObject *parent) :
 GagCookieJar::~GagCookieJar()
 {
     QByteArray rawCookies;
-    foreach (const QNetworkCookie cookie, allCookies()) {
+    foreach (const QNetworkCookie &cookie, allCookies()) {
         if (cookie.isSessionCookie())
             continue;
 

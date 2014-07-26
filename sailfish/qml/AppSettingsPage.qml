@@ -32,6 +32,8 @@ import harbour.gagbook.Core 1.0
 Page {
     id: settingsPage
 
+    readonly property bool busy: gagbookManager.busy
+
     SilicaFlickable {
         id: settingsFlickable
         anchors.fill: parent
@@ -65,6 +67,23 @@ Page {
                 text: "Scroll with volume keys"
                 checked: appSettings.scrollWithVolumeKeys
                 onCheckedChanged: appSettings.scrollWithVolumeKeys = checked;
+            }
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+                enabled: !gagbookManager.busy
+                text: gagbookManager.loggedIn ? "Log out" : "Login to 9GAG"
+                onClicked: {
+                    if (gagbookManager.loggedIn) {
+                        gagbookManager.logout();
+                        infoBanner.alert("Logged out from 9GAG");
+                    } else {
+                        var dialog = pageStack.push(Qt.resolvedUrl("LoginDialog.qml"));
+                        dialog.accepted.connect(function() {
+                            gagbookManager.login(dialog.username, dialog.password);
+                        })
+                    }
+                }
             }
         }
 

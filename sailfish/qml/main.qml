@@ -42,5 +42,24 @@ ApplicationWindow {
     GagBookManager {
         id: gagbookManager
         settings: AppSettings { id: appSettings }
+        onLoginSuccess: infoBanner.alert("Login to 9GAG successfully!");
+        onLoginFailure: infoBanner.alert(errorMessage);
+    }
+
+    // Global busy indicator, it reads the 'busy' property from the current page
+    // FIXME: this panel is covered by Image from GagDelegate, setting 'z' property can't solve this
+    DockedPanel {
+        id: busyPanel
+        width: parent.width
+        height: busyIndicator.height + 2 * constant.paddingLarge
+        open: pageStack.currentPage.hasOwnProperty('busy') ? pageStack.currentPage.busy : false
+        dock: Dock.Bottom
+        enabled: false
+
+        BusyIndicator {
+            id: busyIndicator
+            anchors.centerIn: parent
+            running: busyPanel.open
+        }
     }
 }

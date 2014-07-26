@@ -38,6 +38,7 @@
 #include "src/networkmanager.h"
 #include "src/appsettings.h"
 #include "src/volumekeylistener.h"
+#include "src/votingmanager.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -54,8 +55,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    app.setApplicationName("GagBook");
-    app.setOrganizationName("GagBook");
+    app.setApplicationDisplayName("GagBook");
+    app.setApplicationName("harbour-gagbook");
+    app.setOrganizationName("harbour-gagbook");
+    app.setOrganizationDomain("harbour-gagbook");
     app.setApplicationVersion(APP_VERSION);
 
     QScopedPointer<QQuickView> view(SailfishApp::createView());
@@ -71,6 +74,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<GagBookManager>("harbour.gagbook.Core", 1, 0, "GagBookManager");
     qmlRegisterType<GagModel>("harbour.gagbook.Core", 1, 0, "GagModel");
     qmlRegisterType<AppSettings>("harbour.gagbook.Core", 1, 0, "AppSettings");
+    qmlRegisterType<VotingManager>("harbour.gagbook.Core", 1, 0, "VotingManager");
 
     view->setSource(SailfishApp::pathTo("qml/main.qml"));
     view->show();
