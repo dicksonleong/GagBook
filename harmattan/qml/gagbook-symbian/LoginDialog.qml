@@ -38,40 +38,61 @@ CommonDialog {
     buttonTexts: ["Login", "Cancel"]
     onButtonClicked: if (index == 0) accept();
 
-    content: Column {
-        anchors { left: parent.left; right: parent.right; top: parent.top; margins: constant.paddingMedium }
-        height: childrenRect.height + 2 * anchors.margins
-        spacing: constant.paddingMedium
+    content: Flickable {
+        id: flickable
+        anchors { left: parent.left; right: parent.right }
+        height: Math.min(platformContentMaximumHeight, column.height + 2 * column.anchors.margins)
+        contentHeight: column.height + 2 * column.anchors.margins
 
-        Text {
-            anchors { left: parent.left; right: parent.right }
-            font.pixelSize: constant.fontSizeMedium
-            color: constant.colorLight
-            text: "Username or Email"
+        Column {
+            id: column
+            anchors { left: parent.left; right: parent.right; top: parent.top; margins: constant.paddingMedium }
+            spacing: constant.paddingMedium
+
+            Text {
+                anchors { left: parent.left; right: parent.right }
+                font.pixelSize: constant.fontSizeMedium
+                font.bold: true
+                color: constant.colorLight
+                text: "Email"
+            }
+
+            TextField {
+                id: usernameField
+                anchors { left: parent.left; right: parent.right }
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+                validator: RegExpValidator { regExp: /^\S+$/ }
+                Keys.onEnterPressed: passwordField.forceActiveFocus();
+            }
+
+            Text {
+                anchors { left: parent.left; right: parent.right }
+                font.pixelSize: constant.fontSizeMedium
+                font.bold: true
+                color: constant.colorLight
+                text: "Password"
+            }
+
+            TextField {
+                id: passwordField
+                anchors { left: parent.left; right: parent.right }
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+                echoMode: TextInput.Password
+                validator: RegExpValidator { regExp: /^\S+$/ }
+                Keys.onEnterPressed: loginDialog.accept();
+            }
+
+            Text {
+                anchors { left: parent.left; right: parent.right }
+                font.pixelSize: constant.fontSizeSmall
+                color: constant.colorLight
+                wrapMode: Text.Wrap
+                text: "Login with the email address that you have signed up with 9GAG. " +
+                      "Login with Facebook or Google+ is not supported. " +
+                      "Your password is not stored by the app."
+            }
         }
 
-        TextField {
-            id: usernameField
-            anchors { left: parent.left; right: parent.right }
-            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            validator: RegExpValidator { regExp: /^\S+$/ }
-            Keys.onEnterPressed: passwordField.forceActiveFocus();
-        }
-
-        Text {
-            anchors { left: parent.left; right: parent.right }
-            font.pixelSize: constant.fontSizeMedium
-            color: constant.colorLight
-            text: "Password"
-        }
-
-        TextField {
-            id: passwordField
-            anchors { left: parent.left; right: parent.right }
-            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            echoMode: TextInput.Password
-            validator: RegExpValidator { regExp: /^\S+$/ }
-            Keys.onEnterPressed: loginDialog.accept();
-        }
+        ScrollDecorator { flickableItem: flickable }
     }
 }

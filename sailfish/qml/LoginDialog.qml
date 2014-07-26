@@ -36,35 +36,51 @@ Dialog {
 
     canAccept: usernameField.acceptableInput && passwordField.acceptableInput
 
-    Column {
-        anchors { left: parent.left; right: parent.right }
-        spacing: constant.paddingMedium
+    SilicaFlickable {
+        anchors.fill: parent
+        contentHeight: column.height
 
-        DialogHeader { title: "Login" }
-
-        TextField {
-            id: usernameField
+        Column {
+            id: column
             anchors { left: parent.left; right: parent.right }
-            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            label: "Username or Email"
-            placeholderText: label
-            validator: RegExpValidator { regExp: /^\S+$/ }
-            EnterKey.enabled: acceptableInput
-            EnterKey.iconSource: "image://theme/icon-m-enter-next"
-            EnterKey.onClicked: passwordField.forceActiveFocus();
-        }
+            spacing: constant.paddingMedium
 
-        TextField {
-            id: passwordField
-            anchors { left: parent.left; right: parent.right }
-            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            echoMode: TextInput.Password
-            label: "Password"
-            placeholderText: label
-            validator: RegExpValidator { regExp: /^\S+$/ }
-            EnterKey.enabled: acceptableInput
-            EnterKey.iconSource: "image://theme/icon-m-enter-accept"
-            EnterKey.onClicked: loginDialog.accept();
+            DialogHeader { title: "Login" }
+
+            TextField {
+                id: usernameField
+                anchors { left: parent.left; right: parent.right }
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+                label: "Email"
+                placeholderText: label
+                validator: RegExpValidator { regExp: /^\S+$/ }
+                EnterKey.enabled: acceptableInput
+                EnterKey.iconSource: "image://theme/icon-m-enter-next"
+                EnterKey.onClicked: passwordField.forceActiveFocus();
+            }
+
+            TextField {
+                id: passwordField
+                anchors { left: parent.left; right: parent.right }
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+                echoMode: TextInput.Password
+                label: "Password"
+                placeholderText: label
+                validator: RegExpValidator { regExp: /^\S+$/ }
+                EnterKey.enabled: acceptableInput
+                EnterKey.iconSource: "image://theme/icon-m-enter-accept"
+                EnterKey.onClicked: loginDialog.accept();
+            }
+
+            Label {
+                anchors { left: parent.left; right: parent.right; margins: constant.paddingMedium }
+                font.pixelSize: constant.fontSizeSmall
+                color: Theme.highlightColor
+                wrapMode: Text.Wrap
+                text: "Login with the email address that you have signed up with 9GAG. " +
+                      "Login with Facebook or Google+ is not supported. " +
+                      "Your password is not stored by the app."
+            }
         }
     }
 }

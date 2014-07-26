@@ -36,47 +36,65 @@ Sheet {
     property alias username: usernameField.text
     property alias password: passwordField.text
 
-    content: Column {
-        anchors { left: parent.left; right: parent.right; top: parent.top; margins: constant.paddingMedium }
-        spacing: constant.paddingMedium
+    content: Flickable {
+        anchors.fill: parent
+        contentHeight: column.height + 2 * column.anchors.margins // top and bottom margins
 
-        Text {
-            anchors { left: parent.left; right: parent.right }
-            font.pixelSize: constant.fontSizeMedium
-            color: constant.colorLight
-            text: "Username or Email"
-        }
+        Column {
+            id: column
+            anchors { left: parent.left; right: parent.right; top: parent.top; margins: constant.paddingMedium }
+            spacing: constant.paddingMedium
 
-        TextField {
-            id: usernameField
-            anchors { left: parent.left; right: parent.right }
-            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            validator: RegExpValidator { regExp: /^\S+$/ }
-            platformSipAttributes: SipAttributes {
-                actionKeyEnabled: usernameField.acceptableInput
-                actionKeyLabel: "Next"
+            Text {
+                anchors { left: parent.left; right: parent.right }
+                font.pixelSize: constant.fontSizeMedium
+                font.bold: true
+                color: constant.colorLight
+                text: "Email"
             }
-            onAccepted: passwordField.forceActiveFocus();
-        }
 
-        Text {
-            anchors { left: parent.left; right: parent.right }
-            font.pixelSize: constant.fontSizeMedium
-            color: constant.colorLight
-            text: "Password"
-        }
-
-        TextField {
-            id: passwordField
-            anchors { left: parent.left; right: parent.right }
-            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
-            echoMode: TextInput.Password
-            validator: RegExpValidator { regExp: /^\S+$/ }
-            platformSipAttributes: SipAttributes {
-                actionKeyEnabled: passwordField.acceptableInput
-                actionKeyLabel: "Login"
+            TextField {
+                id: usernameField
+                anchors { left: parent.left; right: parent.right }
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+                validator: RegExpValidator { regExp: /^\S+$/ }
+                platformSipAttributes: SipAttributes {
+                    actionKeyEnabled: usernameField.acceptableInput
+                    actionKeyLabel: "Next"
+                }
+                onAccepted: passwordField.forceActiveFocus();
             }
-            onAccepted: loginDialog.accept();
+
+            Text {
+                anchors { left: parent.left; right: parent.right }
+                font.pixelSize: constant.fontSizeMedium
+                font.bold: true
+                color: constant.colorLight
+                text: "Password"
+            }
+
+            TextField {
+                id: passwordField
+                anchors { left: parent.left; right: parent.right }
+                inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+                echoMode: TextInput.Password
+                validator: RegExpValidator { regExp: /^\S+$/ }
+                platformSipAttributes: SipAttributes {
+                    actionKeyEnabled: passwordField.acceptableInput
+                    actionKeyLabel: "Login"
+                }
+                onAccepted: loginDialog.accept();
+            }
+
+            Text {
+                anchors { left: parent.left; right: parent.right }
+                font.pixelSize: constant.fontSizeSmall
+                color: constant.colorLight
+                wrapMode: Text.Wrap
+                text: "Login with the email address that you have signed up with 9GAG. " +
+                      "Login with Facebook or Google+ is not supported. " +
+                      "Your password is not stored by the app."
+            }
         }
     }
 }

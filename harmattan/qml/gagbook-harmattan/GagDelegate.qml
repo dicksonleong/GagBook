@@ -148,7 +148,9 @@ Item {
                                 font.pixelSize: constant.fontSizeMedium
                                 color: constant.colorLight
                                 wrapMode: Text.Wrap
-                                text: "Unfortunately, GagBook does not support viewing NSFW images yet"
+                                text: gagbookManager.loggedIn ? "You need to enable showing of NSFW posts " +
+                                                                "for your account at 9GAG website."
+                                                              : "You need to login to view NSFW images."
                             }
                         }
                     }
