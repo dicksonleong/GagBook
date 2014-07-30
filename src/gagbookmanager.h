@@ -34,12 +34,28 @@ class NetworkManager;
 class AppSettings;
 class QNetworkReply;
 
+/*! Handle login and hold other global instance class
+
+    A single global instance class that hold and expose other global instance
+    classes (AppSettings and NetworkManager) so they can be easily accessible
+    by other classes that need them. Also handle 9GAG account login.
+ */
 class GagBookManager : public QObject
 {
     Q_OBJECT
+
+    /*! True if user is logged in to 9GAG account, otherwise false. */
     Q_PROPERTY(bool loggedIn READ isLoggedIn NOTIFY loggedInChanged)
+
+    /*! True if there is an active login request. Busy visual feedback should
+        show to user and login should be disable when busy. */
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
+
+    /*! The download counter for current app session, in MB with 2 decimal points. */
     Q_PROPERTY(QString downloadCounter READ downloadCounter NOTIFY downloadCounterChanged)
+
+    /*! The global instance of AppSettings. Must be set before component completed and
+        can not be change afterward. */
     Q_PROPERTY(AppSettings *settings READ settings WRITE setSettings)
 public:
     explicit GagBookManager(QObject *parent = 0);
@@ -48,19 +64,30 @@ public:
     bool isBusy() const;
     QString downloadCounter() const;
 
+    /*! Get the global instance of AppSettings. */
     AppSettings *settings() const;
     void setSettings(AppSettings *settings);
 
+    /*! Get the global instance of NetworkManager. */
     NetworkManager *networkManager() const;
 
+    /*! Login to 9GAG account. If login success, loginSuccess() will emit, otherwise
+        loginFailure() will emit. */
     Q_INVOKABLE void login(const QString &username, const QString &password);
+
+    /*! Logout from 9GAG account. */
     Q_INVOKABLE void logout();
 
 signals:
     void loggedInChanged();
     void busyChanged();
     void downloadCounterChanged();
+
+    /*! Emit when login is succeeded. */
     void loginSuccess();
+
+    /*! Emit when login is failed, \p errorMessage contains the reason for the
+        failure and should show to user. */
     void loginFailure(const QString &errorMessage);
 
 private slots:

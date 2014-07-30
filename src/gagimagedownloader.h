@@ -36,25 +36,49 @@
 class NetworkManager;
 class QNetworkReply;
 
+/*! Download images for list of GagObject
+
+    Encapsulate (network) requests to download images to local cache for a list
+    of GagObject.
+ */
 class GagImageDownloader : public QObject
 {
     Q_OBJECT
 public:
+    /*! Create the cache directory. Must be call at app startup to make sure the directory
+        is created, otherwise the images downloaded may failed to save to the cache. */
     static void initializeCache();
 
+    /*! Constructor. */
     explicit GagImageDownloader(NetworkManager *networkManager, QObject *parent = 0);
 
+    /*! Get the gag list that set with setGagList(). */
     QList<GagObject> gagList() const;
+
+    /*! Set the list of GagObject that their images want to be downloaded.
+        GagObject::imageUrl() (or GagObject::gifImageUrl() if downloadGIF() is true) must
+        be a valid web URL and will be change to a local URL to the cache image file after
+        the image has been downloaded. */
     void setGagList(const QList<GagObject> &gagList);
 
+    /*! Get the value of downloadGIF set with setDownloadGIF(). */
     bool downloadGIF() const;
+
+    /*! If this is set to true, GIF images (GagObject::gifImageUrl()) will be downloaded
+        instead of normal images (GagObject::imageUrl()). */
     void setDownloadGIF(bool downloadGIF);
 
+    /*! Start the download request. */
     void start();
+
+    /*! Stop and abort all active download request. */
     void stop();
 
 signals:
+    /*! Emit when download progress is changed. */
     void downloadProgress(qint64 downloaded, qint64 total);
+
+    /*! Emit when all images has been downloaded. */
     void finished();
 
 private slots:

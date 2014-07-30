@@ -29,16 +29,22 @@
 #ifndef VOTINGMANAGER_H
 #define VOTINGMANAGER_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 class QNetworkReply;
 class GagBookManager;
 
+/*! Handle gag upvote/downvote action */
 class VotingManager : public QObject
 {
     Q_OBJECT
     Q_ENUMS(VoteType)
+
+    /*! True if there is active network request. Voting should be disable when busy. */
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
+
+    /*! Set the global instance of GagBookManager. Must be set before component completed
+        and can not be change afterward */
     Q_PROPERTY(GagBookManager *manager READ manager WRITE setManager)
 public:
     explicit VotingManager(QObject *parent = 0);
@@ -54,11 +60,18 @@ public:
     GagBookManager *manager() const;
     void setManager(GagBookManager *manager);
 
+    /*! Vote for a gag. \p id is the id of the gag. */
     Q_INVOKABLE void vote(const QString &id, VoteType voteType);
 
 signals:
     void busyChanged();
+
+    /*! Emit when vote is succeeded. \p id is the id of the gag and \p likes is
+        new likes of the gag after voting. */
     void voteSuccess(const QString &id, int likes);
+
+    /*! Emit when vote is failed, \p errorMessage contains the reason for the failure
+        and should show to user. */
     void failure(const QString &errorMessage);
 
 private slots:

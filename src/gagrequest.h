@@ -37,25 +37,45 @@
 class NetworkManager;
 class QNetworkReply;
 
+/*! Download list of gag
+
+    A abstract class that encapsulate a request to download a list of gag. Can be
+    subclass to support different ways of getting gags.
+
+    \sa NineGagRequest, InfiniGagRequest
+ */
 class GagRequest : public QObject
 {
     Q_OBJECT
 public:
+    /*! Constructor. \p section specify from which 9GAG section to get the gags, eg. hot, comic, etc. */
     explicit GagRequest(NetworkManager *networkManager, const QString &section, QObject *parent = 0);
 
+    /*! Set the id of the last gag in the list. If this is set, the gags retrieved are older than
+        the last gag. */
     void setLastId(const QString &lastId);
 
+    /*! Send the request. */
     void send();
 
 signals:
+    /*! Emit when the request is succeeded. \p gagList contains the gag list retrieved. */
     void success(const QList<GagObject> &gagList);
+
+    /*! Emit when the request is failed, \p errorMessage contains the reason
+        of the failure and should be shown to user. */
     void failure(const QString &errorMessage);
 
 protected:
-    // must be override
+    /*! Implement this to make your own network request. \p section specify from which
+        9GAG section to get the gags, eg. hot, comic, etc. \p lastId is id of the last
+        gag, can be empty. */
     virtual QNetworkReply *createRequest(const QString &section, const QString &lastId) = 0;
+
+    /*! Implement this to parse the response to a list of gags. */
     virtual QList<GagObject> parseResponse(const QByteArray &response) = 0;
 
+    /*! Get the global instance of NetworkManager. */
     NetworkManager *networkManager() const;
 
 private slots:

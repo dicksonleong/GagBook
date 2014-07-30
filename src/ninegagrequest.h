@@ -30,6 +30,7 @@
 
 #include "gagrequest.h"
 
+/*! Scrape 9GAG website html to get gags */
 class NineGagRequest : public GagRequest
 {
     Q_OBJECT

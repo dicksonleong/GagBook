@@ -35,6 +35,12 @@ class QNetworkCookieJar;
 class QNetworkReply;
 class QUrl;
 
+/*! Wrapper for QNetworkAccessManager
+
+    A wrapper for QNetworkAccessManager to provide easy-to-use create*Request()
+    functions for used by other class. Also responsible for tracking download counter.
+    Only a single global instance of NetworkManager should be created for each app session.
+ */
 class NetworkManager : public QObject
 {
     Q_OBJECT
@@ -48,10 +54,14 @@ public:
         Image
     };
 
+    /*! Create a GET network request. */
     QNetworkReply *createGetRequest(const QUrl &url, AcceptType acceptType = None);
+    /*! Create a POST network request. */
     QNetworkReply *createPostRequest(const QUrl &url, const QByteArray &data);
 
     QNetworkCookieJar *cookieJar() const;
+
+    /*! Clear all saved cookies. */
     void clearCookies();
 
     QString downloadCounter() const;

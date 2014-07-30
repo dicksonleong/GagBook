@@ -34,9 +34,21 @@
 #include <policy/resource-set.h>
 #endif
 
+/*! Listen to volume keys press event
+
+    Listen to volume keys press event from QDeclarativeView/QQuickView
+    and emit signals so they can be handled (by QML). On platform that support
+    [libresourceqt](http://api.devpda.net/meego/html/libresourceqt/main.html)
+    (Harmattan & SailfishOS), this class also handle acquiring resource for
+    volume keys.
+ */
 class VolumeKeyListener : public QObject
 {
     Q_OBJECT
+
+    /*! If set to true, volume keys press event will be captured and volumeUpClicked()
+        and volumeDownClicked() will be emitted. On platforms that use libresourceqt,
+        resource for volume keys will be acquired. */
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
 public:
     explicit VolumeKeyListener(QObject *parent = 0);
@@ -46,7 +58,10 @@ public:
 
 signals:
     void enabledChanged();
+
+    /*! Emit when volume up keys is pressed. */
     void volumeUpClicked();
+    /*! Emit when volume down keys is pressed. */
     void volumeDownClicked();
 
 protected:

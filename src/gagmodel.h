@@ -45,15 +45,29 @@ class GagBookManager;
 class GagRequest;
 class GagImageDownloader;
 
+/*! List model of GagObject list for QML. */
 class GagModel : public QAbstractListModel, public QQmlParserStatus
 {
     Q_OBJECT
     DECL_QMLPARSERSTATUS_INTERFACE
     Q_ENUMS(RefreshType)
+
+    /*! True if there is active refresh request. Busy visual feedback should show to user and
+        refresh should be disable. */
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
+
+    /*! The current progress of downloading images. Value between 0.0 to 1.0. */
     Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
+
+    /*! The current progress of manually downloading image (using downloadImage()).
+        Value between 0.0 to 1.0. */
     Q_PROPERTY(qreal manualProgress READ manualProgress NOTIFY manualProgressChanged)
+
+    /*! Set the global instance of GagBookManager. Must be set before component completed
+        and can not be change afterward. */
     Q_PROPERTY(GagBookManager *manager READ manager WRITE setManager)
+
+    /*! The selected 9GAG section to get the gags. */
     Q_PROPERTY(int selectedSection READ selectedSection WRITE setSelectedSection NOTIFY selectedSectionChanged)
 public:
     enum Roles {
@@ -97,9 +111,14 @@ public:
     int selectedSection() const;
     void setSelectedSection(int selectedSection);
 
+    /*! Refresh the gag list. */
     Q_INVOKABLE void refresh(RefreshType refreshType);
+    /*! Stop and abort the refresh request. */
     Q_INVOKABLE void stopRefresh();
+    /*! Download an image for a gag at index \p i. If the gag is a GIF,
+        the GIF image is download instead. */
     Q_INVOKABLE void downloadImage(int i);
+    /*! Change the `likes` of a gag with the \p id. */
     Q_INVOKABLE void changeLikes(const QString &id, int likes);
 
 signals:
@@ -107,6 +126,9 @@ signals:
     void progressChanged();
     void manualProgressChanged();
     void selectedSectionChanged();
+
+    /*! Emit when refresh failed, \p errorMessage contains the reason for the
+        failure and should show to user. */
     void refreshFailure(const QString &errorMessage);
 
 private slots:

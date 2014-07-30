@@ -33,12 +33,16 @@
 #include <QtCore/QScopedPointer>
 #include <QtCore/QUrl>
 
-class QDeclarativeItem;
+/*! Utilities functions for QML
 
+    Collection of utilities functions and constant properties for use by QML
+ */
 class QMLUtils : public QObject
 {
     Q_OBJECT
+    /*! The maximum height for a image to show properly. Value is platform dependent. */
     Q_PROPERTY(int IMAGE_MAX_HEIGHT READ imageMaxHeight CONSTANT)
+    /*! The url of the GagBook repository. */
     Q_PROPERTY(QUrl REPO_WEBSITE READ repoWebsite CONSTANT)
 public:
     explicit QMLUtils(QObject *parent = 0);
@@ -46,16 +50,19 @@ public:
     int imageMaxHeight() const;
     QUrl repoWebsite() const;
 
-    // Copy text to system clipboard
+    /*! Copy the \p text to system clipboard. */
     Q_INVOKABLE void copyToClipboard(const QString &text);
 
-    // Save an image
+    /*! Save a cached image to gallery. The \p imageUrl must be a url point to
+      a **local** cached image file. */
     Q_INVOKABLE QString saveImage(const QUrl &imageUrl);
 
-    // Share a link using Harmattan Share UI
+    /*! Share the \p link using Harmattan Share UI. Only available for Harmattan. */
     Q_INVOKABLE void shareLink(const QString &link, const QString &title = QString());
 
-    // Open the link using Symbian's default browser
+    /*! Open the \p url using Symbian's default browser. Qt.openUrlExternally() in QML
+        does not open the default browser in Symbian and this function is a workaround.
+        On other platform, please use Qt.openUrlExternally(). */
     Q_INVOKABLE void openDefaultBrowser(const QUrl &url);
 
 private:

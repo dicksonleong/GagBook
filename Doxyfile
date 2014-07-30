@@ -1,0 +1,11 @@
+PROJECT_NAME           = "Gagbook"
+PROJECT_BRIEF          = "Unofficial 9GAG mobile app"
+OUTPUT_DIRECTORY       = "doc"
+QT_AUTOBRIEF           = YES
+SORT_MEMBER_DOCS       = NO
+INPUT                  = src/
+FILE_PATTERNS          = *.h
+RECURSIVE              = YES
+SOURCE_BROWSER         = YES
+HTML_DYNAMIC_SECTIONS  = YES
+GENERATE_LATEX         = NO

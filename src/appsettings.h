@@ -34,20 +34,37 @@
 
 class QSettings;
 
+/*! Expose QSettings keys as property
+
+    Expose QSettings keys as property to allow easier access by both C++ and QML.
+    Only a single global instance should be created for each app session. To add a
+    new key to QSettings, add a Q_PROPERTY, a getter and setter method, a private
+    member to store the value, and set the member from QSettings in contructor.
+ */
 class AppSettings : public QObject
 {
     Q_OBJECT
     Q_ENUMS(Source)
 
+    /*! True if white UI theme is used, false if dark UI theme (the default).
+        Only usable for Harmattan and Symbian. */
     Q_PROPERTY(bool whiteTheme READ isWhiteTheme WRITE setWhiteTheme NOTIFY whiteThemeChanged)
+
+    /*! Specify which source to use to get the gags. Default is NineGagSource. */
     Q_PROPERTY(Source source READ source WRITE setSource NOTIFY sourceChanged)
+
+    /*! True if scroll with volume keys is enabled. Default is false. */
     Q_PROPERTY(bool scrollWithVolumeKeys READ scrollWithVolumeKeys WRITE setScrollWithVolumeKeys
                NOTIFY scrollWithVolumeKeysChanged)
+
+    /*! List of 9GAG sections. This allow user to add/remove 9GAG sections manually and does not
+        require an app update to view a newly added 9GAG sections. Currently there is no UI to
+        modify this, that means user has to edit the config file manually. */
     Q_PROPERTY(QStringList sections READ sections WRITE setSections NOTIFY sectionsChanged)
 public:
     enum Source {
-        NineGagSource,
-        InfiniGagSource
+        NineGagSource, //!< Use 9GAG website scraping method (preferred). \sa NineGagRequest
+        InfiniGagSource //!< Use [InfiniGAG](https://github.com/k3min/infinigag) API. \sa InfiniGagRequest
     };
 
     explicit AppSettings(QObject *parent = 0);

@@ -30,6 +30,14 @@
 
 #include <QtNetwork/QNetworkCookieJar>
 
+/*! Store/retrieve cookies to/from QSettings
+
+    Responsible for storing 9GAG website cookies to QSettings when destructing
+    (app exiting) and retrieving saved cookies from QSettings when contructing
+    (app starting). GagCookieJar directly use QSettings to store/retrieve
+    cookies instead of using AppSettings because the global instance of AppSettings
+    has been destructed when GagCookieJar is destructing.
+ */
 class GagCookieJar : public QNetworkCookieJar
 {
     Q_OBJECT
@@ -37,6 +45,7 @@ public:
     explicit GagCookieJar(QObject *parent = 0);
     ~GagCookieJar();
 
+    /*! Clear all saved cookies. */
     void clear();
 };
 

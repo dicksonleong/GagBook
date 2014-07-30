@@ -30,6 +30,10 @@
 
 #include "gagrequest.h"
 
+/*! Uses [InfiniGAG](https://github.com/k3min/infinigag) API to get gags
+
+    InifiGAG is unrealiable and only act as a backup method to get gags.
+ */
 class InfiniGagRequest : public GagRequest
 {
     Q_OBJECT
