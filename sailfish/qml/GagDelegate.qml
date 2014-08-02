@@ -30,7 +30,7 @@ import Sailfish.Silica 1.0
 import harbour.gagbook.Core 1.0
 
 Item {
-    id: root
+    id: gagDelegate
     width: ListView.view.width
     height: mainColumn.height + separator.height
 
@@ -70,7 +70,7 @@ Item {
 
                 Image {
                     asynchronous: true
-                    smooth: !root.ListView.view.moving
+                    smooth: !gagDelegate.ListView.view.moving
                     cache: false
                     fillMode: Image.PreserveAspectFit
                     source: model.imageUrl
@@ -82,7 +82,7 @@ Item {
 
                 AnimatedImage {
                     asynchronous: true
-                    smooth: !root.ListView.view.moving
+                    smooth: !gagDelegate.ListView.view.moving
                     cache: false
                     // pause the animation when app is in background
                     paused: mainPage.status != PageStatus.Active || !Qt.application.active
@@ -341,4 +341,6 @@ Item {
         anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
         color: Theme.secondaryColor
     }
+
+    ListView.onAdd: AddAnimation { target: gagDelegate }
 }

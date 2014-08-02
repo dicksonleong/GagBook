@@ -357,4 +357,12 @@ Item {
             }
         }
     }
+
+    ListView.onAdd: NumberAnimation {
+        target: gagDelegate
+        property: "opacity"
+        from: 0; to: 1
+        duration: 250
+        easing.type: Easing.InOutQuad
+    }
 }
