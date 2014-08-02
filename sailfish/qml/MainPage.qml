@@ -58,52 +58,6 @@ Page {
         model: gagModel
         orientation: ListView.Vertical
         spacing: constant.paddingMedium
-        header: PageHeader {title: "/" + appSettings.sections[gagModel.selectedSection]}
-
-        ViewPlaceholder {
-            id: placeHolder
-            text: "Couldn't get any gags"
-            enabled: gagListView.count == 0 && !gagModel.busy
-            hintText: qsTr("Check your WiFi or 3G settings and" +
-                           "\ntry refreshing from the menu. ")
-        }
-
-        delegate: GagDelegate {}
-        footer: Item {
-            id: footerItem
-            width: parent.width
-            height: {
-                if (gagListView.count === 0)
-                    return gagListView.height - (gagListView.headerItem ? gagListView.headerItem.height : 0)
-                return footerColumn.height + 2 * constant.paddingSmall
-            }
-            visible: gagModel.busy
-
-            Column {
-                id: footerColumn
-                anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter }
-                height: childrenRect.height
-
-                Text {
-                    anchors { left: parent.left; right: parent.right }
-                    horizontalAlignment: Text.AlignHCenter
-                    elide: Text.ElideRight
-                    font.pixelSize: constant.fontSizeMedium
-                    color: constant.colorLight
-                    text: "Downloading..."
-                }
-
-                ProgressBar {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width: parent.width * 0.75
-                    value: gagModel.progress
-                    indeterminate: gagModel.progress == 0
-                }
-            }
-        }
-
-        onAtYEndChanged: if (atYEnd && !gagModel.busy && count > 0) gagModel.refresh(GagModel.RefreshOlder)
-        onMovementEnded: mainPage.currentIndex = gagListView.indexAt(0, gagListView.contentY + gagListView.height / 2);
 
         PullDownMenu {
             MenuItem {
@@ -113,12 +67,70 @@ Page {
             MenuItem {
                 text: "Settings"
                 onClicked: pageStack.push(Qt.resolvedUrl("AppSettingsPage.qml"));
-            }            
+            }
             MenuItem {
                 text: "Refresh"
                 onClicked: gagModel.refresh(GagModel.RefreshAll);
             }
         }
+
+        header: PageHeader { title: "/" + appSettings.sections[gagModel.selectedSection] }
+
+        delegate: GagDelegate {}
+
+        footer: Item {
+            width: parent.width
+            height: footerLoader.status == Loader.Ready ? footerLoader.height + 2 * footerLoader.anchors.margins : 0
+
+            // show downloading indicator at the end of the list
+            Loader {
+                id: footerLoader
+                anchors { left: parent.left; right: parent.right; top: parent.top; margins: constant.paddingMedium  }
+                sourceComponent: gagModel.busy && gagListView.count > 0 ? downloadingIndicator : undefined
+            }
+        }
+
+        // show downloading indicator when the list is empty
+        Loader {
+            anchors {
+                left: parent.left; right: parent.right
+                verticalCenter: parent.verticalCenter
+                margins: constant.paddingMedium
+            }
+            sourceComponent: gagModel.busy && gagListView.count == 0 ? downloadingIndicator : undefined
+
+            Component {
+                id: downloadingIndicator
+
+                Column {
+                    Text {
+                        anchors { left: parent.left; right: parent.right }
+                        horizontalAlignment: Text.AlignHCenter
+                        elide: Text.ElideRight
+                        font.pixelSize: constant.fontSizeMedium
+                        color: constant.colorLight
+                        text: "Downloading..."
+                    }
+
+                    ProgressBar {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: parent.width * 0.75
+                        value: gagModel.progress
+                        indeterminate: gagModel.progress == 0
+                    }
+                }
+            }
+        }
+
+        ViewPlaceholder {
+            id: placeHolder
+            text: "Couldn't get any gags"
+            enabled: gagListView.count == 0 && !gagModel.busy
+            hintText: qsTr("Check your WiFi or 3G settings and try refreshing from the menu.")
+        }
+
+        onAtYEndChanged: if (atYEnd && !gagModel.busy && count > 0) gagModel.refresh(GagModel.RefreshOlder)
+        onMovementEnded: mainPage.currentIndex = gagListView.indexAt(0, gagListView.contentY + gagListView.height / 2);
     }
 
     GagModel {

@@ -87,33 +87,49 @@ Page {
         delegate: GagDelegate {}
         footer: Item {
             width: ListView.view.width
-            height: ListView.view.count > 0 ? footerColumn.height + 2 * constant.paddingLarge
-                                            : ListView.view.height
-            visible: gagModel.busy
+            height: footerLoader.status == Loader.Ready ? footerLoader.height + 2 * footerLoader.anchors.margins : 0
 
-            Column {
-                id: footerColumn
-                anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter }
-                height: childrenRect.height
-                spacing: constant.paddingMedium
+            // show downloading indicator at the end of the list
+            Loader {
+                id: footerLoader
+                anchors { left: parent.left; right: parent.right; top: parent.top; margins: constant.paddingLarge  }
+                sourceComponent: gagModel.busy && gagListView.count > 0 ? downloadingIndicator : undefined
+            }
+        }
 
-                Text {
-                    anchors { left: parent.left; right: parent.right }
-                    horizontalAlignment: Text.AlignHCenter
-                    elide: Text.ElideRight
-                    font.pixelSize: constant.fontSizeMedium
-                    color: constant.colorLight
-                    text: "Downloading..."
-                }
+        // show downloading indicator when the list is empty
+        Loader {
+            anchors {
+                left: parent.left; right: parent.right
+                verticalCenter: parent.verticalCenter
+                margins: constant.paddingLarge
+            }
+            sourceComponent: gagModel.busy && gagListView.count == 0 ? downloadingIndicator : undefined
 
-                ProgressBar {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    platformInverted: appSettings.whiteTheme
-                    width: parent.width * 0.75
-                    value: gagModel.progress
-                    // when indeterminate change from true to false the indeterminate
-                    // graphic is still there (bug?)
-                    //indeterminate: gagModel.progress == 0
+            Component {
+                id: downloadingIndicator
+
+                Column {
+                    spacing: constant.paddingMedium
+
+                    Text {
+                        anchors { left: parent.left; right: parent.right }
+                        horizontalAlignment: Text.AlignHCenter
+                        elide: Text.ElideRight
+                        font.pixelSize: constant.fontSizeMedium
+                        color: constant.colorLight
+                        text: "Downloading..."
+                    }
+
+                    ProgressBar {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        platformInverted: appSettings.whiteTheme
+                        width: parent.width * 0.75
+                        value: gagModel.progress
+                        // when indeterminate change from true to false the indeterminate
+                        // graphic is still there (bug?)
+                        //indeterminate: gagModel.progress == 0
+                    }
                 }
             }
         }
