@@ -5,7 +5,13 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
-* Wed Jul 9 2014 Dickson <dicksonleong@gmail.com> 1.0.0-2
+* Thu Aug 7 2014 Dickson <dicksonleong8@gmail.com> 1.1.0-1
+- Login to 9GAG using email and voting (big thanks to @b0bben)
+- Fix image not loading asychronously, scrolling will be smoother now
+- Show progress when downloading a single image
+- New cover UI (experimental, may be a bit buggy)
+
+* Wed Jul 9 2014 Dickson <dicksonleong8@gmail.com> 1.0.0-2
 - Fix GIF not playing
 
 * Tue Jul 8 2014 Dickson <dicksonleong8@gmail.com> 1.0.0-1

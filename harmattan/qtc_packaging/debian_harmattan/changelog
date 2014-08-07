@@ -1,3 +1,10 @@
+gagbook (1.1.0) unstable; urgency=medium
+  * Login to 9GAG using email and voting (big thanks to @b0bben)
+  * Fix image not loading asychronously, scrolling will be smoother now
+  * Show progress when downloading a single image
+
+ -- Dickson <dicksonleong8@gmail.com>  Thu, 07 Aug 2014 16:20:16 +0800
+
 gagbook (1.0.0) unstable; urgency=medium
   * Inline GIF player
   * Fix viewing tall image
