@@ -144,9 +144,9 @@ Item {
                                 font.pixelSize: constant.fontSizeMedium
                                 color: constant.colorLight
                                 wrapMode: Text.Wrap
-                                text: gagbookManager.loggedIn ? "You need to enable showing of NSFW posts " +
-                                                                "for your account at 9GAG website."
-                                                              : "You need to login to view NSFW images."
+                                text: appSettings.loggedIn ? "You need to enable showing of NSFW posts " +
+                                                             "for your account at 9GAG website."
+                                                           : "You need to login to view NSFW images."
                             }
                         }
                     }
@@ -292,7 +292,7 @@ Item {
 
             Button {
                 platformInverted: appSettings.whiteTheme
-                enabled: gagbookManager.loggedIn && !votingManager.busy
+                enabled: appSettings.loggedIn && !votingManager.busy
                 opacity: enabled ? 1.0 : 0.5
                 checked: model.likes == 1
                 iconSource: "Images/up" + (platformInverted ? "_inverted.svg" : ".svg")
@@ -300,7 +300,7 @@ Item {
             }
             Button {
                 platformInverted: appSettings.whiteTheme
-                enabled: gagbookManager.loggedIn && !votingManager.busy
+                enabled: appSettings.loggedIn && !votingManager.busy
                 opacity: enabled ? 1.0 : 0.5
                 checked: model.likes == -1
                 iconSource: "Images/down" + (platformInverted ? "_inverted.svg" : ".svg")

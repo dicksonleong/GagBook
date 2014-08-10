@@ -44,9 +44,6 @@ class GagBookManager : public QObject
 {
     Q_OBJECT
 
-    /*! True if user is logged in to 9GAG account, otherwise false. */
-    Q_PROPERTY(bool loggedIn READ isLoggedIn NOTIFY loggedInChanged)
-
     /*! True if there is an active login request. Busy visual feedback should
         show to user and login should be disable when busy. */
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
@@ -60,7 +57,6 @@ class GagBookManager : public QObject
 public:
     explicit GagBookManager(QObject *parent = 0);
 
-    bool isLoggedIn() const;
     bool isBusy() const;
     QString downloadCounter() const;
 
@@ -79,7 +75,6 @@ public:
     Q_INVOKABLE void logout();
 
 signals:
-    void loggedInChanged();
     void busyChanged();
     void downloadCounterChanged();
 
@@ -94,13 +89,10 @@ private slots:
     void onLoginFinished();
 
 private:
-    bool m_isLoggedIn;
     bool m_isBusy;
     AppSettings *m_settings;
     NetworkManager *m_netManager;
     QNetworkReply *m_loginReply;
-
-    bool checkIsLoggedIn();
 };
 
 #endif // GAGBOOKMANAGER_H

@@ -51,6 +51,7 @@ static QStringList defaultSections()
 AppSettings::AppSettings(QObject *parent) :
     QObject(parent), m_settings(new QSettings(this))
 {
+    m_loggedIn = m_settings->value("loggedIn", false).toBool();
     m_whiteTheme = m_settings->value("whiteTheme", false).toBool();
     m_source = static_cast<Source>(m_settings->value("source", 0).toInt());
     m_scrollWithVolumeKeys = m_settings->value("scrollWithVolumeKeys", false).toBool();
@@ -58,6 +59,20 @@ AppSettings::AppSettings(QObject *parent) :
 
     if (m_sections.isEmpty())
         setSections(defaultSections());
+}
+
+bool AppSettings::isLoggedIn() const
+{
+    return m_loggedIn;
+}
+
+void AppSettings::setLoggedIn(bool isLoggedIn)
+{
+    if (m_loggedIn != isLoggedIn) {
+        m_loggedIn = isLoggedIn;
+        m_settings->setValue("loggedIn", m_loggedIn);
+        emit loggedInChanged();
+    }
 }
 
 bool AppSettings::isWhiteTheme() const

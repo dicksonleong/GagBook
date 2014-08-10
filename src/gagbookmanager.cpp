@@ -41,17 +41,11 @@
 #include "appsettings.h"
 
 GagBookManager::GagBookManager(QObject *parent) :
-    QObject(parent), m_isLoggedIn(false), m_isBusy(false), m_settings(0),
+    QObject(parent), m_isBusy(false), m_settings(0),
     m_netManager(new NetworkManager(this)), m_loginReply(0)
 {
     GagImageDownloader::initializeCache();
     connect(m_netManager, SIGNAL(downloadCounterChanged()), SIGNAL(downloadCounterChanged()));
-    m_isLoggedIn = checkIsLoggedIn();
-}
-
-bool GagBookManager::isLoggedIn() const
-{
-    return m_isLoggedIn;
 }
 
 bool GagBookManager::isBusy() const
@@ -115,18 +109,17 @@ void GagBookManager::logout()
 {
     //we log out by removing the loggedin cookie
     m_netManager->clearCookies();
-    if (m_isLoggedIn != false) {
-        m_isLoggedIn = false;
-        emit loggedInChanged();
-    }
+    m_settings->setLoggedIn(false);
 }
 
 void GagBookManager::onLoginFinished()
 {
     if(m_loginReply->error() == QNetworkReply::NoError) {
-        if (checkIsLoggedIn()) {
-            m_isLoggedIn = true;
-            emit loggedInChanged();
+        const int statusCode = m_loginReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        const QUrl redirectUrl = m_loginReply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+        // if redirect to 9gag.com, means login success
+        if (statusCode >= 300 && statusCode < 400 && redirectUrl.host() == "9gag.com") {
+            m_settings->setLoggedIn(true);
             emit loginSuccess();
         } else {
             emit loginFailure("Wrong username or password. Please try again.");
@@ -142,17 +135,4 @@ void GagBookManager::onLoginFinished()
         m_isBusy = false;
         emit busyChanged();
     }
-}
-
-bool GagBookManager::checkIsLoggedIn()
-{
-    const QList<QNetworkCookie> cookies = m_netManager->cookieJar()->cookiesForUrl((QUrl("http://9gag.com/")));
-
-    foreach (const QNetworkCookie &cookie, cookies) {
-        if (cookie.name() == "loggedin" && cookie.value() == "1"
-                && cookie.expirationDate() > QDateTime::currentDateTime())
-            return true;
-    }
-
-    return false;
 }

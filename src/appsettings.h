@@ -46,6 +46,9 @@ class AppSettings : public QObject
     Q_OBJECT
     Q_ENUMS(Source)
 
+    /*! True if user logged in to 9GAG account. */
+    Q_PROPERTY(bool loggedIn READ isLoggedIn WRITE setLoggedIn NOTIFY loggedInChanged)
+
     /*! True if white UI theme is used, false if dark UI theme (the default).
         Only usable for Harmattan and Symbian. */
     Q_PROPERTY(bool whiteTheme READ isWhiteTheme WRITE setWhiteTheme NOTIFY whiteThemeChanged)
@@ -69,6 +72,9 @@ public:
 
     explicit AppSettings(QObject *parent = 0);
 
+    bool isLoggedIn() const;
+    void setLoggedIn(bool isLoggedIn);
+
     bool isWhiteTheme() const;
     void setWhiteTheme(bool whiteTheme);
 
@@ -82,6 +88,7 @@ public:
     void setSections(const QStringList &sections);
 
 signals:
+    void loggedInChanged();
     void whiteThemeChanged();
     void sourceChanged();
     void scrollWithVolumeKeysChanged();
@@ -91,6 +98,7 @@ private:
     Q_DISABLE_COPY(AppSettings)
 
     QSettings *m_settings;
+    bool m_loggedIn;
     bool m_whiteTheme;
     Source m_source;
     bool m_scrollWithVolumeKeys;

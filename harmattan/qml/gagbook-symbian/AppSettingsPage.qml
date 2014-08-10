@@ -110,9 +110,9 @@ Page {
                 width: parent.width * 0.75
                 platformInverted: appSettings.whiteTheme
                 enabled: !gagbookManager.busy
-                text: gagbookManager.loggedIn ? "Log out" : "Login to 9GAG"
+                text: appSettings.loggedIn ? "Log out" : "Login to 9GAG"
                 onClicked: {
-                    if (gagbookManager.loggedIn) {
+                    if (appSettings.loggedIn) {
                         gagbookManager.logout();
                         infoBanner.alert("Logged out from 9GAG");
                     } else {

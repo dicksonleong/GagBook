@@ -148,7 +148,7 @@ Item {
                                 font.pixelSize: constant.fontSizeMedium
                                 color: constant.colorLight
                                 wrapMode: Text.Wrap
-                                text: gagbookManager.loggedIn ? "You need to enable showing of NSFW posts " +
+                                text: appSettings.loggedIn ? "You need to enable showing of NSFW posts " +
                                                                 "for your account at 9GAG website."
                                                               : "You need to login to view NSFW images."
                             }
@@ -289,14 +289,14 @@ Item {
 
             Button {
                 iconSource: "image://theme/icon-m-toolbar-up" + (appSettings.whiteTheme ? "" : "-selected")
-                enabled: gagbookManager.loggedIn && !votingManager.busy
+                enabled: appSettings.loggedIn && !votingManager.busy
                 opacity: enabled ? 1.0 : 0.5
                 checked: model.likes == 1
                 onClicked: votingManager.vote(model.id, checked ? VotingManager.Unlike : VotingManager.Like);
             }
             Button {
                 iconSource: "image://theme/icon-m-toolbar-down" + (appSettings.whiteTheme ? "" : "-selected")
-                enabled: gagbookManager.loggedIn && !votingManager.busy
+                enabled: appSettings.loggedIn && !votingManager.busy
                 opacity: enabled ? 1.0 : 0.5
                 checked: model.likes == -1
                 onClicked: votingManager.vote(model.id, checked ? VotingManager.Unlike : VotingManager.Dislike);

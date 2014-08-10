@@ -31,7 +31,6 @@
 #include <QtCore/QObject>
 
 class QNetworkAccessManager;
-class QNetworkCookieJar;
 class QNetworkReply;
 class QUrl;
 
@@ -58,8 +57,6 @@ public:
     QNetworkReply *createGetRequest(const QUrl &url, AcceptType acceptType = None);
     /*! Create a POST network request. */
     QNetworkReply *createPostRequest(const QUrl &url, const QByteArray &data);
-
-    QNetworkCookieJar *cookieJar() const;
 
     /*! Clear all saved cookies. */
     void clearCookies();

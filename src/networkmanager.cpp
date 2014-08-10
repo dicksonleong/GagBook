@@ -71,11 +71,6 @@ QNetworkReply *NetworkManager::createPostRequest(const QUrl &url, const QByteArr
     return m_networkAccessManager->post(request, data);
 }
 
-QNetworkCookieJar *NetworkManager::cookieJar() const
-{
-    return m_networkAccessManager->cookieJar();
-}
-
 void NetworkManager::clearCookies()
 {
     GagCookieJar *cookieJar = qobject_cast<GagCookieJar *>(m_networkAccessManager->cookieJar());
