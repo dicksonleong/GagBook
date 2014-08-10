@@ -1,3 +1,8 @@
+gagbook (1.1.1) unstable; urgency=medium
+  * Fix unable to login
+
+ -- Dickson <dicksonleong8@gmail.com>  Sun, 10 Aug 2014 23:20:16 +0800
+
 gagbook (1.1.0) unstable; urgency=medium
   * Login to 9GAG using email and voting (big thanks to @b0bben)
   * Fix image not loading asychronously, scrolling will be smoother now

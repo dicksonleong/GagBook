@@ -5,6 +5,9 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Sun Aug 10 2014 Dickson <dicksonleong8@gmail.com> 1.1.1-1
+- Fix unable to login
+
 * Thu Aug 7 2014 Dickson <dicksonleong8@gmail.com> 1.1.0-1
 - Login to 9GAG using email and voting (big thanks to @b0bben)
 - Fix image not loading asychronously, scrolling will be smoother now
