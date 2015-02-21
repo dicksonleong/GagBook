@@ -38,53 +38,58 @@ Page {
     transitions: Transition { AnchorAnimation { duration: 250; easing.type: Easing.InOutQuad } }
 
     SilicaFlickable {
-        id: flickable
+        id: flick
         anchors.fill: parent
-        contentWidth: imageContainer.width; contentHeight: imageContainer.height
-        onHeightChanged: if (gagImage.status == Image.Ready) gagImage.fitToScreen()
-
+        contentWidth: parent.width
+        contentHeight: parent.height
+        
         VerticalScrollDecorator{}
         HorizontalScrollDecorator{}
 
-        Item {
-            id: imageContainer
-            width: Math.max(gagImage.width * gagImage.scale, flickable.width)
-            height: Math.max(gagImage.height * gagImage.scale, flickable.height)
+        PinchArea {
+            width: Math.max(flick.contentWidth, flick.width)
+            height: Math.max(flick.contentHeight, flick.height)
 
+            property real initialWidth
+            property real initialHeight
+            onPinchStarted: {
+                initialWidth = flick.contentWidth
+                initialHeight = flick.contentHeight
+                flick.interactive = false
+            }
+
+            onPinchUpdated: {
+                // adjust content pos due to drag
+                flick.contentX += pinch.previousCenter.x - pinch.center.x
+                flick.contentY += pinch.previousCenter.y - pinch.center.y
+
+                // resize content
+                flick.resizeContent(initialWidth * pinch.scale, initialHeight * pinch.scale, pinch.center)
+            }
+
+            onPinchFinished: {
+                // Move its content within bounds.
+                flick.returnToBounds()
+                flick.interactive = true
+            }
             Image {
                 id: gagImage
 
                 property real prevScale
-
-                function fitToScreen() {
-                    scale = Math.min(flickable.width / width, flickable.height / height, 1)
-                    pinchArea.minScale = scale
-                    prevScale = scale
-                }
+                
+                width: flick.contentWidth
+                height: flick.contentHeight
 
                 asynchronous: true
                 anchors.centerIn: parent
-                smooth: !flickable.moving
+                smooth: !flick.moving
                 cache: true
                 fillMode: Image.PreserveAspectFit
                 sourceSize.height: QMLUtils.IMAGE_MAX_HEIGHT
                 source: gag.isPartialImage ? gag.fullImageUrl : gag.imageUrl
 
-                onScaleChanged: {
-                    if ((width * scale) > flickable.width) {
-                        var xoff = (flickable.width / 2 + flickable.contentX) * scale / prevScale;
-                        flickable.contentX = xoff - flickable.width / 2
-                    }
-                    if ((height * scale) > flickable.height) {
-                        var yoff = (flickable.height / 2 + flickable.contentY) * scale / prevScale;
-                        flickable.contentY = yoff - flickable.height / 2
-                    }
-                    prevScale = scale
-                }
-
                 onStatusChanged: {
                     if (status == Image.Ready) {
-                        fitToScreen()
                         loadedAnimation.start()
                     }
                 }
@@ -97,48 +102,9 @@ Page {
                     from: 0; to: 1
                     easing.type: Easing.InOutQuad
                 }
-            }
+            } // Image End
         }
-
-        PinchArea {
-            id: pinchArea
-
-            property real minScale: 1.0
-            property real maxScale: 3.0
-
-            anchors.fill: parent
-            enabled: gagImage.status == Image.Ready
-            pinch.target: gagImage
-            pinch.minimumScale: minScale * 0.5 // This is to create "bounce back effect"
-            pinch.maximumScale: maxScale * 1.5 // when over zoomed
-
-            onPinchFinished: {
-                flickable.returnToBounds()
-                if (gagImage.scale < pinchArea.minScale) {
-                    bounceBackAnimation.to = pinchArea.minScale
-                    bounceBackAnimation.start()
-                }
-                else if (gagImage.scale > pinchArea.maxScale) {
-                    bounceBackAnimation.to = pinchArea.maxScale
-                    bounceBackAnimation.start()
-                }
-            }
-
-            NumberAnimation {
-                id: bounceBackAnimation
-                target: gagImage
-                duration: 250
-                property: "scale"
-                from: gagImage.scale
-            }
-        }
-
-        /*MouseArea {
-            anchors.fill: parent
-            enabled: gagImage.status == Image.Ready
-        }*/
     }
-
     Loader {
         anchors.centerIn: parent
         sourceComponent: {
@@ -165,3 +131,4 @@ Page {
         Component { id: failedLoading; Label { text: "Error loading image" } }
     }
 }
+
