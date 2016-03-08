@@ -65,4 +65,6 @@ OTHER_FILES += \
     qml/SectionPage.qml \
     qml/SimpleListItem.qml \
     qml/LoginDialog.qml \
-    qml/Images/icon-gif-play.png
+    qml/Images/icon-gif-play.png \
+    qml/VideoComponent.qml
+

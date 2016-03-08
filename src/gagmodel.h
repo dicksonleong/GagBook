@@ -77,12 +77,14 @@ public:
         ImageUrlRole,
         FullImageUrlRole,
         GifImageUrlRole,
+        VideoUrlRole,
         ImageSizeRole,
         VotesCountRole,
         CommentsCountRole,
         LikesRole,
         IsNSFWRole,
         IsGIFRole,
+        IsVideoRole,
         IsPartialImageRole,
         IsDownloadingRole
     };

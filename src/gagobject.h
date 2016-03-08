@@ -68,6 +68,9 @@ public:
     QUrl gifImageUrl() const;
     void setGifImageUrl(const QUrl &imageUrl);
 
+    QUrl videoUrl() const;
+    void setVideoUrl(const QUrl &videoUrl);
+
     QSize imageSize() const;
     void setImageSize(const QSize &imageSize);
 
@@ -85,6 +88,9 @@ public:
 
     bool isGIF() const;
     void setIsGIF(bool isGIF);
+
+    bool isVideo() const;
+    void setIsVideo(bool isVideo);
 
     bool isPartialImage() const;
     void setIsPartialImage(bool isPartialImage);

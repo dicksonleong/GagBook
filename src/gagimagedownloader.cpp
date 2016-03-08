@@ -55,7 +55,7 @@ void GagImageDownloader::initializeCache()
 }
 
 GagImageDownloader::GagImageDownloader(NetworkManager *networkManager, QObject *parent) :
-    QObject(parent), m_networkManager(networkManager), m_downloadGIF(false)
+    QObject(parent), m_networkManager(networkManager), m_downloadGIF(false), m_downloadVideo(false)
 {
 }
 
@@ -79,20 +79,32 @@ void GagImageDownloader::setDownloadGIF(bool downloadGIF)
     m_downloadGIF = downloadGIF;
 }
 
+void GagImageDownloader::setDownloadVideo(bool downloadVideo)
+{
+    m_downloadVideo = downloadVideo;
+}
+
 void GagImageDownloader::start()
 {
     // if there is still downloads ongoing when start() is called
     // there will be big problem since m_gagList will be replaced
     Q_ASSERT(m_replyHash.isEmpty());
     foreach (const GagObject &gag, m_gagList) {
-        if (gag.imageUrl().isEmpty() && gag.gifImageUrl().isEmpty())
+        if (gag.imageUrl().isEmpty() && gag.gifImageUrl().isEmpty() && gag.videoUrl().isEmpty())
             continue;
 
-        if (m_downloadGIF && !gag.isGIF()) {
+        else if (m_downloadVideo && !gag.isVideo()) {
+            qWarning("GagImageDownloader::start(): Not Video, skip");
+            continue;
+        }
+        else if (m_downloadGIF && !gag.isGIF()) {
             qWarning("GagImageDownloader::start(): Not GIF, skip");
             continue;
         }
-        const QUrl downloadImageUrl = m_downloadGIF ? gag.gifImageUrl() : gag.imageUrl();
+        QUrl downloadImageUrl;
+        if (m_downloadVideo) downloadImageUrl = gag.videoUrl();
+        else if (m_downloadGIF) downloadImageUrl = gag.gifImageUrl();
+        else downloadImageUrl = gag.imageUrl();
 
         QNetworkReply *reply = m_networkManager->createGetRequest(downloadImageUrl, NetworkManager::Image);
         // make sure the QNetworkReply will be destroy when this object is destroyed
@@ -135,7 +147,12 @@ void GagImageDownloader::onFinished()
             image.close();
 
             GagObject gag = m_replyHash.value(reply);
-            if (m_downloadGIF) {
+            if (m_downloadVideo) {
+                if (gag.videoUrl().isEmpty())
+                    return;
+                gag.setVideoUrl(QUrl::fromLocalFile(fileName));
+            }
+            else if (m_downloadGIF) {
                 if (gag.imageUrl().isEmpty())
                     gag.setImageUrl(QUrl::fromLocalFile(fileName));
                 gag.setGifImageUrl(QUrl::fromLocalFile(fileName));

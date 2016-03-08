@@ -47,12 +47,14 @@ GagModel::GagModel(QObject *parent) :
     _roles[ImageUrlRole] = "imageUrl";
     _roles[FullImageUrlRole] = "fullImageUrl";
     _roles[GifImageUrlRole] = "gifImageUrl";
+    _roles[VideoUrlRole] = "videoUrl";
     _roles[ImageSizeRole] = "imageSize";
     _roles[VotesCountRole] = "votesCount";
     _roles[CommentsCountRole] = "commentsCount";
     _roles[LikesRole] = "likes";
     _roles[IsNSFWRole] = "isNSFW";
     _roles[IsGIFRole] = "isGIF";
+    _roles[IsVideoRole] = "isVideo";
     _roles[IsPartialImageRole] = "isPartialImage";
     _roles[IsDownloadingRole] = "isDownloading";
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
@@ -99,6 +101,10 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
         if (gag.gifImageUrl().scheme() != "file")
             return QUrl();
         return gag.gifImageUrl();
+    case VideoUrlRole:
+        if (gag.videoUrl().scheme() != "file")
+            return QUrl();
+        return gag.videoUrl();
     case ImageSizeRole:
         return gag.imageSize();
     case VotesCountRole:
@@ -111,6 +117,8 @@ QVariant GagModel::data(const QModelIndex &index, int role) const
         return gag.isNSFW();
     case IsGIFRole:
         return gag.isGIF();
+    case IsVideoRole:
+        return gag.isVideo();
     case IsPartialImageRole:
         return gag.isPartialImage();
     case IsDownloadingRole:
@@ -260,6 +268,7 @@ void GagModel::downloadImage(int i)
 
     m_manualImageDownloader = new GagImageDownloader(manager()->networkManager(), this);
     m_manualImageDownloader->setGagList(gags);
+    m_manualImageDownloader->setDownloadVideo(gags.first().isVideo());
     m_manualImageDownloader->setDownloadGIF(gags.first().isGIF());
     connect(m_manualImageDownloader, SIGNAL(downloadProgress(qint64,qint64)),
             SLOT(onManualDownloadProgress(qint64,qint64)));

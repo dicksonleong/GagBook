@@ -32,6 +32,8 @@ import harbour.gagbook.Core 1.0
 ApplicationWindow {
     id: appWindow
 
+    property var coverPage
+
     initialPage: Component { MainPage { } }
     cover: Qt.resolvedUrl("CoverPage.qml")
 

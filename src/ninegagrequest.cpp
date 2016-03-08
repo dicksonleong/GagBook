@@ -110,9 +110,15 @@ static QList<GagObject> parseGAG(const QWebElementCollection &entryItems)
         if (!postContainer.findFirst("div.nsfw-post").isNull()) {
             gag.setIsNSFW(true);
         } else if (!postContainer.findFirst("div.badge-animated-container-animated").isNull()) {
-            gag.setIsGIF(true);
-            gag.setImageUrl(postContainer.findFirst("img.badge-item-img").attribute("src"));
-            gag.setGifImageUrl(postContainer.findFirst("div.badge-animated-container-animated").attribute("data-image"));
+            if (!postContainer.findFirst("div.badge-animated-container-animated").attribute("data-mp4").isNull()) {
+                gag.setIsVideo(true);
+                gag.setImageUrl(postContainer.findFirst("img.badge-item-img").attribute("src"));
+                gag.setVideoUrl(postContainer.findFirst("div.badge-animated-container-animated").attribute("data-mp4"));
+            } else {
+                gag.setIsGIF(true);
+                gag.setImageUrl(postContainer.findFirst("img.badge-item-img").attribute("src"));
+                gag.setGifImageUrl(postContainer.findFirst("div.badge-animated-container-animated").attribute("data-image"));
+            }
         } else if (postContainer.hasClass("with-button")) {
             //not full pic, we'll need to go deeper for the full lenght image
             const QUrl regularImgUrl = postContainer.findFirst("img.badge-item-img").attribute("src");

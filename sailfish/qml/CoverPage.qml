@@ -158,4 +158,6 @@ CoverBackground {
             mainPage.positionAtIndex(slideView.currentIndex);
         }
     }
+
+    Component.onCompleted: appWindow.coverPage = cover
 }

@@ -36,12 +36,14 @@ class GagObjectData : public QSharedData
 {
 public:
     GagObjectData() : votesCount(0), commentsCount(0), likes(0),
-        isNSFW(false), isGIF(false), isPartialImage(false) {}
+        isNSFW(false), isGIF(false), isVideo(false), isPartialImage(false) {}
     ~GagObjectData() {
         if (imageUrl.scheme() == "file")
             QFile::remove(imageUrl.toLocalFile());
         if (gifImageUrl.scheme() == "file")
             QFile::remove(gifImageUrl.toLocalFile());
+        if (videoUrl.scheme() == "file")
+            QFile::remove(videoUrl.toLocalFile());
     }
 
     QString id;
@@ -50,12 +52,14 @@ public:
     QUrl imageUrl;
     QUrl fullImageUrl;
     QUrl gifImageUrl;
+    QUrl videoUrl;
     QSize imageSize;
     int votesCount;
     int commentsCount;
     int likes;
     bool isNSFW;
     bool isGIF;
+    bool isVideo;
     bool isPartialImage;
 
 private:
@@ -142,6 +146,16 @@ void GagObject::setGifImageUrl(const QUrl &imageUrl)
     d->gifImageUrl = imageUrl;
 }
 
+QUrl GagObject::videoUrl() const
+{
+    return d->videoUrl;
+}
+
+void GagObject::setVideoUrl(const QUrl &videoUrl)
+{
+   d->videoUrl = videoUrl;
+}
+
 QSize GagObject::imageSize() const
 {
     return d->imageSize;
@@ -200,6 +214,16 @@ bool GagObject::isGIF() const
 void GagObject::setIsGIF(bool isGIF)
 {
     d->isGIF = isGIF;
+}
+
+bool GagObject::isVideo() const
+{
+    return d->isVideo;
+}
+
+void GagObject::setIsVideo(bool isVideo)
+{
+    d->isVideo = isVideo;
 }
 
 bool GagObject::isPartialImage() const

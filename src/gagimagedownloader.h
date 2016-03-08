@@ -68,6 +68,10 @@ public:
         instead of normal images (GagObject::imageUrl()). */
     void setDownloadGIF(bool downloadGIF);
 
+    /*! If this is set to true, videos (GagObject::videoUrl()) will be downloaded
+        instead of normal images (GagObject::imageUrl()). */
+    void setDownloadVideo(bool downloadVideo);
+
     /*! Start the download request. */
     void start();
 
@@ -88,6 +92,7 @@ private:
     NetworkManager *m_networkManager;
     QList<GagObject> m_gagList;
     bool m_downloadGIF;
+    bool m_downloadVideo;
 
     QHash<QNetworkReply*, GagObject> m_replyHash;
     int m_imagesTotal;
