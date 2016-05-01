@@ -5,6 +5,9 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Sun May 01 2016 Leszek Lesner <leszek.lesner@web.de> 1.2.2-1
+- Fix scaling of large images
+
 * Sun Aug 10 2014 Dickson <dicksonleong8@gmail.com> 1.1.1-1
 - Fix unable to login
 

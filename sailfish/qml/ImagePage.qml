@@ -37,48 +37,51 @@ Page {
     clip: true
     transitions: Transition { AnchorAnimation { duration: 250; easing.type: Easing.InOutQuad } }
 
+    property real prevScale: 0
+    property real fitScale: 0
+
+    function _onScaleChanged() {
+        if (prevScale === 0)
+            prevScale = gagImage.scale
+        if ((gagImage.width * gagImage.scale) > flick.width) {
+            var xoff = (flick.width / 2 + flick.contentX) * gagImage.scale / prevScale;
+            flick.contentX = xoff - flick.width / 2
+        }
+        if ((gagImage.height * gagImage.scale) > flick.height) {
+            var yoff = (flick.height / 2 + flick.contentY) * gagImage.scale / prevScale;
+            flick.contentY = yoff - flick.height / 2
+        }
+        prevScale = gagImage.scale
+    }
+
+    function _fitToScreen() {
+        fitScale = Math.min(flick.width / gagImage.width, flick.height / gagImage.height)
+        gagImage.scale = fitScale
+        prevScale = fitScale
+        pinchArea.pinch.minimumScale = Math.min(fitScale, 1)
+    }
+
+
     SilicaFlickable {
         id: flick
         anchors.fill: parent
-        contentWidth: parent.width
-        contentHeight: parent.height
+        contentWidth: imageContainer.width
+        contentHeight: imageContainer.height
         
         VerticalScrollDecorator{}
         HorizontalScrollDecorator{}
 
-        PinchArea {
-            width: Math.max(flick.contentWidth, flick.width)
-            height: Math.max(flick.contentHeight, flick.height)
+        onHeightChanged: {
+           if (gagImage.status === Image.Ready) _fitToScreen();
+        }
 
-            property real initialWidth
-            property real initialHeight
-            onPinchStarted: {
-                initialWidth = flick.contentWidth
-                initialHeight = flick.contentHeight
-                flick.interactive = false
-            }
+        Item {
+            id: imageContainer
+            width: Math.max(gagImage.width * gagImage.scale, flick.width)
+            height: Math.max(gagImage.height * gagImage.scale, flick.height)
 
-            onPinchUpdated: {
-                // adjust content pos due to drag
-                flick.contentX += pinch.previousCenter.x - pinch.center.x
-                flick.contentY += pinch.previousCenter.y - pinch.center.y
-
-                // resize content
-                flick.resizeContent(initialWidth * pinch.scale, initialHeight * pinch.scale, pinch.center)
-            }
-
-            onPinchFinished: {
-                // Move its content within bounds.
-                flick.returnToBounds()
-                flick.interactive = true
-            }
             Image {
                 id: gagImage
-
-                property real prevScale
-                
-                width: flick.contentWidth
-                height: flick.contentHeight
 
                 asynchronous: true
                 anchors.centerIn: parent
@@ -94,6 +97,14 @@ Page {
                     }
                 }
 
+                onScaleChanged: {
+                    _onScaleChanged()
+                }
+
+                onHeightChanged: {
+                    _fitToScreen()
+                }
+
                 NumberAnimation {
                     id: loadedAnimation
                     target: gagImage
@@ -104,7 +115,31 @@ Page {
                 }
             } // Image End
         }
+
+        PinchArea {
+            id: pinchArea
+            anchors.fill: parent
+
+            property real initialWidth
+            property real initialHeight
+            pinch.target: gagImage
+            pinch.minimumScale: 1.0
+            pinch.maximumScale: 3.0
+
+            onPinchFinished: {
+                // Move its content within bounds.
+                flick.returnToBounds()
+                flick.interactive = true
+            }
+
+            Rectangle {
+                opacity: 0.0
+                anchors.fill: parent
+            }
+        }
+
     }
+
     Loader {
         anchors.centerIn: parent
         sourceComponent: {

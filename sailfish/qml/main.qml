@@ -31,6 +31,8 @@ import harbour.gagbook.Core 1.0
 
 ApplicationWindow {
     id: appWindow
+    allowedOrientations: Orientation.All
+    _defaultPageOrientations: Orientation.All
 
     property var coverPage
 
