@@ -74,7 +74,7 @@ int QMLUtils::imageMaxHeight() const
 
 QUrl QMLUtils::repoWebsite() const
 {
-    return QUrl("https://github.com/dicksonleong/GagBook");
+    return QUrl("https://github.com/llelectronics/GagBook");
 }
 
 void QMLUtils::copyToClipboard(const QString &text)
