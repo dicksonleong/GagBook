@@ -48,7 +48,7 @@ NineGagRequest::NineGagRequest(NetworkManager *networkManager, const QString &se
 
 QNetworkReply *NineGagRequest::createRequest(const QString &section, const QString &lastId)
 {
-    QUrl requestUrl("http://9gag.com/" + section);
+    QUrl requestUrl("https://9gag.com/" + section);
 
     if (!lastId.isEmpty()) {
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
