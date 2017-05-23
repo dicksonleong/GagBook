@@ -6,7 +6,6 @@ Page {
     id: commentsPage
 
     property string gagURL
-                             "&appId=a_dd8f2b7d304a10edaf6f29517ea0ca4100a43d1b&readOnly=1"
     readonly property string rootUrl: "https://comment-cdn.9gag.com/v1/cacheable/comment-list.json?appId=a_dd8f2b7d304a10edaf6f29517ea0ca4100a43d1b&url=%1&count=%2&level=2&order=score&mentionMapping=true"
     property int nb_comment : 20
 
