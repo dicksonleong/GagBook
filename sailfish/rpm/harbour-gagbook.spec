@@ -13,7 +13,7 @@ Name:       harbour-gagbook
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    An unofficial app for 9GAG website
-Version:    1.2.4
+Version:    1.2.5
 Release:    1
 Group:      Applications/Internet
 License:    BSD
@@ -26,8 +26,8 @@ BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  pkgconfig(Qt5Network)
-BuildRequires:  pkgconfig(Qt5Widgets)
 BuildRequires:  pkgconfig(Qt5WebKitWidgets)
+BuildRequires:  pkgconfig(Qt5Widgets)
 BuildRequires:  pkgconfig(sailfishapp)
 BuildRequires:  pkgconfig(qdeclarative5-boostable)
 BuildRequires:  pkgconfig(libresourceqt5)

@@ -32,14 +32,34 @@ Page {
     id: commentsPage
 
     property string gagURL
-    readonly property string rootUrl: "http://comment.9gag.com/comment/list?url=%1" +
-                             "&appId=a_dd8f2b7d304a10edaf6f29517ea0ca4100a43d1b&readOnly=1"
+    readonly property string rootUrl: "https://m." + gagURL.slice(8) + "#comment"
+//    readonly property string rootUrl: "https://comment-cdn.9gag.com/comment/list?url=%1" +
+//                             "&appId=a_dd8f2b7d304a10edaf6f29517ea0ca4100a43d1b&readOnly=1&commentL1=5&commentL2=3&pretty=0"
+    /*readonly property string rootUrl: "https://comment.9gag.com/comment/list?url=%1" +
+                             "&appId=a_dd8f2b7d304a10edaf6f29517ea0ca4100a43d1b&readOnly=1"*/
 
     SilicaWebView {
         anchors.fill: parent
         header: PageHeader { title: "Comments" }
         url: rootUrl.arg(gagURL)
 
+        experimental.overview: true
+        property variant devicePixelRatio: {//1.5
+            if (Screen.width <= 540) return 1.5;
+            else if (Screen.width > 540 && Screen.width <= 768) return 2.0;
+            else if (Screen.width > 768) return 3.0;
+        }
+        experimental.customLayoutWidth: commentsPage.width / devicePixelRatio
+
+        PullDownMenu {
+            MenuItem {
+                text: "Go Back"
+                onClicked: pageStack.pop();
+            }
+        }
+
         VerticalScrollDecorator {}
+
+        Component.onCompleted: console.debug("URL: " + rootUrl)
     }
 }
