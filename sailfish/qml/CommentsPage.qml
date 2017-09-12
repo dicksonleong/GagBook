@@ -32,16 +32,35 @@ Page {
     id: commentsPage
 
     property string gagURL
+    property string appId: "a_dd8f2b7d304a10edaf6f29517ea0ca4100a43d1b"
     readonly property string rootUrl: "https://m." + gagURL.slice(8) + "#comment"
-//    readonly property string rootUrl: "https://comment-cdn.9gag.com/comment/list?url=%1" +
-//                             "&appId=a_dd8f2b7d304a10edaf6f29517ea0ca4100a43d1b&readOnly=1&commentL1=5&commentL2=3&pretty=0"
+    property string apiCallUrl: "http://comment-cdn.9gag.com/v1/topComments.json?appId=" +
+                                appId +
+                                "&urls=" + gagURL + "&commentL1=5&commentL2=3&pretty=0"
     /*readonly property string rootUrl: "https://comment.9gag.com/comment/list?url=%1" +
                              "&appId=a_dd8f2b7d304a10edaf6f29517ea0ca4100a43d1b&readOnly=1"*/
+
+    // Not working anymore as it seems
+//    function getComments() {
+//        var xhr = new XMLHttpRequest();
+//        xhr.open("GET",apiCallUrl,true);
+//        xhr.onreadystatechange = function() {
+//            if (xhr.readyState === 4) {
+//                if (xhr.status === 200) {
+//                    var jsonObject = eval(xhr.responseText);
+//                    console.log("Payload Data: " + jsonObject.payload.data[0].comments);
+//                } else {
+//                    console.log("responseText", xhr.responseText);
+//                }
+//            }
+//        }
+//        xhr.send();
+//    }
 
     SilicaWebView {
         anchors.fill: parent
         header: PageHeader { title: "Comments" }
-        url: rootUrl.arg(gagURL)
+        url: rootUrl
 
         experimental.overview: true
         property variant devicePixelRatio: {//1.5
@@ -50,6 +69,10 @@ Page {
             else if (Screen.width > 768) return 3.0;
         }
         experimental.customLayoutWidth: commentsPage.width / devicePixelRatio
+
+        experimental.userScripts: [
+                    Qt.resolvedUrl("devicePixelRatioHack.js")
+        ]
 
         PullDownMenu {
             MenuItem {
@@ -60,6 +83,9 @@ Page {
 
         VerticalScrollDecorator {}
 
-        Component.onCompleted: console.debug("URL: " + rootUrl)
+//        Component.onCompleted: {
+//            console.debug("URL: " + rootUrl)
+//            getComments();
+//        }
     }
 }
