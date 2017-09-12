@@ -5,6 +5,13 @@
 # * date Author's Name <author's email> version-release
 # - Summary of changes
 
+* Tue Sep 12 2017 Leszek Lesner <leszek.lesner@web.de> 1.2.6-1
+- Comments API seems broken call mobile site instead
+- Also use devicePixelRatioHack.js
+
+* Tue Sep 05 2017 Leszek Lesner <leszek.lesner@web.de> 1.2.5-1
+- Added device Pixel Ratio Hacks for Webview
+
 * Tue Apr 18 2017 Leszek Lesner <leszek.lesner@web.de> 1.2.4-1
 - Fix replaces outdated sections
 - Added support for adding and removing sections
