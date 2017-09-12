@@ -60,10 +60,15 @@ Item {
             id: gagImageLoader
 
             property bool playGif: false
+            property bool playVideo: false
 
             anchors { left: parent.left; right: parent.right }
             height: (model.imageSize.height * (Screen.width / model.imageSize.width)) || Screen.width
-            sourceComponent: playGif ? animatedImageComponent : imageComponent
+            sourceComponent: {
+                if (playVideo) return videoPlayerComponent
+                else if (playGif) return animatedImageComponent
+                else return imageComponent
+            }
 
             Component {
                 id: imageComponent
@@ -74,6 +79,15 @@ Item {
                     cache: false
                     fillMode: Image.PreserveAspectFit
                     source: model.imageUrl
+                }
+            }
+
+            Component {
+                id: videoPlayerComponent
+
+                VideoComponent {
+                    mp4: model.videoUrl
+                    anchors.fill: parent
                 }
             }
 
@@ -107,7 +121,7 @@ Item {
                     case Image.Error:
                         return errorText;
                     case Image.Ready:
-                        if (model.isGIF && !gagImageLoader.playGif)
+                        if (model.isVideo && !gagImageLoader.playVideo || model.isGIF && !gagImageLoader.playGif)
                             return gifPlayIcon;
                         if (model.isPartialImage)
                             return partialImageBar;
@@ -256,7 +270,16 @@ Item {
                 anchors.fill: parent
                 enabled: !model.isNSFW && !model.isDownloading
                 onClicked: {
-                    if (model.isGIF) {
+                    if (model.isVideo) {
+                        if (!model.videoUrl.toString()) {
+                            gagImageLoader.playVideo = true;
+                            gagModel.downloadImage(index);
+                        } else {
+                            gagImageLoader.playVideo = !gagImageLoader.playVideo;
+                        }
+                        return;
+                    }
+                    else if (model.isGIF) {
                         if (!model.gifImageUrl.toString()) {
                             // download GIF
                             gagImageLoader.playGif = true;

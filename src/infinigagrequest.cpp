@@ -32,6 +32,8 @@
 
 #include "networkmanager.h"
 
+#include <QDebug>
+
 // For more information about InfiniGAG API, see <https://github.com/k3min/infinigag>
 
 InfiniGagRequest::InfiniGagRequest(NetworkManager *networkManager, const QString &section, QObject *parent) :
@@ -64,8 +66,13 @@ QList<GagObject> InfiniGagRequest::parseResponse(const QByteArray &response)
         gag.setUrl(gagJsonMap.value("link").toString());
         gag.setTitle(gagJsonMap.value("caption").toString());
 
+        const QString videoUrl = gagJsonMap.value("media").toMap().value("mp4").toString();
         const QString imageUrl = gagJsonMap.value("images").toMap().value("normal").toString();
-        if (imageUrl.endsWith(".gif")) {
+        if (!videoUrl.isEmpty()) {
+            gag.setIsVideo(true);
+            gag.setVideoUrl(videoUrl);
+        }
+        else if (videoUrl.isEmpty() && imageUrl.endsWith(".gif")) {
             gag.setIsGIF(true);
             gag.setGifImageUrl(imageUrl);
         } else {

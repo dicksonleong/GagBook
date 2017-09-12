@@ -37,56 +37,72 @@ Page {
     clip: true
     transitions: Transition { AnchorAnimation { duration: 250; easing.type: Easing.InOutQuad } }
 
-    SilicaFlickable {
-        id: flickable
-        anchors.fill: parent
-        contentWidth: imageContainer.width; contentHeight: imageContainer.height
-        onHeightChanged: if (gagImage.status == Image.Ready) gagImage.fitToScreen()
+    property real prevScale: 0
+    property real fitScale: 0
 
+    function _onScaleChanged() {
+        if (prevScale === 0)
+            prevScale = gagImage.scale
+        if ((gagImage.width * gagImage.scale) > flick.width) {
+            var xoff = (flick.width / 2 + flick.contentX) * gagImage.scale / prevScale;
+            flick.contentX = xoff - flick.width / 2
+        }
+        if ((gagImage.height * gagImage.scale) > flick.height) {
+            var yoff = (flick.height / 2 + flick.contentY) * gagImage.scale / prevScale;
+            flick.contentY = yoff - flick.height / 2
+        }
+        prevScale = gagImage.scale
+    }
+
+    function _fitToScreen() {
+        fitScale = Math.min(flick.width / gagImage.width, flick.height / gagImage.height)
+        gagImage.scale = fitScale
+        prevScale = fitScale
+        pinchArea.pinch.minimumScale = Math.min(fitScale, 1)
+    }
+
+
+    SilicaFlickable {
+        id: flick
+        anchors.fill: parent
+        contentWidth: imageContainer.width
+        contentHeight: imageContainer.height
+        
         VerticalScrollDecorator{}
         HorizontalScrollDecorator{}
 
+        onHeightChanged: {
+           if (gagImage.status === Image.Ready) _fitToScreen();
+        }
+
         Item {
             id: imageContainer
-            width: Math.max(gagImage.width * gagImage.scale, flickable.width)
-            height: Math.max(gagImage.height * gagImage.scale, flickable.height)
+            width: Math.max(gagImage.width * gagImage.scale, flick.width)
+            height: Math.max(gagImage.height * gagImage.scale, flick.height)
 
             Image {
                 id: gagImage
 
-                property real prevScale
-
-                function fitToScreen() {
-                    scale = Math.min(flickable.width / width, flickable.height / height, 1)
-                    pinchArea.minScale = scale
-                    prevScale = scale
-                }
-
                 asynchronous: true
                 anchors.centerIn: parent
-                smooth: !flickable.moving
+                smooth: !flick.moving
                 cache: true
                 fillMode: Image.PreserveAspectFit
                 sourceSize.height: QMLUtils.IMAGE_MAX_HEIGHT
                 source: gag.isPartialImage ? gag.fullImageUrl : gag.imageUrl
 
-                onScaleChanged: {
-                    if ((width * scale) > flickable.width) {
-                        var xoff = (flickable.width / 2 + flickable.contentX) * scale / prevScale;
-                        flickable.contentX = xoff - flickable.width / 2
-                    }
-                    if ((height * scale) > flickable.height) {
-                        var yoff = (flickable.height / 2 + flickable.contentY) * scale / prevScale;
-                        flickable.contentY = yoff - flickable.height / 2
-                    }
-                    prevScale = scale
-                }
-
                 onStatusChanged: {
                     if (status == Image.Ready) {
-                        fitToScreen()
                         loadedAnimation.start()
                     }
+                }
+
+                onScaleChanged: {
+                    _onScaleChanged()
+                }
+
+                onHeightChanged: {
+                    _fitToScreen()
                 }
 
                 NumberAnimation {
@@ -97,46 +113,31 @@ Page {
                     from: 0; to: 1
                     easing.type: Easing.InOutQuad
                 }
-            }
+            } // Image End
         }
 
         PinchArea {
             id: pinchArea
-
-            property real minScale: 1.0
-            property real maxScale: 3.0
-
             anchors.fill: parent
-            enabled: gagImage.status == Image.Ready
+
+            property real initialWidth
+            property real initialHeight
             pinch.target: gagImage
-            pinch.minimumScale: minScale * 0.5 // This is to create "bounce back effect"
-            pinch.maximumScale: maxScale * 1.5 // when over zoomed
+            pinch.minimumScale: 1.0
+            pinch.maximumScale: 3.0
 
             onPinchFinished: {
-                flickable.returnToBounds()
-                if (gagImage.scale < pinchArea.minScale) {
-                    bounceBackAnimation.to = pinchArea.minScale
-                    bounceBackAnimation.start()
-                }
-                else if (gagImage.scale > pinchArea.maxScale) {
-                    bounceBackAnimation.to = pinchArea.maxScale
-                    bounceBackAnimation.start()
-                }
+                // Move its content within bounds.
+                flick.returnToBounds()
+                flick.interactive = true
             }
 
-            NumberAnimation {
-                id: bounceBackAnimation
-                target: gagImage
-                duration: 250
-                property: "scale"
-                from: gagImage.scale
+            Rectangle {
+                opacity: 0.0
+                anchors.fill: parent
             }
         }
 
-        /*MouseArea {
-            anchors.fill: parent
-            enabled: gagImage.status == Image.Ready
-        }*/
     }
 
     Loader {
@@ -165,3 +166,4 @@ Page {
         Component { id: failedLoading; Label { text: "Error loading image" } }
     }
 }
+

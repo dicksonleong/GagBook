@@ -1,9 +1,9 @@
 Name: harbour-gagbook
 Summary: An unofficial app for 9GAG website
-Version: 1.1.1
+Version: 1.2.3
 Release: 1
 Group: Applications/Internet
-URL: https://github.com/dicksonleong/GagBook
+URL: https://github.com/llelectronics/GagBook
 License: BSD
 Sources:
 - '%{name}-%{version}.tar.bz2'

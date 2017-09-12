@@ -35,19 +35,105 @@ Page {
     property GagModel gagModel
 
     SilicaListView {
+        id: listView
         anchors.fill: parent
         model: appSettings.sections
 
         header: PageHeader { title: "Section" }
 
-        delegate: SimpleListItem {
-            selected: gagModel.selectedSection == index
-            text: modelData
-            onClicked: {
-                gagModel.selectedSection = index;
-                gagModel.refresh(GagModel.RefreshAll);
-                pageStack.navigateBack();
+        PullDownMenu {
+            MenuItem {
+                text: qsTr("Add section")
+                onClicked: sectionPanel.open = true
             }
         }
+
+        delegate:
+            BackgroundItem {
+            id: bgdelegate
+            width: parent.width
+            height: menuOpen ? contextMenu.height + simpleListItem.height : simpleListItem.height
+            property Item contextMenu
+            property bool menuOpen: contextMenu != null && contextMenu.parent === bgdelegate
+
+            function remove() {
+                var removal = removalComponent.createObject(bgdelegate)
+                removal.execute(simpleListItem,qsTr("Deleting ") + modelData, function() { appSettings.sections.splice(appSettings.sections.indexOf(modelData), 1) })
+            }
+
+            SimpleListItem {
+                id: simpleListItem
+                selected: gagModel.selectedSection == index
+                text: modelData
+
+                function showContextMenu() {
+                    if (!contextMenu)
+                        contextMenu = myMenu.createObject(listView)
+                    contextMenu.show(bgdelegate)
+                }
+
+                onClicked: {
+                    gagModel.selectedSection = index;
+                    gagModel.refresh(GagModel.RefreshAll);
+                    pageStack.navigateBack();
+                }
+
+                onPressAndHold: showContextMenu()
+
+            }
+            Component {
+                id: removalComponent
+                RemorseItem {
+                    id: remorse
+                    onCanceled: destroy()
+                }
+            }
+
+            Component {
+                id: myMenu
+                ContextMenu {
+                    MenuItem {
+                        text: qsTr("Delete")
+                        onClicked: {
+                            bgdelegate.remove();
+                        }
+                    }
+                }
+            }
+        } // Background Item End
     }
+
+    DockedPanel {
+        id: sectionPanel
+
+        width: sectionPage.isPortrait ? parent.width : Theme.itemSizeExtraLarge + Theme.paddingLarge
+        height: sectionPage.isPortrait ? Theme.itemSizeExtraLarge + Theme.paddingLarge : parent.height
+        modal: true
+
+        dock: sectionPage.isPortrait ? Dock.Bottom : Dock.Right
+        onOpenChanged: {
+            if (open) inputName.forceActiveFocus();
+            else sectionPage.forceActiveFocus();
+        }
+
+        TextField {
+            id: inputName
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            width: parent.width - (Theme.paddingLarge * 2)
+            placeholderText: qsTr("Enter Sectioname")
+            label: "Section"
+            inputMethodHints: Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
+            // Only allow Enter key to be pressed when text has been entered
+            EnterKey.enabled: text.length > 0
+            EnterKey.onClicked: {
+                appSettings.sections.push(text)
+                sectionPanel.open = false
+                Qt.inputMethod.hide();
+                sectionPage.forceActiveFocus();
+            }
+        }
+
+    }
+
 }

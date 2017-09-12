@@ -52,7 +52,7 @@ Page {
                 currentIndex: appSettings.source
                 menu: ContextMenu {
                     MenuItem { text: "9GAG" }
-                    MenuItem { text: "InfiniGAG" }
+                    //MenuItem { text: "InfiniGAG" }
                 }
                 onCurrentIndexChanged: {
                     switch (currentIndex) {

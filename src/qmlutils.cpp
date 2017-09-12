@@ -30,7 +30,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <QtGui/QClipboard>
-#include <QtDeclarative/QDeclarativeItem>
+#include <QtQml/QQmlEngine>
+#include <QtQuick/QQuickView>
 #include <QtGui/QDesktopServices>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -73,7 +74,7 @@ int QMLUtils::imageMaxHeight() const
 
 QUrl QMLUtils::repoWebsite() const
 {
-    return QUrl("https://github.com/dicksonleong/GagBook");
+    return QUrl("https://github.com/llelectronics/GagBook");
 }
 
 void QMLUtils::copyToClipboard(const QString &text)

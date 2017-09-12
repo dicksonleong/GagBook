@@ -60,6 +60,7 @@ Page {
                 wrapMode: Text.Wrap
                 textFormat: Text.RichText
                 text: "v" + APP_VERSION + "<br>\
+Copyright (c) 2017 Leszek Lesner<br><br>\
 Copyright (c) 2014 Dickson Leong<br><br>\
 Sailfish port by <a href=\"http://twitter.com/b0bben\">b0bben</a><br><br>\
 GagBook is an unofficial mobile app for 9GAG website that allows you to view posts from \

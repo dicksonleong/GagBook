@@ -37,14 +37,14 @@ static QStringList defaultSections()
     sections.append("fresh");
     sections.append("gif");
     sections.append("cute");
-    sections.append("geeky");
+    sections.append("anime-manga");
     sections.append("cosplay");
-    sections.append("meme");
+    sections.append("relationship");
     sections.append("timely");
     sections.append("girl");
     sections.append("food");
     sections.append("wtf");
-    sections.append("comic");
+    sections.append("movie-tv");
     return sections;
 }
 

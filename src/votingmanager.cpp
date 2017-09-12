@@ -71,7 +71,7 @@ void VotingManager::vote(const QString &id, VotingManager::VoteType voteType)
         emit busyChanged();
     }
 
-    QUrl voteUrl("http://9gag.com/vote/"+ enumToString(voteType).toLower() +"/id/" + id);
+    QUrl voteUrl("https://9gag.com/vote/"+ enumToString(voteType).toLower() +"/id/" + id);
     m_reply = m_manager->networkManager()->createPostRequest(voteUrl, QByteArray());
     m_reply->setParent(this);
     connect(m_reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
